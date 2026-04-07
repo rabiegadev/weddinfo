@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WeddingFlourish } from "./wedding-flourish";
+import { SectionDivider } from "./section-divider";
 
 const examples = [
   {
@@ -33,7 +33,7 @@ export function PortfolioSection() {
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/80 to-transparent" />
       <div className="relative mx-auto max-w-6xl">
-        <WeddingFlourish />
+        <SectionDivider />
         <h2 className="mt-4 text-center text-3xl font-semibold tracking-tight text-zinc-900">
           Przykładowe realizacje
         </h2>

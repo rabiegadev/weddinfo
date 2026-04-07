@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="pl"
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-[var(--background)] text-zinc-900">
+      <body className="bg-weddinfo-app flex min-h-full flex-col text-zinc-900">
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>
         <SiteFooter />

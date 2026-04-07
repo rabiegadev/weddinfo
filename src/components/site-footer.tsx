@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { WedinfoLogo } from "@/components/wedinfo-logo";
 
 export function SiteFooter() {
   return (
@@ -6,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="font-semibold tracking-tight text-white">Wedinfo</p>
+            <WedinfoLogo variant="light" className="select-none" />
             <p className="mt-2 max-w-xs text-sm leading-relaxed text-zinc-400">
               Wizytówki weselne — harmonogram, RSVP i wszystko, co ważne dla gości,
               w jednym spokojnym miejscu.

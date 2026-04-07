@@ -1,14 +1,12 @@
 import Link from "next/link";
+import { WedinfoLogo } from "@/components/wedinfo-logo";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-rose-900/10 bg-white/85 backdrop-blur-md dark:bg-zinc-950/80 dark:border-rose-100/10">
+    <header className="sticky top-0 z-50 border-b border-rose-900/10 bg-white/80 backdrop-blur-md dark:bg-zinc-950/80 dark:border-rose-100/10">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link
-          href="/"
-          className="shrink-0 font-semibold tracking-tight text-rose-950 dark:text-rose-50"
-        >
-          Wedinfo
+        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90">
+          <WedinfoLogo variant="brand" />
         </Link>
         <nav className="flex max-w-[min(100%,28rem)] flex-wrap items-center justify-end gap-x-2.5 gap-y-1 text-xs sm:max-w-none sm:gap-x-4 sm:text-sm">
           <Link

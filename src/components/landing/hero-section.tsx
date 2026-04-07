@@ -1,12 +1,27 @@
 import Link from "next/link";
-import { WeddingFlourish } from "./wedding-flourish";
+import { SectionDivider } from "./section-divider";
 
 export function HeroSection() {
   return (
     <section className="relative flex min-h-[85vh] flex-col justify-center overflow-hidden px-4 py-16 sm:px-6 sm:py-24">
+      {/* Duży znak w tle — obrączki */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[min(120vw,640px)] w-[min(120vw,640px)] -translate-x-1/2 -translate-y-[58%] opacity-[0.07]"
+        aria-hidden
+      >
+        <svg viewBox="0 0 200 200" className="h-full w-full" fill="none">
+          <circle cx="78" cy="100" r="52" stroke="#be123c" strokeWidth="1.2" />
+          <circle cx="122" cy="100" r="52" stroke="#be123c" strokeWidth="1.2" />
+          <path
+            d="M100 28c-8 18-28 32-48 38 6 4 10 12 12 20 14-16 36-28 58-30-8-8-14-18-22-28z"
+            fill="#881337"
+            opacity="0.5"
+          />
+        </svg>
+      </div>
       {/* Warm base wash */}
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-rose-50/95 via-amber-50/30 to-[#faf8f7]"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-rose-50/90 via-amber-50/25 to-transparent"
         aria-hidden
       />
       {/* Soft rose glow orbs */}
@@ -33,7 +48,7 @@ export function HeroSection() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-3xl text-center">
-        <WeddingFlourish className="mb-4 opacity-90" />
+        <SectionDivider className="mb-5" />
         <p className="text-sm font-medium uppercase tracking-[0.22em] text-rose-800/85">
           Wizytówka wesela
         </p>

@@ -1,4 +1,4 @@
-import { WeddingFlourish } from "./wedding-flourish";
+import { SectionDivider } from "./section-divider";
 
 const quotes = [
   {
@@ -29,7 +29,7 @@ export function TestimonialsSection() {
     >
       <div className="pointer-events-none absolute inset-0 opacity-[0.35] bg-[radial-gradient(ellipse_at_30%_20%,_rgb(254_205_211/0.5)_0%,_transparent_55%),radial-gradient(ellipse_at_70%_80%,_rgb(254_243_199/0.4)_0%,_transparent_50%)]" />
       <div className="relative mx-auto max-w-6xl">
-        <WeddingFlourish />
+        <SectionDivider />
         <h2 className="mt-4 text-center text-3xl font-semibold tracking-tight text-zinc-900">
           Opinie par
         </h2>

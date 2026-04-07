@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WeddingFlourish } from "./wedding-flourish";
+import { SectionDivider } from "./section-divider";
 
 export function ContactSection() {
   return (
@@ -9,7 +9,7 @@ export function ContactSection() {
     >
       <div className="pointer-events-none absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-b from-transparent via-white to-rose-50/20" />
       <div className="relative mx-auto max-w-6xl">
-        <WeddingFlourish />
+        <SectionDivider />
         <h2 className="mt-4 text-center text-3xl font-semibold tracking-tight text-zinc-900">
           Kontakt
         </h2>
