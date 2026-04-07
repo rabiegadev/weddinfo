@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
+/*
+  Strona jest świadomie „jasna”: unikamy sytuacji, w której OS ma dark mode,
+  a kolory tekstu z Tailwinda nie przełączają się razem z tłem (wtedy wszystko
+  wygląda na „czarne/niewidoczne”). Klasy dark:* działają tylko po dodaniu
+  class="dark" na <html> (na przyszłość, np. przełącznik motywu).
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #faf8f7;
   --foreground: #1c1917;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -12,15 +21,8 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0a0a;
-    --foreground: #fafaf9;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }

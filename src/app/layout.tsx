@@ -30,9 +30,9 @@ export default function RootLayout({
   return (
     <html
       lang="pl"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[var(--background)]">
+      <body className="flex min-h-full flex-col bg-[var(--background)] text-zinc-900">
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>
       </body>
