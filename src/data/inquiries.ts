@@ -1,4 +1,4 @@
-import { eq, type InferSelectModel } from "drizzle-orm";
+import { desc, eq, type InferSelectModel } from "drizzle-orm";
 import { getDb, inquiries } from "@/db";
 import type { ScheduleRow } from "@/db/schema";
 
@@ -65,4 +65,55 @@ export async function getInquiryByPublicId(
     .limit(1);
   if (!row) return null;
   return toSafe(row);
+}
+
+export type AdminInquiryListItem = SafeInquiry & { id: string };
+
+function toAdminListItem(row: InquiryRow): AdminInquiryListItem {
+  return { id: row.id, ...toSafe(row) };
+}
+
+export async function listInquiriesForAdmin(): Promise<AdminInquiryListItem[]> {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(inquiries)
+    .orderBy(desc(inquiries.createdAt));
+  return rows.map(toAdminListItem);
+}
+
+export async function updateInquiryStatusByPublicId(
+  publicId: string,
+  status: string,
+): Promise<void> {
+  const db = getDb();
+  await db
+    .update(inquiries)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(inquiries.publicId, publicId));
+}
+
+export async function getInquiryInternalIdByPublicId(
+  publicId: string,
+): Promise<string | null> {
+  const db = getDb();
+  const [row] = await db
+    .select({ id: inquiries.id })
+    .from(inquiries)
+    .where(eq(inquiries.publicId, publicId))
+    .limit(1);
+  return row?.id ?? null;
+}
+
+export async function getInquiryAdminByPublicId(
+  publicId: string,
+): Promise<AdminInquiryListItem | null> {
+  const db = getDb();
+  const [row] = await db
+    .select()
+    .from(inquiries)
+    .where(eq(inquiries.publicId, publicId))
+    .limit(1);
+  if (!row) return null;
+  return toAdminListItem(row);
 }

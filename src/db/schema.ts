@@ -73,3 +73,15 @@ export const replyTokens = pgTable("reply_tokens", {
   usedAt: timestamp("used_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+export const rsvpResponses = pgTable("rsvp_responses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  inquiryId: uuid("inquiry_id")
+    .notNull()
+    .references(() => inquiries.id, { onDelete: "cascade" }),
+  guestName: text("guest_name").notNull(),
+  guestEmail: text("guest_email"),
+  attending: boolean("attending").notNull(),
+  dietaryNote: text("dietary_note"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});

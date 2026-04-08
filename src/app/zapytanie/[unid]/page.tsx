@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getInquiryByPublicId } from "@/data/inquiries";
+import { listAttachmentsByInquiryId } from "@/data/inquiry-attachments";
+import { listMessagesByInquiryId } from "@/data/inquiry-messages";
+import {
+  getInquiryByPublicId,
+  getInquiryInternalIdByPublicId,
+} from "@/data/inquiries";
 import { inquiryViewCookieValid } from "./actions";
 import { InquiryDetails } from "./inquiry-details";
 import { InquiryPasswordForm } from "./inquiry-password-form";
@@ -16,6 +21,13 @@ export default async function InquiryPage({ params }: Props) {
 
   const unlocked = await inquiryViewCookieValid(unid);
   const inquiry = unlocked ? exists : null;
+  const inquiryId = inquiry
+    ? await getInquiryInternalIdByPublicId(unid)
+    : null;
+  const messages =
+    inquiry && inquiryId ? await listMessagesByInquiryId(inquiryId) : [];
+  const attachments =
+    inquiry && inquiryId ? await listAttachmentsByInquiryId(inquiryId) : [];
 
   return (
     <div className="mx-auto min-h-[60vh] max-w-3xl px-4 py-12 sm:px-6">
@@ -28,7 +40,11 @@ export default async function InquiryPage({ params }: Props) {
         </Link>
       </p>
       {inquiry ? (
-        <InquiryDetails inquiry={inquiry} />
+        <InquiryDetails
+          inquiry={inquiry}
+          messages={messages}
+          attachments={attachments}
+        />
       ) : (
         <InquiryPasswordForm publicId={unid} />
       )}

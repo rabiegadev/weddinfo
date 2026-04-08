@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "admin:hash-password": "node scripts/hash-admin-password.cjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",

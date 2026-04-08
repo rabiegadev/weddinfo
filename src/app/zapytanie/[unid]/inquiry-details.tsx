@@ -1,4 +1,7 @@
+import type { InquiryAttachmentRow } from "@/data/inquiry-attachments";
+import type { InquiryMessageRow } from "@/data/inquiry-messages";
 import type { SafeInquiry } from "@/data/inquiries";
+import { GuestCorrespondenceSection } from "./guest-correspondence";
 
 function row(label: string, value: string | null | undefined) {
   if (value == null || value === "") return null;
@@ -12,7 +15,15 @@ function row(label: string, value: string | null | undefined) {
   );
 }
 
-export function InquiryDetails({ inquiry }: { inquiry: SafeInquiry }) {
+export function InquiryDetails({
+  inquiry,
+  messages,
+  attachments,
+}: {
+  inquiry: SafeInquiry;
+  messages: InquiryMessageRow[];
+  attachments: InquiryAttachmentRow[];
+}) {
   const names = `${inquiry.partner1FirstName} ${inquiry.partner1LastName} & ${inquiry.partner2FirstName} ${inquiry.partner2LastName}`;
 
   return (
@@ -25,14 +36,18 @@ export function InquiryDetails({ inquiry }: { inquiry: SafeInquiry }) {
           {names}
         </h1>
         <p className="text-sm text-zinc-500">
-          Status: <span className="font-medium text-zinc-800 dark:text-zinc-200">{inquiry.status}</span>
+          Status:{" "}
+          <span className="font-medium text-zinc-800 dark:text-zinc-200">
+            {inquiry.status}
+          </span>
         </p>
       </header>
 
       <dl className="space-y-3">
         {row("Data wesela", inquiry.weddingDate ?? undefined)}
         {row("Miejsce", inquiry.locationName ?? undefined)}
-        {row("Współrzędne", 
+        {row(
+          "Współrzędne",
           inquiry.locationLat && inquiry.locationLng
             ? `${inquiry.locationLat}, ${inquiry.locationLng}`
             : undefined,
@@ -69,10 +84,12 @@ export function InquiryDetails({ inquiry }: { inquiry: SafeInquiry }) {
         </section>
       ) : null}
 
-      <section className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/50 p-4 text-sm text-zinc-600 dark:border-zinc-700 dark:bg-zinc-950/40 dark:text-zinc-400">
-        Historia wiadomości z zespołem pojawi się tutaj po wdrożeniu modułu
-        korespondencji.
-      </section>
+      <GuestCorrespondenceSection
+        publicId={inquiry.publicId}
+        messages={messages}
+        attachments={attachments}
+        rsvpEnabled={inquiry.rsvpEnabled}
+      />
     </div>
   );
 }
