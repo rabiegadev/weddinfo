@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SectionDivider } from "./section-divider";
 import { SectionTexture } from "./section-texture";
 
@@ -30,18 +29,18 @@ export function PortfolioSection() {
   return (
     <section
       id="realizacje"
-      className="relative scroll-mt-20 overflow-hidden border-t border-[var(--w-gold-deep)]/15 bg-white/30 px-4 py-20 backdrop-blur-[2px] sm:px-6"
+      className="scroll-mt-header relative overflow-hidden border-t border-[var(--w-gold-deep)]/15 bg-white/30 px-4 py-16 backdrop-blur-[2px] sm:px-6 sm:py-20"
     >
       <SectionTexture variant="pattern" />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28 bg-gradient-to-b from-white/70 to-transparent" />
       <div className="relative z-10 mx-auto max-w-6xl">
         <SectionDivider className="w-[min(100%,24rem)]" />
-        <h2 className="font-wedinfo-serif mt-5 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl">
+        <h2 className="font-wedinfo-serif mt-5 text-balance text-center text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl md:text-4xl">
           Przykładowe realizacje
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-[var(--foreground)]/70">
-          Tak mogą wyglądać gotowe wizytówki — spójna typografia, harmonogram,
-          mapa i sekcja dla gości. Poniżej wersje demonstracyjne (adresy przykładowe).
+        <p className="mx-auto mt-3 max-w-3xl text-pretty text-center text-sm leading-relaxed text-[var(--foreground)]/72 sm:text-base">
+          Tak może wyglądać Twoja strona weselna — spójna, w dopasowanej kolorystyce i designie oraz ze
+          spersonalizowanymi zdjęciami, informacjami i odliczaniem do najważniejszego dnia.
         </p>
         <GoldFlourishSmall className="mx-auto mt-8" />
         <div className="mt-10 grid gap-8 md:grid-cols-3">
@@ -96,16 +95,6 @@ export function PortfolioSection() {
             </article>
           ))}
         </div>
-        <p className="mt-10 text-center text-sm text-[var(--foreground)]/55">
-          Chcesz podobną stronę?{" "}
-          <Link
-            href="/zloz-zapytanie"
-            className="font-medium text-[var(--w-gold-deep)] underline-offset-2 hover:underline"
-          >
-            Wypełnij krótki brief
-          </Link>
-          .
-        </p>
       </div>
     </section>
   );

@@ -8,6 +8,12 @@ type ScheduleRow = { time: string; action: string };
 
 const emptyScheduleRow = (): ScheduleRow => ({ time: "", action: "" });
 
+/** min. 16px — bez zoom iOS w polach; min. wysokość pod palec */
+const fieldClass =
+  "min-h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 py-3 text-base leading-normal text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50";
+
+const textareaClass = `${fieldClass} min-h-[5.25rem] resize-y sm:min-h-[5.5rem]`;
+
 export function InquiryForm() {
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<SubmitInquiryResult | null>(null);
@@ -114,7 +120,7 @@ export function InquiryForm() {
             <input
               required
               name="p1f"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
@@ -122,7 +128,7 @@ export function InquiryForm() {
             <input
               required
               name="p1l"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
@@ -130,7 +136,7 @@ export function InquiryForm() {
             <input
               required
               name="p2f"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
@@ -138,7 +144,7 @@ export function InquiryForm() {
             <input
               required
               name="p2l"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
         </div>
@@ -154,7 +160,7 @@ export function InquiryForm() {
             <input
               type="date"
               name="weddingDate"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm sm:col-span-2">
@@ -162,7 +168,7 @@ export function InquiryForm() {
             <input
               required
               name="locationName"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
@@ -170,7 +176,7 @@ export function InquiryForm() {
             <input
               name="locationLat"
               placeholder="np. 52.2297"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
@@ -178,7 +184,7 @@ export function InquiryForm() {
             <input
               name="locationLng"
               placeholder="np. 21.0122"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
         </div>
@@ -193,7 +199,7 @@ export function InquiryForm() {
           <textarea
             name="colorPalette"
             rows={2}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+            className={textareaClass}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -201,7 +207,7 @@ export function InquiryForm() {
           <textarea
             name="themes"
             rows={2}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+            className={textareaClass}
           />
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -211,7 +217,7 @@ export function InquiryForm() {
               required
               type="email"
               name="clientEmail"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
@@ -219,7 +225,7 @@ export function InquiryForm() {
             <input
               type="tel"
               name="clientPhone"
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+              className={fieldClass}
             />
           </label>
         </div>
@@ -242,7 +248,7 @@ export function InquiryForm() {
                     setSchedule(next);
                   }}
                   placeholder="np. 15:00"
-                  className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+                  className={fieldClass}
                 />
               </label>
               <label className="flex-[2] flex flex-col gap-1 text-sm">
@@ -255,14 +261,14 @@ export function InquiryForm() {
                     setSchedule(next);
                   }}
                   placeholder="Ślub / powitanie"
-                  className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+                  className={fieldClass}
                 />
               </label>
               {schedule.length > 1 ? (
                 <button
                   type="button"
                   onClick={() => setSchedule(schedule.filter((_, j) => j !== i))}
-                  className="rounded-lg px-3 py-2 text-sm text-red-700 hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-950/40"
+                  className="touch-manipulation min-h-11 rounded-lg px-4 py-2 text-base text-red-700 hover:bg-red-50 active:bg-red-100 dark:text-red-300 dark:hover:bg-red-950/40 sm:text-sm [-webkit-tap-highlight-color:transparent]"
                 >
                   Usuń
                 </button>
@@ -272,7 +278,7 @@ export function InquiryForm() {
           <button
             type="button"
             onClick={() => setSchedule([...schedule, emptyScheduleRow()])}
-            className="text-sm font-medium text-rose-800 hover:underline dark:text-rose-200"
+            className="touch-manipulation inline-flex min-h-11 items-center text-base font-medium text-rose-800 hover:underline active:opacity-80 dark:text-rose-200 sm:text-sm [-webkit-tap-highlight-color:transparent]"
           >
             + dodaj punkt
           </button>
@@ -288,18 +294,22 @@ export function InquiryForm() {
           <textarea
             name="accommodationNote"
             rows={3}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+            className={textareaClass}
           />
         </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="rsvpEnabled" className="size-4 rounded border-zinc-300" />
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-base text-zinc-800 touch-manipulation dark:text-zinc-200 sm:text-sm">
+          <input
+            type="checkbox"
+            name="rsvpEnabled"
+            className="size-5 shrink-0 rounded border-zinc-300 text-rose-800 dark:border-zinc-600"
+          />
           Chcę sekcji RSVP na stronie
         </label>
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-zinc-600 dark:text-zinc-400">Termin odpowiedzi RSVP</span>
           <input
             name="rsvpDeadline"
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+            className={fieldClass}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -307,7 +317,7 @@ export function InquiryForm() {
           <textarea
             name="extraNotes"
             rows={4}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
+            className={textareaClass}
           />
         </label>
       </section>
@@ -316,7 +326,7 @@ export function InquiryForm() {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-full bg-rose-800 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-rose-900 disabled:opacity-60 dark:bg-rose-700 dark:hover:bg-rose-600"
+          className="touch-manipulation min-h-12 w-full rounded-full bg-rose-800 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-rose-900 disabled:opacity-60 active:bg-rose-950 dark:bg-rose-700 dark:hover:bg-rose-600 sm:w-auto sm:text-sm [-webkit-tap-highlight-color:transparent]"
         >
           {pending ? "Wysyłanie…" : "Wyślij zapytanie"}
         </button>

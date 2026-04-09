@@ -3,10 +3,13 @@
  */
 export function WelcomeScrollChevron() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center sm:bottom-8">
+    <div
+      className="pointer-events-none absolute inset-x-0 z-10 flex justify-center"
+      style={{ bottom: "max(1.25rem, env(safe-area-inset-bottom, 0px))" }}
+    >
       <a
         href="#glowna-tresc"
-        className="pointer-events-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--w-gold-deep)]"
+        className="touch-manipulation pointer-events-auto inline-flex min-h-11 min-w-11 items-center justify-center rounded-full p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--w-gold-deep)] [-webkit-tap-highlight-color:transparent]"
         aria-label="Przewiń do treści strony"
       >
         <span className="wedinfo-welcome-scroll-inner inline-block">

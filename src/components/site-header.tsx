@@ -31,40 +31,47 @@ export function SiteHeader() {
           ? "translate-y-0 opacity-100"
           : "pointer-events-none -translate-y-full opacity-0"
       }`}
-      style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden" }}
+      style={{
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        paddingTop: "env(safe-area-inset-top, 0px)",
+      }}
     >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:h-16 sm:gap-4 sm:px-6">
-        <Link href="/" className="min-w-0 shrink-0 transition-opacity hover:opacity-90">
+      <div className="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-2 px-3 sm:min-h-16 sm:gap-4 sm:px-6">
+        <Link
+          href="/"
+          className="touch-manipulation min-w-0 shrink-0 py-2 transition-opacity hover:opacity-90 [-webkit-tap-highlight-color:transparent]"
+        >
           <WedinfoLogo variant="light" size="md" />
         </Link>
-        <nav className="flex min-w-0 flex-nowrap items-center justify-end gap-x-2 overflow-x-auto whitespace-nowrap text-[11px] [scrollbar-width:none] sm:gap-x-3 sm:text-sm md:gap-x-4 [&::-webkit-scrollbar]:hidden">
+        <nav className="flex min-w-0 flex-nowrap items-center justify-end gap-x-0.5 overflow-x-auto whitespace-nowrap text-[11px] [scrollbar-width:none] sm:gap-x-1 sm:text-sm md:gap-x-2 [&::-webkit-scrollbar]:hidden">
           <Link
             href="/#realizacje"
-            className="text-[#f2ebe3]/72 transition hover:text-[#faf6ee]"
+            className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
           >
             Realizacje
           </Link>
           <Link
             href="/#opinie"
-            className="text-[#f2ebe3]/72 transition hover:text-[#faf6ee]"
+            className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
           >
             Opinie
           </Link>
           <Link
             href="/#kontakt"
-            className="text-[#f2ebe3]/72 transition hover:text-[#faf6ee]"
+            className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
           >
             Kontakt
           </Link>
           <Link
             href="/zloz-zapytanie"
-            className="font-medium text-[#f0d9a8] transition hover:text-[#faf0dc]"
+            className="touch-manipulation inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg px-2 py-2 font-medium text-[#f0d9a8] transition active:bg-white/5 hover:text-[#faf0dc] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
           >
             Złóż zapytanie
           </Link>
           <Link
             href="/admin/login"
-            className="text-[#f2ebe3]/42 transition hover:text-[#f2ebe3]/68"
+            className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/42 transition active:bg-white/5 hover:text-[#f2ebe3]/68 [-webkit-tap-highlight-color:transparent] sm:px-2.5"
           >
             Panel
           </Link>

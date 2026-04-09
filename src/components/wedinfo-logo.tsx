@@ -35,14 +35,14 @@ const iconClass: Record<WedinfoLogoSize, string> = {
   sm: "h-8 w-auto",
   md: "h-9 w-auto sm:h-10",
   lg: "h-11 w-auto sm:h-12 md:h-14",
-  hero: "h-[5.25rem] w-auto sm:h-32 md:h-[8.5rem]",
+  hero: "h-[4.5rem] w-auto max-[360px]:h-[4rem] sm:h-32 md:h-[8.5rem]",
 };
 
 const wordClass: Record<WedinfoLogoSize, string> = {
   sm: "text-[1.65rem] leading-none sm:text-[1.85rem]",
   md: "text-[1.85rem] leading-none sm:text-[2.15rem]",
   lg: "text-[2.1rem] leading-none sm:text-[2.45rem] md:text-[2.65rem]",
-  hero: "text-[2.75rem] leading-none sm:text-5xl md:text-6xl",
+  hero: "text-[2.25rem] leading-none max-[360px]:text-[2rem] sm:text-5xl md:text-6xl",
 };
 
 /**

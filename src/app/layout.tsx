@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
 import { ScrollBackdrop } from "@/components/scroll-backdrop";
 import { SiteFooter } from "@/components/site-footer";
@@ -31,6 +31,14 @@ export const metadata: Metadata = {
     "Złóż zapytanie o wizytówkę weselną: harmonogram, lokalizacja, RSVP i kontakt dla gości.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#faf7f2",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -41,7 +49,7 @@ export default function RootLayout({
       lang="pl"
       className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="bg-weddinfo-app relative flex min-h-full flex-col text-[var(--foreground)]">
+      <body className="bg-weddinfo-app relative flex min-h-dvh min-h-[100dvh] flex-col overflow-x-clip text-[var(--foreground)]">
         <ScrollBackdrop />
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>

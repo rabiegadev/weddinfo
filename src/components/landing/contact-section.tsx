@@ -6,7 +6,7 @@ export function ContactSection() {
   return (
     <section
       id="kontakt"
-      className="relative scroll-mt-20 overflow-hidden border-t border-[var(--w-gold-deep)]/18 bg-white/45 px-4 py-20 backdrop-blur-[1px] sm:px-6"
+      className="scroll-mt-header relative overflow-hidden border-t border-[var(--w-gold-deep)]/18 bg-white/45 px-4 py-16 backdrop-blur-[1px] sm:px-6 sm:py-20"
     >
       <SectionTexture variant="pattern" />
       <div
@@ -15,7 +15,7 @@ export function ContactSection() {
       />
       <div className="relative z-10 mx-auto max-w-6xl">
         <SectionDivider className="w-[min(100%,24rem)]" />
-        <h2 className="font-wedinfo-serif mt-5 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl">
+        <h2 className="font-wedinfo-serif mt-5 text-center text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl md:text-4xl">
           Kontakt
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-[var(--foreground)]/70">
@@ -33,7 +33,7 @@ export function ContactSection() {
             </p>
             <Link
               href="/zloz-zapytanie"
-              className="mt-5 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-105"
+              className="touch-manipulation mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] px-5 py-3 text-base font-semibold text-white hover:brightness-105 active:brightness-95 sm:w-auto sm:text-sm [-webkit-tap-highlight-color:transparent]"
             >
               Przejdź do formularza
             </Link>

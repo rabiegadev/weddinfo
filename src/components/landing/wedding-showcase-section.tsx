@@ -48,36 +48,31 @@ export function WeddingShowcaseSection() {
     <section
       ref={rootRef}
       id="wizytowka-wesela"
-      className={`wedinfo-showcase relative scroll-mt-20 overflow-hidden border-t border-[var(--w-gold-deep)]/12 px-4 py-20 sm:px-6 ${on ? "wedinfo-showcase-on" : ""}`}
+      className={`wedinfo-showcase scroll-mt-header relative overflow-hidden border-t border-[var(--w-gold-deep)]/12 px-4 py-16 sm:px-6 sm:py-20 ${on ? "wedinfo-showcase-on" : ""}`}
       aria-labelledby="wedinfo-showcase-heading"
     >
       <SectionTexture variant="paper" />
       <div className="relative z-10 mx-auto max-w-6xl">
         <SectionDivider className="w-[min(100%,24rem)]" />
-        <p className="mt-5 text-center text-xs font-medium uppercase tracking-[0.22em] text-[var(--w-gold-deep)]">
-          Na wizytówce weselnej
-        </p>
         <h2
           id="wedinfo-showcase-heading"
-          className="font-wedinfo-serif mt-3 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl"
+          className="font-wedinfo-serif mt-5 text-balance text-center text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:mt-6 sm:text-3xl md:text-4xl"
         >
-          Fragmenty, które goście widzą pierwsze
+          Sprawdź co znajdzie się na stronie
         </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-[var(--foreground)]/72 sm:text-base">
-          Poniżej przykładowe animacje — na Twojej stronie ustalicie z nami dokładne godziny, adresy i
-          pytania w RSVP.
+        <p className="mx-auto mt-4 max-w-3xl text-pretty text-center text-sm leading-relaxed text-[var(--foreground)]/72 sm:text-base">
+          Możemy umieścić spersonalizowany harmonogram, mapę dojazdu wraz ze szczegółami niezbędnymi, aby
+          dojechać we właściwe miejsce, potwierdzenie obecności ze spersonalizowanymi opcjami do wyboru,
+          przekierowania do galerii, informacje kontaktowe i nie tylko.
         </p>
 
-        <div className="mt-16 grid gap-14 lg:grid-cols-3 lg:gap-10">
+        <div className="mt-16 grid min-w-0 gap-14 lg:grid-cols-3 lg:gap-10">
           {/* Harmonogram */}
           <div className="flex flex-col">
-            <h3 className="font-wedinfo-serif text-lg font-semibold text-[var(--foreground)]">
-              Harmonogram dnia
+            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)] lg:text-left">
+              Harmonogram wesela
             </h3>
-            <p className="mt-1 text-sm text-[var(--foreground)]/65">
-              Oś czasu z punktami — czytelniej niż zrzuty z kalendarza.
-            </p>
-            <div className="relative mt-8 pl-2">
+            <div className="relative mt-6 pl-2 lg:mt-8">
               <div
                 className="wedinfo-tl-line absolute bottom-2 left-[15px] top-2 w-px origin-top bg-[var(--w-gold-deep)]/35"
                 aria-hidden
@@ -107,11 +102,10 @@ export function WeddingShowcaseSection() {
 
           {/* Mapa dojazdu */}
           <div className="flex flex-col">
-            <h3 className="font-wedinfo-serif text-lg font-semibold text-[var(--foreground)]">Dojazd</h3>
-            <p className="mt-1 text-sm text-[var(--foreground)]/65">
-              Monochromatyczna mapka w tonacji strony — punkt A i B oraz przejazd.
-            </p>
-            <div className="mt-8 flex flex-1 items-center justify-center">
+            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)] lg:text-left">
+              Instrukcje dojazdu
+            </h3>
+            <div className="mt-6 flex flex-1 items-center justify-center lg:mt-8">
               <svg
                 viewBox="0 0 220 160"
                 className="h-auto w-full max-w-[260px]"
@@ -206,13 +200,10 @@ export function WeddingShowcaseSection() {
 
           {/* RSVP */}
           <div className="flex flex-col">
-            <h3 className="font-wedinfo-serif text-lg font-semibold text-[var(--foreground)]">
+            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)] lg:text-left">
               Potwierdzenie obecności
             </h3>
-            <p className="mt-1 text-sm text-[var(--foreground)]/65">
-              Gość zaznacza odpowiedzi — bez lawiny wiadomości do pary młodej.
-            </p>
-            <div className="mt-8 rounded-2xl border border-[var(--w-gold-deep)]/18 bg-white/55 p-5 shadow-sm backdrop-blur-sm">
+            <div className="mt-6 rounded-2xl border border-[var(--w-gold-deep)]/18 bg-white/55 p-5 shadow-sm backdrop-blur-sm lg:mt-8">
               <ul className="space-y-3">
                 {[
                   "Będę na ceremonii",
@@ -224,10 +215,10 @@ export function WeddingShowcaseSection() {
                       type="button"
                       disabled={sent}
                       onClick={() => toggleCheck(i)}
-                      className="flex w-full cursor-pointer items-start gap-3 rounded-xl border border-transparent px-1 py-1.5 text-left text-sm text-[var(--foreground)]/85 transition hover:bg-[var(--w-cream-a)]/80 disabled:cursor-default disabled:opacity-90"
+                      className="touch-manipulation flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent px-2 py-3 text-left text-base text-[var(--foreground)]/85 transition hover:bg-[var(--w-cream-a)]/80 active:bg-[var(--w-cream-a)]/60 disabled:cursor-default disabled:opacity-90 sm:text-sm [-webkit-tap-highlight-color:transparent]"
                     >
                       <span
-                        className={`mt-0.5 flex size-[1.15rem] shrink-0 items-center justify-center rounded border-2 transition ${
+                        className={`mt-0 flex size-5 shrink-0 items-center justify-center rounded border-2 transition ${
                           checks[i]
                             ? "border-[var(--w-gold-deep)] bg-[var(--w-gold-deep)]/12"
                             : "border-[var(--w-gold-deep)]/35 bg-white/80"
@@ -249,7 +240,7 @@ export function WeddingShowcaseSection() {
                 type="button"
                 onClick={sendDemo}
                 disabled={sent}
-                className="mt-5 w-full rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] py-2.5 text-sm font-semibold text-white shadow-md shadow-[var(--w-gold-deep)]/15 transition hover:brightness-105 disabled:cursor-default disabled:opacity-75"
+                className="touch-manipulation mt-5 min-h-12 w-full rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] py-3 text-base font-semibold text-white shadow-md shadow-[var(--w-gold-deep)]/15 transition hover:brightness-105 active:brightness-95 disabled:cursor-default disabled:opacity-75 sm:text-sm [-webkit-tap-highlight-color:transparent]"
               >
                 {sent ? "Wysłano" : "Wyślij odpowiedź"}
               </button>

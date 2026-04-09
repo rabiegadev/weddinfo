@@ -50,10 +50,30 @@
   --color-w-beige: var(--w-beige-b);
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: clip;
+}
+
 body {
   background-color: transparent;
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: clip;
+  /* iOS: stabilna wysokość przy pasku adresu */
+  min-height: 100dvh;
+}
+
+/* Kotwice pod stały nagłówek + notch (safe-area) */
+.scroll-mt-header {
+  scroll-margin-top: max(4.5rem, calc(3.75rem + env(safe-area-inset-top, 0px)));
+}
+
+@media (min-width: 640px) {
+  .scroll-mt-header {
+    scroll-margin-top: max(5rem, calc(4.25rem + env(safe-area-inset-top, 0px)));
+  }
 }
 
 /* Bazowa „papierowa” warstwa — pod dynamicznym tłem przewijania */

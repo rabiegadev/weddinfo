@@ -8,7 +8,7 @@ export function WelcomeScreen() {
   return (
     <div className="welcome-landing">
       <section
-        className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-16"
+        className="relative flex min-h-dvh flex-col items-center justify-center overflow-x-clip overflow-y-hidden px-3 py-12 pt-[max(3rem,env(safe-area-inset-top,0px))] sm:px-4 sm:py-16"
         aria-label="Powitanie"
       >
         <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
@@ -43,7 +43,7 @@ export function WelcomeScreen() {
         />
 
         {/* Karta: ciemne tło pod złote logo (jak w załączonym brandingu) */}
-        <div className="relative z-10 mx-auto w-full max-w-lg rounded-[2rem] border border-[#c9a86a]/28 bg-gradient-to-br from-[#141210]/94 via-[#1f1b17]/96 to-[#12100e]/95 px-8 py-10 text-center shadow-[0_24px_56px_rgba(0,0,0,0.45)] ring-1 ring-[#f0d9a8]/10 sm:px-10 sm:py-11">
+        <div className="relative z-10 mx-auto w-full max-w-lg rounded-[1.75rem] border border-[#c9a86a]/28 bg-gradient-to-br from-[#141210]/94 via-[#1f1b17]/96 to-[#12100e]/95 px-5 py-8 text-center shadow-[0_24px_56px_rgba(0,0,0,0.45)] ring-1 ring-[#f0d9a8]/10 sm:rounded-[2rem] sm:px-10 sm:py-11">
           <div
             className="pointer-events-none absolute inset-0 rounded-[2rem] opacity-40"
             style={{

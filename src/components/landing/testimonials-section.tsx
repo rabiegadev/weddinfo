@@ -26,7 +26,7 @@ export function TestimonialsSection() {
   return (
     <section
       id="opinie"
-      className="relative scroll-mt-20 overflow-hidden bg-gradient-to-b from-[var(--w-cream-b)] via-[var(--w-pink-dust)]/25 to-[var(--w-cream-a)] px-4 py-20 sm:px-6"
+      className="scroll-mt-header relative overflow-hidden bg-gradient-to-b from-[var(--w-cream-b)] via-[var(--w-pink-dust)]/25 to-[var(--w-cream-a)] px-4 py-16 sm:px-6 sm:py-20"
     >
       <SectionTexture variant="paper" />
       <div
@@ -38,7 +38,7 @@ export function TestimonialsSection() {
       />
       <div className="relative z-10 mx-auto max-w-6xl">
         <SectionDivider className="w-[min(100%,24rem)]" />
-        <h2 className="font-wedinfo-serif mt-5 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl">
+        <h2 className="font-wedinfo-serif mt-5 text-balance text-center text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl md:text-4xl">
           Opinie par
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-[var(--foreground)]/70">
@@ -49,28 +49,38 @@ export function TestimonialsSection() {
           {quotes.map((q) => (
             <li
               key={q.who}
-              className="flex flex-col rounded-2xl border border-white/90 bg-white/65 p-6 shadow-sm shadow-[var(--w-mauve)]/5 backdrop-blur-sm"
+              className="relative flex flex-col overflow-hidden rounded-2xl border border-white/90 bg-white/65 shadow-sm shadow-[var(--w-mauve)]/5 backdrop-blur-sm"
             >
-              <div className="flex gap-0.5 text-[var(--w-gold-soft-b)]" aria-hidden>
-                {"★★★★★".split("").map((s, i) => (
-                  <span key={i}>{s}</span>
-                ))}
+              <div className="relative z-0 flex flex-1 flex-col p-6 grayscale">
+                <div className="flex gap-0.5 text-[var(--w-gold-soft-b)]" aria-hidden>
+                  {"★★★★★".split("").map((s, i) => (
+                    <span key={i}>{s}</span>
+                  ))}
+                </div>
+                <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-[var(--foreground)]/78">
+                  „{q.text}”
+                </blockquote>
+                <footer className="mt-6 flex items-center gap-3 border-t border-[var(--w-gold-deep)]/12 pt-4">
+                  <div
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--w-pink-dust)] to-[var(--w-cream-a)] text-sm font-semibold text-[var(--w-gold-deep)]"
+                    aria-hidden
+                  >
+                    {q.initial}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[var(--foreground)]">{q.who}</p>
+                    <p className="text-xs text-[var(--foreground)]/50">{q.role}</p>
+                  </div>
+                </footer>
               </div>
-              <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-[var(--foreground)]/78">
-                „{q.text}”
-              </blockquote>
-              <footer className="mt-6 flex items-center gap-3 border-t border-[var(--w-gold-deep)]/12 pt-4">
-                <div
-                  className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--w-pink-dust)] to-[var(--w-cream-a)] text-sm font-semibold text-[var(--w-gold-deep)]"
-                  aria-hidden
-                >
-                  {q.initial}
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-[var(--foreground)]">{q.who}</p>
-                  <p className="text-xs text-[var(--foreground)]/50">{q.role}</p>
-                </div>
-              </footer>
+              <div
+                className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-neutral-900/45"
+                aria-hidden
+              >
+                <span className="font-mono text-sm font-semibold tracking-[0.25em] text-white drop-shadow-md sm:text-base">
+                  -DEMO-
+                </span>
+              </div>
             </li>
           ))}
         </ul>

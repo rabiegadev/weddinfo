@@ -4,7 +4,7 @@ import { SectionTexture } from "./section-texture";
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-[78vh] flex-col justify-center overflow-hidden bg-[var(--w-cream-b)] px-4 py-16 sm:px-6 sm:py-20">
+    <section className="relative flex min-h-[min(78vh,100dvh)] flex-col justify-center overflow-x-clip bg-[var(--w-cream-b)] px-4 py-14 sm:min-h-[78vh] sm:px-6 sm:py-20">
       <SectionTexture variant="pattern" />
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 z-[1] h-[min(110vw,560px)] w-[min(110vw,560px)] -translate-x-1/2 -translate-y-[55%] opacity-[0.09]"
@@ -40,32 +40,35 @@ export function HeroSection() {
       <div className="relative z-10 mx-auto w-full max-w-3xl text-center">
         <SectionDivider className="mb-5 w-[min(100%,22rem)]" />
         <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--w-gold-deep)] sm:text-sm">
-          Wizytówka wesela
+          Wizytówka Wesela
         </p>
-        <h1 className="font-wedinfo-serif mt-5 text-balance text-4xl font-semibold leading-tight tracking-tight text-[var(--foreground)] sm:text-5xl md:text-[2.85rem]">
-          Jedna strona ze wszystkim, co ważne dla gości
+        <h1 className="font-wedinfo-serif mt-5 text-balance text-[1.65rem] font-semibold leading-snug tracking-tight text-[var(--foreground)] sm:text-4xl sm:leading-tight md:text-5xl lg:text-[2.85rem]">
+          Jedno miejsce ze wszystkim, co ważne dla Twoich gości.
         </h1>
-        <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-[var(--foreground)]/72">
-          Harmonogram, dojazd, nocleg, RSVP — zbierz informacje w jednym miejscu.
-          Spokojna, czytelna wizytówka pod adresem w domenie Weddinfo, w zgodzie z
-          ekosystemem Wedding Assistant.
+        <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-[var(--foreground)]/72 sm:text-lg">
+          Harmonogram, dojazd, noclegi, potwierdzenia obecności (RSVP) — wszystkie informacje zebrane w
+          jednym, pięknym miejscu.
         </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap">
+        <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-[var(--foreground)]/72 sm:text-lg">
+          Stwórz czytelną, elegancką wizytówkę weselną pod własnym adresem w domenie Weddinfo. Możesz ją
+          łatwo połączyć z pozostałymi narzędziami Wedding Assistant.
+        </p>
+        <div className="mt-10 flex w-full max-w-md flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           <Link
             href="/zloz-zapytanie"
-            className="inline-flex h-12 min-w-[200px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] px-8 text-sm font-semibold text-white shadow-lg shadow-[var(--w-gold-deep)]/20 transition hover:brightness-105"
+            className="touch-manipulation inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] px-8 text-base font-semibold text-white shadow-lg shadow-[var(--w-gold-deep)]/20 transition hover:brightness-105 active:brightness-95 sm:w-auto sm:min-w-[200px] sm:text-sm [-webkit-tap-highlight-color:transparent]"
           >
             Złóż zapytanie
           </Link>
           <Link
             href="#realizacje"
-            className="inline-flex h-12 items-center justify-center rounded-full border border-[var(--w-gold-deep)]/35 bg-white/65 px-6 text-sm font-medium text-[var(--w-gold-deep)] backdrop-blur-sm transition hover:border-[var(--w-gold-deep)]/55 hover:bg-white"
+            className="touch-manipulation inline-flex min-h-12 w-full items-center justify-center rounded-full border border-[var(--w-gold-deep)]/35 bg-white/65 px-6 text-base font-medium text-[var(--w-gold-deep)] backdrop-blur-sm transition hover:border-[var(--w-gold-deep)]/55 hover:bg-white active:bg-white/90 sm:w-auto sm:text-sm [-webkit-tap-highlight-color:transparent]"
           >
             Zobacz przykłady
           </Link>
         </div>
-        <p className="mt-5 max-w-md text-center text-sm text-[var(--foreground)]/55">
-          Po wysłaniu formularza otrzymasz numer zapytania i link do statusu.
+        <p className="mx-auto mt-5 max-w-lg text-balance text-center text-sm leading-relaxed text-[var(--foreground)]/55 sm:text-base">
+          Po wysłaniu formularza od razu otrzymasz numer zapytania i link do statusu realizacji.
         </p>
       </div>
     </section>

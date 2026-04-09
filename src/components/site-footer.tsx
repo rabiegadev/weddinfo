@@ -9,7 +9,7 @@ export function SiteFooter() {
         background: "linear-gradient(180deg, #2e2822 0%, #1a1614 100%)",
       }}
     >
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 pt-12 pb-[calc(3rem+env(safe-area-inset-bottom,0px))] sm:px-6">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
             <WedinfoLogo variant="light" size="md" className="select-none" />
@@ -19,20 +19,35 @@ export function SiteFooter() {
               mieli jasny, wspólny punkt odniesienia w sieci.
             </p>
           </div>
-          <nav className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
-            <Link href="/zloz-zapytanie" className="transition hover:text-white">
+          <nav className="flex flex-col gap-1 text-sm sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-2">
+            <Link
+              href="/zloz-zapytanie"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+            >
               Złóż zapytanie
             </Link>
-            <Link href="/#realizacje" className="transition hover:text-white">
+            <Link
+              href="/#realizacje"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+            >
               Realizacje
             </Link>
-            <Link href="/#opinie" className="transition hover:text-white">
+            <Link
+              href="/#opinie"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+            >
               Opinie
             </Link>
-            <Link href="/#kontakt" className="transition hover:text-white">
+            <Link
+              href="/#kontakt"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+            >
               Kontakt
             </Link>
-            <Link href="/admin/login" className="text-[#9a9088] transition hover:text-[#e8dfd4]">
+            <Link
+              href="/admin/login"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 text-[#9a9088] transition hover:text-[#e8dfd4] [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+            >
               Panel
             </Link>
           </nav>

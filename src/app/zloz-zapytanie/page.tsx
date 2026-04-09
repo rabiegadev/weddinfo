@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ZlozZapytaniePage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+    <div className="mx-auto max-w-3xl px-4 py-8 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] pt-8 sm:px-6 sm:py-14 sm:pb-14 sm:pt-14">
       <p className="mb-6 text-sm">
         <Link href="/" className="text-rose-800 hover:underline dark:text-rose-200">
           ← Strona główna

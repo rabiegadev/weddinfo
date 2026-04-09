@@ -44,13 +44,13 @@ export function AdminLoginForm() {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-950"
+          className="min-h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 py-3 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
         />
       </label>
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-full bg-rose-800 py-2.5 text-sm font-semibold text-white hover:bg-rose-900 disabled:opacity-60 dark:bg-rose-700"
+        className="touch-manipulation min-h-12 w-full rounded-full bg-rose-800 py-3 text-base font-semibold text-white hover:bg-rose-900 disabled:opacity-60 active:bg-rose-950 dark:bg-rose-700 sm:text-sm [-webkit-tap-highlight-color:transparent]"
       >
         {pending ? "Logowanie…" : "Zaloguj"}
       </button>

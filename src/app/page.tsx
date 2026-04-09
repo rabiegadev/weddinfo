@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <WelcomeScreen />
-      <div id="glowna-tresc" className="flex flex-1 flex-col scroll-mt-[4.5rem]">
+      <div id="glowna-tresc" className="scroll-mt-header flex flex-1 flex-col">
         <HeroSection />
         <WeddingShowcaseSection />
         <PortfolioSection />
