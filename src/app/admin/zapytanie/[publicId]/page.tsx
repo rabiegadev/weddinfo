@@ -15,7 +15,7 @@ type Props = { params: Promise<{ publicId: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { publicId } = await params;
-  return { title: `Zapytanie ${publicId}` };
+  return { title: `Zapytanie ${publicId} — Weddinfo` };
 }
 
 export default async function AdminInquiryPage({ params }: Props) {

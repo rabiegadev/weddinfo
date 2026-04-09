@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyAdminSessionTokenEdge } from "@/lib/admin-session-edge";
 
-export async function middleware(request: NextRequest) {
+/** Ochrona panelu admina (Next 16: konwencja `proxy` zamiast `middleware`). */
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (pathname === "/admin/login" || pathname === "/admin/logout") {
     return NextResponse.next();

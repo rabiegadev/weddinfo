@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getInquiryByPublicId } from "@/data/inquiries";
 import { TokenReplyForm } from "./token-reply-form";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Odpowiedź na zapytanie",
+};
 
 type Props = {
   params: Promise<{ unid: string }>;

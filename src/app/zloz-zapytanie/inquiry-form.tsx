@@ -56,11 +56,26 @@ export function InquiryForm() {
           Numer referencyjny:{" "}
           <span className="font-mono font-medium">#{result.publicId}</span>
         </p>
-        <p className="mt-2 text-sm leading-relaxed">
-          Wkrótce wyślemy wiadomość na podany adres z linkiem do statusu i hasłem
-          dostępu.
-        </p>
-        {result.guestPassword ? (
+        {result.mailSent ? (
+          <p className="mt-2 text-sm leading-relaxed">
+            Wysłaliśmy wiadomość na podany adres e-mail z linkiem do podglądu i
+            hasłem dostępu. Sprawdź też folder spam.
+          </p>
+        ) : (
+          <div className="mt-3 space-y-2 rounded-lg border border-amber-300/80 bg-amber-50/90 p-3 text-sm text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-100">
+            <p>
+              <strong>Nie udało się wysłać e-maila</strong> (brak lub błędna
+              konfiguracja wysyłki na serwerze). Zapisz poniższe hasło — jest
+              potrzebne do wejścia na stronę zapytania.
+            </p>
+            {result.guestPassword ? (
+              <p className="font-mono text-base font-semibold tracking-wide">
+                Hasło: {result.guestPassword}
+              </p>
+            ) : null}
+          </div>
+        )}
+        {result.mailSent && result.guestPassword ? (
           <p className="mt-3 rounded-lg bg-white/60 p-3 text-xs dark:bg-black/20">
             <strong>Tryb dev:</strong> hasło dostępu:{" "}
             <span className="font-mono">{result.guestPassword}</span>

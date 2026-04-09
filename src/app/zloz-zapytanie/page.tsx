@@ -3,7 +3,7 @@ import Link from "next/link";
 import { InquiryForm } from "./inquiry-form";
 
 export const metadata: Metadata = {
-  title: "Złóż zapytanie — Wedinfo",
+  title: "Złóż zapytanie — Weddinfo",
   description:
     "Formularz zapytania o wizytówkę weselną: para młoda, miejsce, harmonogram, RSVP.",
 };

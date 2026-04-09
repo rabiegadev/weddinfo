@@ -4,7 +4,7 @@ import { listInquiriesForAdmin } from "@/data/inquiries";
 import { requireAdminSession } from "@/lib/admin-auth";
 
 export const metadata: Metadata = {
-  title: "Dashboard — Wedinfo",
+  title: "Dashboard — Weddinfo",
 };
 
 function statusLabel(s: string) {

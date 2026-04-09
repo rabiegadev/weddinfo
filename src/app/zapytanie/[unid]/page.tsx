@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { listAttachmentsByInquiryId } from "@/data/inquiry-attachments";
@@ -13,6 +14,11 @@ import { InquiryPasswordForm } from "./inquiry-password-form";
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ unid: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { unid } = await params;
+  return { title: `Zapytanie ${unid}` };
+}
 
 export default async function InquiryPage({ params }: Props) {
   const { unid } = await params;

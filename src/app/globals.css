@@ -1,16 +1,37 @@
 @import "tailwindcss";
 
 /*
-  Strona jest świadomie „jasna”: unikamy sytuacji, w której OS ma dark mode,
-  a kolory tekstu z Tailwinda nie przełączają się razem z tłem (wtedy wszystko
-  wygląda na „czarne/niewidoczne”). Klasy dark:* działają tylko po dodaniu
-  class="dark" na <html> (na przyszłość, np. przełącznik motywu).
+  Motyw jasny z dwiema harmonijnymi paletami (krem / złoto / beż + róż puder / mauve).
+  Klasy dark:* działają tylko po class="dark" na <html>.
 */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #faf8f7;
-  --foreground: #1c1917;
+  /* Paleta A — czysta biel, krem, złoto, beż, rumieniec */
+  --w-white: #ffffff;
+  --w-cream-a: #faf6ee;
+  --w-gold-soft-a: #e5c18f;
+  --w-gold-deep: #bfa46f;
+  --w-beige-a: #ede6d9;
+  --w-blush-a: #e8d4c8;
+
+  /* Paleta B — alternatywny krem, róż, beż, złoto, mauve */
+  --w-cream-b: #faf7f2;
+  --w-pink-dust: #efd4d9;
+  --w-beige-b: #ede4e0;
+  --w-gold-soft-b: #d9b88a;
+  --w-mauve: #c9a8b9;
+  --w-blush-b: #e8c7d4;
+
+  /* Semantyka */
+  --background: var(--w-cream-b);
+  --foreground: #3d3429;
+  --w-gold-line: var(--w-gold-deep);
+  --w-gold-shine: #f1d38e;
+  /* Odcień złota „wyciągnięty” z tekstury pergaminu (jaśniejszy, do nałożeń) */
+  --w-texture-gold: #c9a26a;
+  --w-texture-gold-soft: #ddbc8c;
+
   color-scheme: light;
 }
 
@@ -19,27 +40,101 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-cormorant), ui-serif, "Times New Roman", serif;
+  --color-w-white: var(--w-white);
+  --color-w-cream: var(--w-cream-b);
+  --color-w-gold: var(--w-gold-deep);
+  --color-w-gold-soft: var(--w-gold-soft-b);
+  --color-w-blush: var(--w-blush-b);
+  --color-w-mauve: var(--w-mauve);
+  --color-w-beige: var(--w-beige-b);
 }
 
 body {
-  background-color: var(--background);
+  background-color: transparent;
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Delikatna „papierowa” tekstura + ciepłe plamy — cała witryna */
+/* Bazowa „papierowa” warstwa — pod dynamicznym tłem przewijania */
 .bg-weddinfo-app {
-  background-color: #faf8f7;
-  background-image:
-    radial-gradient(ellipse 100% 60% at 50% -15%, rgba(254, 205, 211, 0.38), transparent 52%),
-    radial-gradient(ellipse 55% 45% at 0% 40%, rgba(254, 243, 199, 0.22), transparent 48%),
-    radial-gradient(ellipse 50% 40% at 100% 65%, rgba(254, 215, 170, 0.2), transparent 45%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  background-attachment: fixed;
+  background-color: var(--w-cream-b);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 
-@media (max-width: 768px) {
-  .bg-weddinfo-app {
-    background-attachment: scroll;
+.font-wedinfo-serif {
+  font-family: var(--font-serif);
+}
+
+/* Metaliczne złoto (tekst / akcenty) */
+.text-gold-metallic {
+  background: linear-gradient(
+    105deg,
+    var(--w-gold-deep) 0%,
+    var(--w-gold-shine) 45%,
+    var(--w-gold-soft-a) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animacje sekcji „wizytówka wesela” (ekran 2 powitalny) */
+@keyframes wedinfo-draw-stroke {
+  to {
+    stroke-dashoffset: 0;
   }
+}
+
+@keyframes wedinfo-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes wedinfo-float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes wedinfo-pulse-ring {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scale(1.12);
+  }
+}
+
+.wedinfo-feat-animate.wedinfo-feat-on .wedinfo-feat-draw {
+  animation: wedinfo-draw-stroke 1.1s ease forwards;
+}
+
+.wedinfo-feat-animate.wedinfo-feat-on .wedinfo-feat-pop {
+  animation: wedinfo-pop-in 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.wedinfo-feat-animate.wedinfo-feat-on .wedinfo-feat-float {
+  animation: wedinfo-float-soft 3.2s ease-in-out infinite;
+}
+
+.wedinfo-feat-animate.wedinfo-feat-on .wedinfo-feat-ring {
+  animation: wedinfo-pulse-ring 2.4s ease-in-out infinite;
+}
+
+.wedinfo-feat-animate.wedinfo-feat-on .wedinfo-feat-pop {
+  animation: wedinfo-pop-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }

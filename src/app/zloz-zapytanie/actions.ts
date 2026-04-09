@@ -2,11 +2,18 @@
 
 import { getDb, inquiries } from "@/db";
 import { createPublicId } from "@/lib/id";
+import { sendInquiryConfirmationEmail } from "@/lib/mail";
 import { generateGuestPassword, hashGuestPassword } from "@/lib/password";
 import { inquiryFormSchema } from "@/lib/validation/inquiry";
 
 export type SubmitInquiryResult =
-  | { ok: true; publicId: string; guestPassword?: string }
+  | {
+      ok: true;
+      publicId: string;
+      /** Tylko gdy e-mail nie został wysłany — zapisz hasło i przekaż parze. */
+      guestPassword?: string;
+      mailSent: boolean;
+    }
   | { ok: false; error: string };
 
 export async function submitInquiry(
@@ -61,10 +68,28 @@ export async function submitInquiry(
     };
   }
 
+  const coupleLabel = `${data.partner1FirstName} ${data.partner1LastName} & ${data.partner2FirstName} ${data.partner2LastName}`;
+  const inquiryPath = `/zapytanie/${encodeURIComponent(publicId)}`;
+
+  const mail = await sendInquiryConfirmationEmail({
+    to: data.clientEmail,
+    publicId,
+    guestPassword,
+    coupleLabel,
+    inquiryPath,
+  });
+
+  const mailSent = mail.ok;
+  if (!mailSent) {
+    console.error("[submitInquiry] E-mail nie wysłany:", mail.error);
+  }
+
   const devShowPassword = process.env.WEDDINFO_DEV_RETURN_PASSWORD === "true";
+
   return {
     ok: true,
     publicId,
-    ...(devShowPassword ? { guestPassword } : {}),
+    mailSent,
+    ...(!mailSent || devShowPassword ? { guestPassword } : {}),
   };
 }

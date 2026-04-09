@@ -5,45 +5,48 @@ export function ContactSection() {
   return (
     <section
       id="kontakt"
-      className="relative scroll-mt-20 border-t border-rose-100/90 bg-white px-4 py-20 sm:px-6"
+      className="relative scroll-mt-20 border-t border-[var(--w-gold-deep)]/18 bg-white/50 px-4 py-20 backdrop-blur-[1px] sm:px-6"
     >
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-b from-transparent via-white to-rose-50/20" />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-b from-transparent via-white/80 to-[var(--w-blush-a)]/25"
+        aria-hidden
+      />
       <div className="relative mx-auto max-w-6xl">
-        <SectionDivider />
-        <h2 className="mt-4 text-center text-3xl font-semibold tracking-tight text-zinc-900">
+        <SectionDivider className="w-[min(100%,24rem)]" />
+        <h2 className="font-wedinfo-serif mt-5 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl">
           Kontakt
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-center text-zinc-600">
+        <p className="mx-auto mt-3 max-w-xl text-center text-[var(--foreground)]/70">
           Masz pytanie o wizytówkę, termin lub własną domenę? Napisz — odpowiemy
           możliwie szybko.
         </p>
         <div className="mx-auto mt-12 grid max-w-3xl gap-6 sm:grid-cols-2">
-          <div className="rounded-2xl border border-rose-100 bg-gradient-to-br from-rose-50/80 to-white p-6 shadow-sm">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-rose-900/90">
+          <div className="rounded-2xl border border-[var(--w-gold-deep)]/18 bg-gradient-to-br from-[var(--w-pink-dust)]/35 to-white/90 p-6 shadow-sm">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--w-gold-deep)]">
               Zapytanie o stronę
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--foreground)]/72">
               Najwygodniej przez formularz — dostaniesz numer referencyjny i link do
               statusu.
             </p>
             <Link
               href="/zloz-zapytanie"
-              className="mt-5 inline-flex items-center justify-center rounded-full bg-rose-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-rose-900"
+              className="mt-5 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-105"
             >
               Przejdź do formularza
             </Link>
           </div>
-          <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-6">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-700">
+          <div className="rounded-2xl border border-[var(--foreground)]/10 bg-[var(--w-beige-b)]/60 p-6">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--foreground)]/65">
               Autor rozwiązania
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--foreground)]/72">
               Projekt i rozwój strony: zespół{" "}
               <a
                 href="https://rabiegadevelopment.pl"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-rose-800 underline-offset-2 hover:text-rose-950 hover:underline"
+                className="font-medium text-[var(--w-gold-deep)] underline-offset-2 hover:underline"
               >
                 rabiegadevelopment.pl
               </a>

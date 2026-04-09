@@ -5,7 +5,7 @@ import { isAdminSessionValid } from "@/lib/admin-auth";
 import { AdminLoginForm } from "./login-form";
 
 export const metadata: Metadata = {
-  title: "Logowanie — Wedinfo",
+  title: "Logowanie — Weddinfo",
 };
 
 export default async function AdminLoginPage() {
