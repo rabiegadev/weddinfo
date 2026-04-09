@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SectionDivider } from "./section-divider";
+import { SectionTexture } from "./section-texture";
 
 const examples = [
   {
@@ -29,10 +30,11 @@ export function PortfolioSection() {
   return (
     <section
       id="realizacje"
-      className="relative scroll-mt-20 border-t border-[var(--w-gold-deep)]/15 bg-white/35 px-4 py-20 backdrop-blur-[2px] sm:px-6"
+      className="relative scroll-mt-20 overflow-hidden border-t border-[var(--w-gold-deep)]/15 bg-white/30 px-4 py-20 backdrop-blur-[2px] sm:px-6"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/70 to-transparent" />
-      <div className="relative mx-auto max-w-6xl">
+      <SectionTexture variant="pattern" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28 bg-gradient-to-b from-white/70 to-transparent" />
+      <div className="relative z-10 mx-auto max-w-6xl">
         <SectionDivider className="w-[min(100%,24rem)]" />
         <h2 className="font-wedinfo-serif mt-5 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl">
           Przykładowe realizacje

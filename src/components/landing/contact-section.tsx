@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { SectionDivider } from "./section-divider";
+import { SectionTexture } from "./section-texture";
 
 export function ContactSection() {
   return (
     <section
       id="kontakt"
-      className="relative scroll-mt-20 border-t border-[var(--w-gold-deep)]/18 bg-white/50 px-4 py-20 backdrop-blur-[1px] sm:px-6"
+      className="relative scroll-mt-20 overflow-hidden border-t border-[var(--w-gold-deep)]/18 bg-white/45 px-4 py-20 backdrop-blur-[1px] sm:px-6"
     >
+      <SectionTexture variant="pattern" />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-b from-transparent via-white/80 to-[var(--w-blush-a)]/25"
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-1/2 z-[1] bg-gradient-to-b from-transparent via-white/80 to-[var(--w-blush-a)]/25"
         aria-hidden
       />
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         <SectionDivider className="w-[min(100%,24rem)]" />
         <h2 className="font-wedinfo-serif mt-5 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl">
           Kontakt

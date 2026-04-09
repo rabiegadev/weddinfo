@@ -1,127 +1,85 @@
 "use client";
 
-import { useId, type SVGProps } from "react";
+import Image from "next/image";
+import { Great_Vibes } from "next/font/google";
 
 export type WedinfoLogoSize = "sm" | "md" | "lg" | "hero";
 
 type LogoProps = {
-  variant?: "brand" | "light";
+  variant?: "brand" | "light" | "welcome";
   markOnly?: boolean;
   size?: WedinfoLogoSize;
   className?: string;
-} & Omit<SVGProps<SVGSVGElement>, "children">;
-
-const sizeClasses: Record<WedinfoLogoSize, { mark: string; text: string }> = {
-  sm: { mark: "h-8 w-8", text: "text-base sm:text-lg" },
-  md: { mark: "h-10 w-10 sm:h-11 sm:w-11", text: "text-lg sm:text-xl" },
-  lg: { mark: "h-14 w-14 sm:h-16 sm:w-16", text: "text-2xl sm:text-3xl" },
-  hero: {
-    mark: "h-[4.5rem] w-[4.5rem] sm:h-[5.5rem] sm:w-[5.5rem] md:h-28 md:w-28",
-    text: "text-4xl sm:text-5xl md:text-6xl tracking-tight",
-  },
+  priority?: boolean;
 };
 
-export function WedinfoLogoMark({
-  variant = "brand",
-  className = "",
-  size = "md",
-  ...svgProps
-}: Omit<LogoProps, "markOnly"> & { size?: WedinfoLogoSize }) {
-  const isLight = variant === "light";
-  const gid = useId().replace(/:/g, "");
-  const gradRing = `wedinfo-ring-${gid}`;
-  const gradShine = `wedinfo-shine-${gid}`;
-  const s = sizeClasses[size];
+const weddinfoWordmark = Great_Vibes({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
 
-  return (
-    <svg
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={`shrink-0 ${s.mark} ${className}`}
-      aria-hidden
-      {...svgProps}
-    >
-      <defs>
-        <linearGradient id={gradRing} x1="8" y1="10" x2="42" y2="44" gradientUnits="userSpaceOnUse">
-          <stop stopColor={isLight ? "#f5e6d3" : "var(--w-gold-deep)"} />
-          <stop offset="0.45" stopColor={isLight ? "#faf0e4" : "var(--w-gold-shine)"} />
-          <stop offset="1" stopColor={isLight ? "#e8d4c8" : "var(--w-gold-soft-b)"} />
-        </linearGradient>
-        <linearGradient id={gradShine} x1="22" y1="6" x2="30" y2="22" gradientUnits="userSpaceOnUse">
-          <stop stopColor={isLight ? "#fde8ef" : "var(--w-blush-b)"} stopOpacity={isLight ? 0.9 : 0.95} />
-          <stop offset="1" stopColor={isLight ? "#f5d0dc" : "var(--w-pink-dust)"} stopOpacity={0.75} />
-        </linearGradient>
-      </defs>
-      {isLight ? (
-        <rect
-          x="2"
-          y="2"
-          width="44"
-          height="44"
-          rx="12"
-          fill="rgba(255,255,255,0.06)"
-          stroke="rgba(229,193,143,0.35)"
-          strokeWidth="1"
-        />
-      ) : (
-        <rect
-          x="2"
-          y="2"
-          width="44"
-          height="44"
-          rx="12"
-          fill="rgba(255,255,255,0.72)"
-          stroke="rgba(191,164,111,0.45)"
-          strokeWidth="1"
-        />
-      )}
-      <circle
-        cx="19.5"
-        cy="26"
-        r="9"
-        stroke={`url(#${gradRing})`}
-        strokeWidth="1.35"
-        fill="none"
-      />
-      <circle
-        cx="28.5"
-        cy="26"
-        r="9"
-        stroke={`url(#${gradRing})`}
-        strokeWidth="1.35"
-        fill="none"
-        opacity={isLight ? 0.92 : 0.98}
-      />
-      <path
-        d="M24 10c-1.4 3.4-4.5 5.6-7.4 6.8 1 .4 2 1.2 2.6 2.2 1.1-1.4 3.1-3 5.1-3.4z"
-        fill={`url(#${gradShine})`}
-      />
-    </svg>
-  );
-}
+const ICON_SRC = "/images/weddinfo-icon-couple.png";
+/** Proporcje ikony (dopasuj po wymianie PNG). */
+const ICON_W = 280;
+const ICON_H = 360;
 
+const rowLayout: Record<WedinfoLogoSize, string> = {
+  sm: "flex-row items-center gap-2",
+  md: "flex-row items-center gap-2.5 sm:gap-3",
+  lg: "flex-row items-center gap-3 sm:gap-3.5",
+  hero: "flex-col items-center gap-4 sm:gap-5",
+};
+
+const iconClass: Record<WedinfoLogoSize, string> = {
+  sm: "h-8 w-auto",
+  md: "h-9 w-auto sm:h-10",
+  lg: "h-11 w-auto sm:h-12 md:h-14",
+  hero: "h-[5.25rem] w-auto sm:h-32 md:h-[8.5rem]",
+};
+
+const wordClass: Record<WedinfoLogoSize, string> = {
+  sm: "text-[1.65rem] leading-none sm:text-[1.85rem]",
+  md: "text-[1.85rem] leading-none sm:text-[2.15rem]",
+  lg: "text-[2.1rem] leading-none sm:text-[2.45rem] md:text-[2.65rem]",
+  hero: "text-[2.75rem] leading-none sm:text-5xl md:text-6xl",
+};
+
+/**
+ * Ikona pary (PNG) + napis „Weddinfo” w skrypcie Great Vibes.
+ */
 export function WedinfoLogo({
   variant = "brand",
   markOnly = false,
   size = "md",
   className = "",
-  ...svgProps
+  priority = false,
 }: LogoProps) {
   const isLight = variant === "light";
-  const s = sizeClasses[size];
-  const textClass =
-    variant === "light"
-      ? `font-wedinfo-serif font-semibold ${s.text} text-[#faf6ee]`
-      : `font-wedinfo-serif font-semibold ${s.text} text-gold-metallic`;
 
-  const layout =
-    size === "hero" ? "flex flex-col items-center gap-4 sm:gap-5" : "inline-flex items-center gap-2.5 sm:gap-3";
+  const textStyles = isLight
+    ? "text-[#f5ebdc] [text-shadow:0_1px_2px_rgba(0,0,0,0.35)]"
+    : "text-gold-metallic";
 
   return (
-    <span className={`${layout} ${className}`}>
-      <WedinfoLogoMark variant={variant} size={size} {...svgProps} />
-      {!markOnly ? <span className={textClass}>Weddinfo</span> : null}
+    <span className={`inline-flex ${rowLayout[size]} ${className}`}>
+      <Image
+        src={ICON_SRC}
+        alt={markOnly ? "Weddinfo" : ""}
+        width={ICON_W}
+        height={ICON_H}
+        priority={priority}
+        className={`shrink-0 object-contain object-bottom ${iconClass[size]}`}
+        sizes={size === "hero" ? "(max-width: 768px) 40vw, 200px" : "80px"}
+        aria-hidden={!markOnly}
+      />
+      {!markOnly ? (
+        <span
+          className={`${weddinfoWordmark.className} ${wordClass[size]} ${textStyles} select-none`}
+        >
+          Weddinfo
+        </span>
+      ) : null}
     </span>
   );
 }

@@ -26,44 +26,45 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 border-b border-[var(--w-gold-deep)]/12 bg-[var(--w-cream-b)]/92 backdrop-blur-lg transition-[transform,opacity,box-shadow] duration-500 ease-out ${
+      className={`fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#1c1815]/52 shadow-[inset_0_-1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-xl backdrop-saturate-150 transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none supports-[backdrop-filter]:bg-[#1c1815]/44 ${
         visible
-          ? "translate-y-0 opacity-100 shadow-[0_4px_24px_rgba(61,52,41,0.08)]"
+          ? "translate-y-0 opacity-100"
           : "pointer-events-none -translate-y-full opacity-0"
       }`}
+      style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden" }}
     >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
-        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90">
-          <WedinfoLogo variant="brand" size="md" />
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:h-16 sm:gap-4 sm:px-6">
+        <Link href="/" className="min-w-0 shrink-0 transition-opacity hover:opacity-90">
+          <WedinfoLogo variant="light" size="md" />
         </Link>
-        <nav className="flex max-w-[min(100%,28rem)] flex-wrap items-center justify-end gap-x-2.5 gap-y-1 text-xs sm:max-w-none sm:gap-x-4 sm:text-sm">
+        <nav className="flex min-w-0 flex-nowrap items-center justify-end gap-x-2 overflow-x-auto whitespace-nowrap text-[11px] [scrollbar-width:none] sm:gap-x-3 sm:text-sm md:gap-x-4 [&::-webkit-scrollbar]:hidden">
           <Link
             href="/#realizacje"
-            className="text-[var(--foreground)]/65 transition hover:text-[var(--w-gold-deep)]"
+            className="text-[#f2ebe3]/72 transition hover:text-[#faf6ee]"
           >
             Realizacje
           </Link>
           <Link
             href="/#opinie"
-            className="text-[var(--foreground)]/65 transition hover:text-[var(--w-gold-deep)]"
+            className="text-[#f2ebe3]/72 transition hover:text-[#faf6ee]"
           >
             Opinie
           </Link>
           <Link
             href="/#kontakt"
-            className="text-[var(--foreground)]/65 transition hover:text-[var(--w-gold-deep)]"
+            className="text-[#f2ebe3]/72 transition hover:text-[#faf6ee]"
           >
             Kontakt
           </Link>
           <Link
             href="/zloz-zapytanie"
-            className="font-medium text-[var(--w-gold-deep)] transition hover:text-[var(--w-gold-deep)]/85"
+            className="font-medium text-[#f0d9a8] transition hover:text-[#faf0dc]"
           >
             Złóż zapytanie
           </Link>
           <Link
             href="/admin/login"
-            className="text-[var(--foreground)]/45 transition hover:text-[var(--foreground)]/70"
+            className="text-[#f2ebe3]/42 transition hover:text-[#f2ebe3]/68"
           >
             Panel
           </Link>

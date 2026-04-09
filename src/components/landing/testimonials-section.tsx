@@ -1,4 +1,5 @@
 import { SectionDivider } from "./section-divider";
+import { SectionTexture } from "./section-texture";
 
 const quotes = [
   {
@@ -25,16 +26,17 @@ export function TestimonialsSection() {
   return (
     <section
       id="opinie"
-      className="relative scroll-mt-20 bg-gradient-to-b from-[var(--w-cream-b)] via-[var(--w-pink-dust)]/25 to-[var(--w-cream-a)] px-4 py-20 sm:px-6"
+      className="relative scroll-mt-20 overflow-hidden bg-gradient-to-b from-[var(--w-cream-b)] via-[var(--w-pink-dust)]/25 to-[var(--w-cream-a)] px-4 py-20 sm:px-6"
     >
+      <SectionTexture variant="paper" />
       <div
-        className="pointer-events-none absolute inset-0 opacity-50"
+        className="pointer-events-none absolute inset-0 z-[1] opacity-50"
         style={{
           background:
             "radial-gradient(ellipse at 25% 25%, rgba(201,168,185,0.2) 0%, transparent 52%), radial-gradient(ellipse at 75% 70%, rgba(232,199,212,0.35) 0%, transparent 48%)",
         }}
       />
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         <SectionDivider className="w-[min(100%,24rem)]" />
         <h2 className="font-wedinfo-serif mt-5 text-center text-3xl font-semibold tracking-tight text-[var(--foreground)] md:text-4xl">
           Opinie par

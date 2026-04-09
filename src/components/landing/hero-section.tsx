@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { SectionDivider } from "./section-divider";
+import { SectionTexture } from "./section-texture";
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-[78vh] flex-col justify-center overflow-hidden px-4 py-16 sm:px-6 sm:py-20">
+    <section className="relative flex min-h-[78vh] flex-col justify-center overflow-hidden bg-[var(--w-cream-b)] px-4 py-16 sm:px-6 sm:py-20">
+      <SectionTexture variant="pattern" />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[min(110vw,560px)] w-[min(110vw,560px)] -translate-x-1/2 -translate-y-[55%] opacity-[0.09]"
+        className="pointer-events-none absolute left-1/2 top-1/2 z-[1] h-[min(110vw,560px)] w-[min(110vw,560px)] -translate-x-1/2 -translate-y-[55%] opacity-[0.09]"
         aria-hidden
       >
         <svg viewBox="0 0 200 200" className="h-full w-full" fill="none">
@@ -19,19 +21,19 @@ export function HeroSection() {
         </svg>
       </div>
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/75 via-[var(--w-cream-a)]/40 to-transparent"
+        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-white/75 via-[var(--w-cream-a)]/40 to-transparent"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -left-1/4 top-0 h-[min(85vw,480px)] w-[min(85vw,480px)] rounded-full bg-[var(--w-pink-dust)]/35 blur-3xl"
+        className="pointer-events-none absolute -left-1/4 top-0 z-[1] h-[min(85vw,480px)] w-[min(85vw,480px)] rounded-full bg-[var(--w-pink-dust)]/35 blur-3xl"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -right-1/4 bottom-0 h-[min(70vw,400px)] w-[min(70vw,400px)] rounded-full bg-[var(--w-gold-soft-a)]/25 blur-3xl"
+        className="pointer-events-none absolute -right-1/4 bottom-0 z-[1] h-[min(70vw,400px)] w-[min(70vw,400px)] rounded-full bg-[var(--w-gold-soft-a)]/25 blur-3xl"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/55 to-transparent"
+        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-white/55 to-transparent"
         aria-hidden
       />
 
