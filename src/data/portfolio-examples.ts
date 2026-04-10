@@ -1,12 +1,36 @@
+export type PortfolioExampleBadge = "demo" | "live";
+
 export type PortfolioExample = {
   couple: string;
   slug: string;
   palette: string;
   accent: string;
   date: string;
+  /** Zrzut ekranu z `/public` — zastępuje szkic przeglądarki w nagłówku karty */
+  screenshotSrc?: string;
+  /** Publiczny URL działającej wizytówki */
+  liveUrl?: string;
+  /** Krótki opis pod zdjęciem (zamiast domyślnego) */
+  summary?: string;
+  /** Tekst pod nagłówkiem zamiast `slug.weddinfo.pl` */
+  urlDisplay?: string;
+  badge?: PortfolioExampleBadge;
 };
 
 export const portfolioExamples: readonly PortfolioExample[] = [
+  {
+    couple: "Ania & Maciej",
+    slug: "aniaimaciej",
+    palette: "from-[var(--w-cream-a)] via-[var(--w-beige-a)]/80 to-[var(--w-blush-a)]/50",
+    accent: "text-[var(--w-gold-deep)]",
+    date: "12 września 2026",
+    screenshotSrc: "/images/portfolio/ania-maciej-ex1.png",
+    liveUrl: "https://weddinfo-ex1.vercel.app/",
+    urlDisplay: "weddinfo-ex1.vercel.app",
+    summary:
+      "Kompletna strona weselna: powitanie z licznikiem, harmonogram, RSVP, dojazd, nocleg, galeria i kontakt — spójna typografia i stonowana kolorystyka.",
+    badge: "live",
+  },
   {
     couple: "Kamila & Bartek",
     slug: "kamilaibartek",
