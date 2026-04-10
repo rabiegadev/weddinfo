@@ -14,9 +14,8 @@ export function SiteFooter() {
           <div>
             <WedinfoLogo variant="light" size="md" className="select-none" />
             <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#c8bfb5]">
-              Strony pod wesele: harmonogram dnia, informacje dla gości i
-              potwierdzenie obecności — przygotowane tak, by Para i zaproszeni
-              mieli jasny, wspólny punkt odniesienia w sieci.
+              Ślubne witryny z harmonogramem dnia, danymi dla gości i potwierdzaniem obecności. Chodzi
+              o jedno, schludne miejsce w Internecie — wspólny adres dla Pary i zaproszonych.
             </p>
           </div>
           <nav className="flex flex-col gap-1 text-sm sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-2">

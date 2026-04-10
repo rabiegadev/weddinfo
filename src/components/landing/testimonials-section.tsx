@@ -41,9 +41,9 @@ export function TestimonialsSection() {
         <h2 className="font-wedinfo-serif mt-5 text-balance text-center text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl md:text-4xl">
           Opinie par
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-center text-[var(--foreground)]/70">
-          Krótkie głosy od osób, które chciały uporządkować komunikację z gośćmi —
-          przykładowe cytaty na potrzeby prezentacji strony.
+        <p className="mx-auto mt-3 max-w-2xl text-pretty text-center text-[var(--foreground)]/70">
+          Zamiast kolejnego wątku na czacie po prostu dawaliśmy gościom jeden konkretny adres w sieci.
+          Oto, co o tym mówią Pary Młode, które już skorzystały z naszych usług.
         </p>
         <ul className="mt-12 grid gap-6 md:grid-cols-3">
           {quotes.map((q) => (
