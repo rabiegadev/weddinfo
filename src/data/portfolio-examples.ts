@@ -32,6 +32,19 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     badge: "live",
   },
   {
+    couple: "Paulina & Bartosz",
+    slug: "paulinabartosz",
+    palette: "from-[var(--w-mauve)]/20 via-[#f8f4fb] to-[var(--w-pink-dust)]/35",
+    accent: "text-[var(--w-gold-deep)]",
+    date: "25 września 2026",
+    screenshotSrc: "/images/portfolio/paulina-bartosz-ex2.png",
+    liveUrl: "https://paulinabartosz.weddinfo.pl/",
+    urlDisplay: "paulinabartosz.weddinfo.pl",
+    summary:
+      "Lawendowe tło z delikatnym wzorem, złote kaligraficzne imiona i fioletowe akcenty w menu oraz etykietach; treść na białych kartach z miękkim cieniem — harmonogram, RSVP, dojazd, kontakt i odliczanie do ślubu w jednej spójnej całości.",
+    badge: "live",
+  },
+  {
     couple: "Kamila & Bartek",
     slug: "kamilaibartek",
     palette: "from-[var(--w-pink-dust)]/90 to-[var(--w-cream-a)]",
