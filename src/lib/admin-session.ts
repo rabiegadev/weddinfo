@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import { ADMIN_SESSION_TTL_SECONDS } from "@/lib/admin-session-config";
 
 type AdminPayload = { typ: "admin"; exp: number };
 
@@ -11,7 +12,7 @@ function getSecret(): string {
 }
 
 export function signAdminSessionToken(): string {
-  const exp = Date.now() + 14 * 24 * 60 * 60 * 1000;
+  const exp = Date.now() + ADMIN_SESSION_TTL_SECONDS * 1000;
   const payload: AdminPayload = { typ: "admin", exp };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const sig = createHmac("sha256", getSecret())

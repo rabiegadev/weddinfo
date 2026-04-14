@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { signAdminSessionToken } from "@/lib/admin-session";
+import { ADMIN_SESSION_TTL_SECONDS } from "@/lib/admin-session-config";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
 
 export type AdminLoginResult =
@@ -41,7 +42,7 @@ export async function adminLogin(password: string): Promise<AdminLoginResult> {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 14 * 24 * 60 * 60,
+    maxAge: ADMIN_SESSION_TTL_SECONDS,
   });
   return { ok: true };
 }
