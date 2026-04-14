@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
 type Payload = { publicId: string; exp: number };
+export const GUEST_SESSION_TTL_SECONDS = 30 * 60;
 
 function getSecret(): string {
   const s = process.env.WEDDINFO_COOKIE_SECRET;
@@ -11,7 +12,7 @@ function getSecret(): string {
 }
 
 export function signInquiryViewToken(publicId: string): string {
-  const exp = Date.now() + 7 * 24 * 60 * 60 * 1000;
+  const exp = Date.now() + GUEST_SESSION_TTL_SECONDS * 1000;
   const payload: Payload = { publicId, exp };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const sig = createHmac("sha256", getSecret())

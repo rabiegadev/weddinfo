@@ -1,5 +1,6 @@
 "use server";
 
+import { and, desc, eq, gt } from "drizzle-orm";
 import { getDb, inquiries } from "@/db";
 import { createPublicId } from "@/lib/id";
 import { sendInquiryConfirmationEmail } from "@/lib/mail";
@@ -58,6 +59,32 @@ export async function submitInquiry(
   const partner1LastName = isContact ? contactNameParts.lastName : data.partner1LastName;
   const partner2FirstName = isContact ? "-" : data.partner2FirstName;
   const partner2LastName = isContact ? "-" : data.partner2LastName;
+
+  // Basic idempotency guard against accidental double-submit within short window.
+  try {
+    const duplicateCutoff = new Date(Date.now() - 30 * 1000);
+    const [existingRecent] = await db
+      .select({ publicId: inquiries.publicId })
+      .from(inquiries)
+      .where(
+        and(
+          eq(inquiries.clientEmail, data.clientEmail),
+          eq(inquiries.inquiryType, data.inquiryType),
+          gt(inquiries.createdAt, duplicateCutoff),
+        ),
+      )
+      .orderBy(desc(inquiries.createdAt))
+      .limit(1);
+    if (existingRecent) {
+      return {
+        ok: true,
+        publicId: existingRecent.publicId,
+        mailSent: true,
+      };
+    }
+  } catch (e) {
+    console.error("[submitInquiry] duplicate-check failed", e);
+  }
 
   try {
     await db.insert(inquiries).values({

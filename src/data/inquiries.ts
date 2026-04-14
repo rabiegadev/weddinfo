@@ -1,6 +1,6 @@
 import { desc, eq, type InferSelectModel } from "drizzle-orm";
 import { getDb, inquiries } from "@/db";
-import type { ScheduleRow } from "@/db/schema";
+import type { ScheduleRow, ScheduleSuggestion } from "@/db/schema";
 
 type InquiryRow = InferSelectModel<typeof inquiries>;
 
@@ -18,14 +18,34 @@ export type SafeInquiry = {
   locationName: string | null;
   locationLat: string | null;
   locationLng: string | null;
+  weddingVenueName: string | null;
+  weddingVenuePostalCode: string | null;
+  weddingVenueCity: string | null;
+  weddingVenueStreet: string | null;
+  weddingVenueMapLink: string | null;
+  ceremonyType: string | null;
+  ceremonyName: string | null;
+  ceremonyPostalCode: string | null;
+  ceremonyCity: string | null;
+  ceremonyStreet: string | null;
+  ceremonyMapLink: string | null;
+  ceremonyOtherDetails: string | null;
+  travelDetails: string | null;
   colorPalette: string | null;
   themes: string | null;
+  templateName: string | null;
   clientEmail: string;
   clientPhone: string | null;
   schedule: ScheduleRow[];
+  schedulePreferences: string | null;
+  scheduleSuggestions: ScheduleSuggestion[];
   accommodationNote: string | null;
+  overnightTransportNote: string | null;
+  afterpartyNote: string | null;
+  guestInfoNote: string | null;
   rsvpEnabled: boolean;
   rsvpDeadline: string | null;
+  rsvpNotes: string | null;
   extraNotes: string | null;
   heroPhotoName: string | null;
   inspirationFilesNames: string[];
@@ -48,14 +68,34 @@ function toSafe(row: InquiryRow): SafeInquiry {
     locationName: row.locationName,
     locationLat: row.locationLat,
     locationLng: row.locationLng,
+    weddingVenueName: row.weddingVenueName,
+    weddingVenuePostalCode: row.weddingVenuePostalCode,
+    weddingVenueCity: row.weddingVenueCity,
+    weddingVenueStreet: row.weddingVenueStreet,
+    weddingVenueMapLink: row.weddingVenueMapLink,
+    ceremonyType: row.ceremonyType,
+    ceremonyName: row.ceremonyName,
+    ceremonyPostalCode: row.ceremonyPostalCode,
+    ceremonyCity: row.ceremonyCity,
+    ceremonyStreet: row.ceremonyStreet,
+    ceremonyMapLink: row.ceremonyMapLink,
+    ceremonyOtherDetails: row.ceremonyOtherDetails,
+    travelDetails: row.travelDetails,
     colorPalette: row.colorPalette,
     themes: row.themes,
+    templateName: row.templateName,
     clientEmail: row.clientEmail,
     clientPhone: row.clientPhone,
     schedule: row.schedule ?? [],
+    schedulePreferences: row.schedulePreferences,
+    scheduleSuggestions: row.scheduleSuggestions ?? [],
     accommodationNote: row.accommodationNote,
+    overnightTransportNote: row.overnightTransportNote,
+    afterpartyNote: row.afterpartyNote,
+    guestInfoNote: row.guestInfoNote,
     rsvpEnabled: row.rsvpEnabled,
     rsvpDeadline: row.rsvpDeadline,
+    rsvpNotes: row.rsvpNotes,
     extraNotes: row.extraNotes,
     heroPhotoName: row.heroPhotoName,
     inspirationFilesNames: row.inspirationFilesNames ?? [],

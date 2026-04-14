@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { weddingTemplateOptions } from "@/data/wedding-templates";
 import { submitInquiry, type SubmitInquiryResult } from "./actions";
@@ -35,6 +35,7 @@ export function InquiryForm() {
   const [schedule, setSchedule] = useState<ScheduleRow[]>([emptyScheduleRow()]);
   const [schedulePreferences, setSchedulePreferences] = useState("");
   const [selectedSuggestions, setSelectedSuggestions] = useState<string[]>([]);
+  const submitLockRef = useRef(false);
 
   function appendSuggestion(value: string) {
     setSelectedSuggestions((prev) => {
@@ -50,6 +51,8 @@ export function InquiryForm() {
   }
 
   async function handleSubmit(formData: FormData) {
+    if (submitLockRef.current) return;
+    submitLockRef.current = true;
     setUploadNotice(null);
     const getOptionalText = (key: string): string | undefined => {
       const value = formData.get(key);
@@ -151,6 +154,7 @@ export function InquiryForm() {
       setResult(res);
     } finally {
       setPending(false);
+      submitLockRef.current = false;
     }
   }
 

@@ -10,7 +10,11 @@ import {
   getInquiryInternalIdByPublicId,
 } from "@/data/inquiries";
 import { insertRsvpResponse } from "@/data/rsvp-responses";
-import { verifyInquiryViewToken, signInquiryViewToken } from "@/lib/inquiry-session";
+import {
+  GUEST_SESSION_TTL_SECONDS,
+  signInquiryViewToken,
+  verifyInquiryViewToken,
+} from "@/lib/inquiry-session";
 import { verifyGuestPassword } from "@/lib/password";
 import {
   messageBodySchema,
@@ -18,7 +22,7 @@ import {
 } from "@/lib/validation/correspondence";
 import { z } from "zod";
 
-const COOKIE = "weddinfo_inquiry_view";
+const COOKIE = "weddinfo_guest_view";
 
 export async function unlockInquiryWithPassword(
   publicId: string,
@@ -51,8 +55,8 @@ export async function unlockInquiryWithPassword(
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 7 * 24 * 60 * 60,
+    path: "/zapytanie",
+    maxAge: GUEST_SESSION_TTL_SECONDS,
   });
   return { ok: true };
 }
@@ -62,7 +66,17 @@ export async function inquiryViewCookieValid(
 ): Promise<boolean> {
   const jar = await cookies();
   const raw = jar.get(COOKIE)?.value;
-  return verifyInquiryViewToken(raw, publicId);
+  const valid = verifyInquiryViewToken(raw, publicId);
+  if (!valid) return false;
+  const refreshed = signInquiryViewToken(publicId);
+  jar.set(COOKIE, refreshed, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/zapytanie",
+    maxAge: GUEST_SESSION_TTL_SECONDS,
+  });
+  return true;
 }
 
 export type GuestActionResult = { ok: true } | { ok: false; error: string };
