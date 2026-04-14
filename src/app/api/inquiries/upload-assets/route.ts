@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("[upload-assets] upload failed", error);
     return NextResponse.json(
-      { ok: false, error: "Nie udało się zapisać plików na serwerze." },
+      { ok: false, error: "Nie udało się zapisać plików na serwerze plików." },
       { status: 500 },
     );
   }

@@ -1,0 +1,93 @@
+<?php
+declare(strict_types=1);
+
+// Skopiuj ten plik jako upload.php na files.weddinfo.pl
+// i ustaw własny sekret.
+
+header('Content-Type: application/json; charset=utf-8');
+
+$uploadToken = 'CHANGE_ME_TO_STRONG_SECRET';
+$uploadsRoot = __DIR__ . '/uploads';
+
+function respond(int $status, array $payload): void {
+    http_response_code($status);
+    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+
+function normalizePath(string $path): string {
+    $path = trim($path);
+    if ($path === '') {
+        return '';
+    }
+    $path = str_replace('\\', '/', $path);
+    $path = preg_replace('/[^a-zA-Z0-9_\/\.-]/', '_', $path);
+    $path = preg_replace('#/+#', '/', $path);
+    $path = ltrim($path, '/');
+    if (str_contains($path, '..')) {
+        return '';
+    }
+    return $path;
+}
+
+$auth = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+if (!str_starts_with($auth, 'Bearer ')) {
+    respond(401, ['ok' => false, 'error' => 'Missing bearer token.']);
+}
+$token = substr($auth, 7);
+if (!hash_equals($uploadToken, $token)) {
+    respond(403, ['ok' => false, 'error' => 'Invalid token.']);
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    respond(405, ['ok' => false, 'error' => 'Method not allowed.']);
+}
+
+$path = normalizePath((string)($_POST['path'] ?? ''));
+if ($path === '') {
+    respond(400, ['ok' => false, 'error' => 'Missing path.']);
+}
+
+if (!isset($_FILES['file']) || !is_array($_FILES['file'])) {
+    respond(400, ['ok' => false, 'error' => 'Missing file.']);
+}
+
+$file = $_FILES['file'];
+if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+    respond(400, ['ok' => false, 'error' => 'Upload error.']);
+}
+
+$tmpName = (string)($file['tmp_name'] ?? '');
+if (!is_uploaded_file($tmpName)) {
+    respond(400, ['ok' => false, 'error' => 'Invalid upload source.']);
+}
+
+$finfo = new finfo(FILEINFO_MIME_TYPE);
+$mime = (string)$finfo->file($tmpName);
+$allowed = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+];
+if (!in_array($mime, $allowed, true)) {
+    respond(400, ['ok' => false, 'error' => 'Unsupported file type.']);
+}
+
+$targetPath = $uploadsRoot . '/' . $path;
+$targetDir = dirname($targetPath);
+if (!is_dir($targetDir) && !mkdir($targetDir, 0775, true) && !is_dir($targetDir)) {
+    respond(500, ['ok' => false, 'error' => 'Failed to create directory.']);
+}
+
+if (!move_uploaded_file($tmpName, $targetPath)) {
+    respond(500, ['ok' => false, 'error' => 'Failed to save file.']);
+}
+
+$publicBase = 'https://files.weddinfo.pl/uploads';
+$publicPath = str_replace('\\', '/', $path);
+respond(200, [
+    'ok' => true,
+    'path' => $publicPath,
+    'url' => $publicBase . '/' . $publicPath,
+]);

@@ -1,5 +1,4 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const MB = 1024 * 1024;
@@ -10,15 +9,12 @@ const allowedMimeTypes = new Set([
   "image/gif",
 ]);
 
-function getUploadRootDir(): string {
-  return (
-    process.env.WEDDINFO_UPLOAD_DIR ||
-    path.join(/* turbopackIgnore: true */ process.cwd(), "uploads", "inquiries")
-  );
-}
-
 export function getUploadPublicBaseUrl(): string {
-  return process.env.WEDDINFO_UPLOAD_BASE_URL || "/api/uploads/inquiries";
+  const raw = process.env.FILES_PUBLIC_BASE_URL?.trim();
+  if (!raw) {
+    throw new Error("FILES_PUBLIC_BASE_URL is not set");
+  }
+  return raw.replace(/\/$/, "");
 }
 
 function safeExtensionFromMime(mimeType: string): string {
@@ -30,6 +26,15 @@ function safeExtensionFromMime(mimeType: string): string {
 
 function safeSegment(input: string): string {
   return input.replace(/[^a-zA-Z0-9_-]/g, "_");
+}
+
+function getFilesUploadEndpoint(): { endpoint: string; token: string } {
+  const endpoint = process.env.FILES_UPLOAD_ENDPOINT?.trim();
+  const token = process.env.FILES_UPLOAD_TOKEN?.trim();
+  if (!endpoint || !token) {
+    throw new Error("Missing files server config (FILES_UPLOAD_ENDPOINT, FILES_UPLOAD_TOKEN).");
+  }
+  return { endpoint, token };
 }
 
 export function assertAllowedImageFile(file: File, maxBytes: number): string | null {
@@ -50,7 +55,6 @@ export async function storeInquiryImage(params: {
   bucket: "hero" | "inspiration";
   file: File;
 }): Promise<{ relativePath: string; publicUrl: string; originalName: string }> {
-  const rootDir = getUploadRootDir();
   const ext = safeExtensionFromMime(params.file.type);
   const timestamp = Date.now();
   const fileName = `${timestamp}_${randomUUID()}${ext}`;
@@ -59,13 +63,34 @@ export async function storeInquiryImage(params: {
     params.bucket,
     fileName,
   );
-  const fullPath = path.join(rootDir, relativePath);
+  const { endpoint, token } = getFilesUploadEndpoint();
+  const uploadFormData = new FormData();
+  uploadFormData.set("path", relativePath);
+  uploadFormData.set("file", params.file);
 
-  await mkdir(path.dirname(fullPath), { recursive: true });
-  const bytes = Buffer.from(await params.file.arrayBuffer());
-  await writeFile(fullPath, bytes);
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: uploadFormData,
+  });
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `Upload server error: HTTP ${response.status}`);
+  }
 
-  const publicBase = getUploadPublicBaseUrl().replace(/\/$/, "");
-  const publicUrl = `${publicBase}/${relativePath.split(path.sep).join("/")}`;
+  const payload = (await response.json().catch(() => null)) as
+    | { ok?: boolean; url?: string; path?: string }
+    | null;
+  if (!payload?.ok) {
+    throw new Error("Upload server returned invalid response.");
+  }
+
+  const publicBase = getUploadPublicBaseUrl();
+  const uploadedPath = payload.path?.trim() || relativePath;
+  const publicUrl =
+    payload.url?.trim() ||
+    `${publicBase}/${uploadedPath.split(path.sep).join("/")}`;
   return { relativePath, publicUrl, originalName: params.file.name };
 }
