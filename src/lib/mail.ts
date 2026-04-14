@@ -1,3 +1,5 @@
+import nodemailer from "nodemailer";
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -47,41 +49,48 @@ function buildInquiryEmailHtml(p: InquiryMailParams): string {
 }
 
 /**
- * Wysyła potwierdzenie przez <a href="https://resend.com">Resend</a> (REST, bez dodatkowej paczki).
- * Wymaga `RESEND_API_KEY`. Nadawcę ustaw w `WEDDINFO_MAIL_FROM` (zweryfikowana domena w Resend).
+ * Wysyła potwierdzenie przez SMTP (np. konto e-mail w SeoHost).
+ * Wymaga: SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS.
  */
 export async function sendInquiryConfirmationEmail(
   p: InquiryMailParams,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  if (!apiKey) {
-    return { ok: false, error: "Brak RESEND_API_KEY" };
+  const smtpHost = process.env.SMTP_HOST?.trim();
+  const smtpUser = process.env.SMTP_USER?.trim();
+  const smtpPass = process.env.SMTP_PASS?.trim();
+  const smtpPortRaw = process.env.SMTP_PORT?.trim();
+  const smtpSecureRaw = process.env.SMTP_SECURE?.trim().toLowerCase();
+  const smtpPort = smtpPortRaw ? Number(smtpPortRaw) : 587;
+  const smtpSecure = smtpSecureRaw ? smtpSecureRaw === "true" : smtpPort === 465;
+  if (!smtpHost || !smtpUser || !smtpPass || Number.isNaN(smtpPort)) {
+    return { ok: false, error: "Brak konfiguracji SMTP (SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS)." };
   }
 
   const from =
-    process.env.WEDDINFO_MAIL_FROM?.trim() ??
-    "Weddinfo <onboarding@resend.dev>";
+    process.env.WEDDINFO_MAIL_FROM?.trim() ?? `Weddinfo <${smtpUser}>`;
 
   const subject = `Weddinfo — potwierdzenie zapytania #${p.publicId}`;
-
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
+  const transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpSecure,
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
     },
-    body: JSON.stringify({
-      from,
-      to: [p.to],
-      subject,
-      html: buildInquiryEmailHtml(p),
-    }),
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("[mail] Resend error", res.status, text);
-    return { ok: false, error: text || `HTTP ${res.status}` };
+  try {
+    await transporter.sendMail({
+      from,
+      to: p.to,
+      subject,
+      html: buildInquiryEmailHtml(p),
+    });
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : "SMTP send failed";
+    console.error("[mail] SMTP error", errMsg);
+    return { ok: false, error: errMsg };
   }
 
   return { ok: true };

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -250,7 +251,7 @@ export function AdminInquiryPanel({
           Dodaj publiczny link (np. mapa w Google, PDF w chmurze). Etykieta jest widoczna dla gości.
         </p>
         {attachments.length > 0 ? (
-          <ul className="mt-2 space-y-1 text-sm">
+          <ul className="mt-2 space-y-3 text-sm">
             {attachments.map((a) => (
               <li key={a.id}>
                 <a
@@ -262,6 +263,20 @@ export function AdminInquiryPanel({
                   {a.role}
                 </a>
                 <span className="text-zinc-500"> · {formatWhen(a.createdAt)}</span>
+                {/\.(png|jpe?g|webp|gif)$/i.test(a.url) ? (
+                  <div className="mt-2">
+                    <a href={a.url} target="_blank" rel="noopener noreferrer">
+                      <Image
+                        src={a.url}
+                        alt={a.role}
+                        width={704}
+                        height={352}
+                        unoptimized
+                        className="max-h-44 w-auto rounded-lg border border-zinc-200 object-cover dark:border-zinc-700"
+                      />
+                    </a>
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>

@@ -32,7 +32,10 @@ export default async function AdminInquiryPage({ params }: Props) {
   ]);
 
   const guestPageUrl = `${base}/zapytanie/${encodeURIComponent(publicId)}`;
-  const names = `${inquiry.partner1FirstName} ${inquiry.partner1LastName} & ${inquiry.partner2FirstName} ${inquiry.partner2LastName}`;
+  const names =
+    inquiry.inquiryType === "contact"
+      ? (inquiry.contactFullName ?? `${inquiry.partner1FirstName} ${inquiry.partner1LastName}`)
+      : `${inquiry.partner1FirstName} ${inquiry.partner1LastName} & ${inquiry.partner2FirstName} ${inquiry.partner2LastName}`;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
@@ -69,6 +72,31 @@ export default async function AdminInquiryPage({ params }: Props) {
           </Link>
         </p>
       </header>
+
+      <section className="mb-8 space-y-3 rounded-xl border border-zinc-200 bg-zinc-50/60 p-4 text-sm dark:border-zinc-800 dark:bg-zinc-900/40">
+        <p>
+          <span className="text-zinc-500">Typ formularza: </span>
+          <strong>{inquiry.inquiryType === "contact" ? "Formularz kontaktowy" : "Formularz wizytówki weselnej"}</strong>
+        </p>
+        {inquiry.contactMessage ? (
+          <p className="whitespace-pre-wrap">
+            <span className="text-zinc-500">Treść wiadomości: </span>
+            {inquiry.contactMessage}
+          </p>
+        ) : null}
+        {inquiry.locationName ? (
+          <p>
+            <span className="text-zinc-500">Lokalizacja wesela: </span>
+            {inquiry.locationName}
+          </p>
+        ) : null}
+        {inquiry.extraNotes ? (
+          <p className="whitespace-pre-wrap">
+            <span className="text-zinc-500">Dodatkowe uwagi: </span>
+            {inquiry.extraNotes}
+          </p>
+        ) : null}
+      </section>
 
       <AdminInquiryPanel
         publicId={publicId}

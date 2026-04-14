@@ -16,6 +16,20 @@ export type SubmitInquiryResult =
     }
   | { ok: false; error: string };
 
+function splitNameParts(fullName: string): { firstName: string; lastName: string } {
+  const normalized = fullName.trim();
+  if (!normalized) {
+    return { firstName: "Kontakt", lastName: "Formularz" };
+  }
+  const parts = normalized.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) {
+    return { firstName: parts[0] ?? "Kontakt", lastName: "Formularz" };
+  }
+  const firstName = parts.shift() ?? "Kontakt";
+  const lastName = parts.join(" ") || "Formularz";
+  return { firstName, lastName };
+}
+
 export async function submitInquiry(
   raw: unknown,
 ): Promise<SubmitInquiryResult> {
@@ -36,27 +50,60 @@ export async function submitInquiry(
   const db = getDb();
   const weddingDate =
     data.weddingDate?.trim() ? data.weddingDate.trim() : null;
+  const isContact = data.inquiryType === "contact";
+  const contactNameParts = splitNameParts(data.contactFullName ?? "");
+  const partner1FirstName = isContact
+    ? contactNameParts.firstName
+    : data.partner1FirstName;
+  const partner1LastName = isContact ? contactNameParts.lastName : data.partner1LastName;
+  const partner2FirstName = isContact ? "-" : data.partner2FirstName;
+  const partner2LastName = isContact ? "-" : data.partner2LastName;
 
   try {
     await db.insert(inquiries).values({
       publicId,
-      partner1FirstName: data.partner1FirstName,
-      partner1LastName: data.partner1LastName,
-      partner2FirstName: data.partner2FirstName,
-      partner2LastName: data.partner2LastName,
+      inquiryType: data.inquiryType,
+      partner1FirstName,
+      partner1LastName,
+      partner2FirstName,
+      partner2LastName,
       weddingDate,
-      locationName: data.locationName,
+      locationName: data.locationName || null,
       locationLat: data.locationLat || null,
       locationLng: data.locationLng || null,
+      weddingVenueName: data.weddingVenueName || null,
+      weddingVenuePostalCode: data.weddingVenuePostalCode || null,
+      weddingVenueCity: data.weddingVenueCity || null,
+      weddingVenueStreet: data.weddingVenueStreet || null,
+      weddingVenueMapLink: data.weddingVenueMapLink || null,
+      ceremonyType: data.ceremonyType || null,
+      ceremonyName: data.ceremonyName || null,
+      ceremonyPostalCode: data.ceremonyPostalCode || null,
+      ceremonyCity: data.ceremonyCity || null,
+      ceremonyStreet: data.ceremonyStreet || null,
+      ceremonyMapLink: data.ceremonyMapLink || null,
+      ceremonyOtherDetails: data.ceremonyOtherDetails || null,
+      travelDetails: data.travelDetails || null,
       colorPalette: data.colorPalette || null,
       themes: data.themes || null,
+      templateName: data.templateName || null,
+      heroPhotoName: data.heroPhotoName || null,
+      inspirationFilesNames: data.inspirationFilesNames ?? [],
+      schedulePreferences: data.schedulePreferences || null,
+      scheduleSuggestions: data.scheduleSuggestions ?? [],
       clientEmail: data.clientEmail,
       clientPhone: data.clientPhone || null,
-      schedule: data.schedule,
+      schedule: data.schedule ?? [],
       accommodationNote: data.accommodationNote || null,
-      rsvpEnabled: data.rsvpEnabled,
+      overnightTransportNote: data.overnightTransportNote || null,
+      afterpartyNote: data.afterpartyNote || null,
+      guestInfoNote: data.guestInfoNote || null,
+      rsvpEnabled: data.rsvpEnabled ?? false,
       rsvpDeadline: data.rsvpDeadline || null,
+      rsvpNotes: data.rsvpNotes || null,
       extraNotes: data.extraNotes || null,
+      contactFullName: data.contactFullName || null,
+      contactMessage: data.contactMessage || null,
       guestPasswordHash,
     });
   } catch (e) {
@@ -68,7 +115,9 @@ export async function submitInquiry(
     };
   }
 
-  const coupleLabel = `${data.partner1FirstName} ${data.partner1LastName} & ${data.partner2FirstName} ${data.partner2LastName}`;
+  const coupleLabel = isContact
+    ? (data.contactFullName?.trim() || "Formularz kontaktowy")
+    : `${data.partner1FirstName} ${data.partner1LastName} & ${data.partner2FirstName} ${data.partner2LastName}`;
   const inquiryPath = `/zapytanie/${encodeURIComponent(publicId)}`;
 
   const mail = await sendInquiryConfirmationEmail({

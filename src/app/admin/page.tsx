@@ -20,6 +20,11 @@ function statusLabel(s: string) {
   }
 }
 
+function inquiryTypeLabel(value: string): string {
+  if (value === "contact") return "Kontakt";
+  return "Wizytówka";
+}
+
 export default async function AdminDashboardPage() {
   await requireAdminSession();
   const rows = await listInquiriesForAdmin();
@@ -70,6 +75,9 @@ export default async function AdminDashboardPage() {
                   Para
                 </th>
                 <th className="px-4 py-3 font-medium text-zinc-700 dark:text-zinc-300">
+                  Typ
+                </th>
+                <th className="px-4 py-3 font-medium text-zinc-700 dark:text-zinc-300">
                   Data wesela
                 </th>
                 <th className="px-4 py-3 font-medium text-zinc-700 dark:text-zinc-300">
@@ -91,11 +99,15 @@ export default async function AdminDashboardPage() {
                     {r.publicId}
                   </td>
                   <td className="px-4 py-3 text-zinc-900 dark:text-zinc-100">
-                    {r.partner1FirstName} {r.partner1LastName} &{" "}
-                    {r.partner2FirstName} {r.partner2LastName}
+                    {r.inquiryType === "contact"
+                      ? (r.contactFullName ?? `${r.partner1FirstName} ${r.partner1LastName}`)
+                      : `${r.partner1FirstName} ${r.partner1LastName} & ${r.partner2FirstName} ${r.partner2LastName}`}
                   </td>
                   <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
-                    {r.weddingDate ?? "—"}
+                    {inquiryTypeLabel(r.inquiryType)}
+                  </td>
+                  <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+                    {r.inquiryType === "contact" ? "—" : (r.weddingDate ?? "—")}
                   </td>
                   <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
                     {statusLabel(r.status)}

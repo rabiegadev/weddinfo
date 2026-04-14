@@ -11,36 +11,35 @@ export function PortfolioExampleCard({ item }: { item: PortfolioExample }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--w-gold-deep)]/15 bg-white/70 shadow-sm shadow-[var(--w-gold-deep)]/8 transition hover:border-[var(--w-gold-deep)]/28 hover:shadow-md"
     >
       {item.screenshotSrc ? (
-        <div className="relative h-48 w-full overflow-hidden">
-          <Image
-            src={item.screenshotSrc}
-            alt={`Wizytówka weselna — ${item.couple}`}
-            fill
-            className="object-cover object-top"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={isLive}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-          <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 px-4 pt-4">
-            <div>
-              <p className="font-wedinfo-serif text-lg font-semibold italic text-[#fdfaf6] drop-shadow-md">
-                {item.couple}
-              </p>
-              <p className="mt-1 text-xs font-medium uppercase tracking-wider text-white/85 drop-shadow-sm">
-                {item.date}
-              </p>
-            </div>
-            <span
-              className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm ${
-                isLive
-                  ? "border border-white/35 bg-[var(--w-gold-deep)]/92 text-[#fdfaf6]"
-                  : "bg-white/75 text-[var(--foreground)]/50"
-              }`}
-            >
-              {isLive ? "Na żywo" : "Demo"}
-            </span>
+        item.liveUrl ? (
+          <Link
+            href={item.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative block h-48 w-full overflow-hidden"
+            aria-label={`Otwórz stronę: ${item.couple}`}
+          >
+            <Image
+              src={item.screenshotSrc}
+              alt={`Wizytówka weselna — ${item.couple}`}
+              fill
+              className="object-cover object-top transition duration-300 group-hover:scale-[1.02]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={isLive}
+            />
+          </Link>
+        ) : (
+          <div className="relative h-48 w-full overflow-hidden">
+            <Image
+              src={item.screenshotSrc}
+              alt={`Wizytówka weselna — ${item.couple}`}
+              fill
+              className="object-cover object-top"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={isLive}
+            />
           </div>
-        </div>
+        )
       ) : (
         <div className={`relative h-36 bg-gradient-to-br ${item.palette} px-4 pt-6`}>
           <div className="absolute inset-0 bg-gradient-to-t from-white/45 to-transparent" />
@@ -68,17 +67,26 @@ export function PortfolioExampleCard({ item }: { item: PortfolioExample }) {
         </div>
       )}
       <div className="flex flex-1 flex-col gap-3 p-5">
-        {item.liveUrl ? (
-          <p className="text-xs">
-            <a
-              href={item.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[var(--w-gold-deep)] underline-offset-2 transition hover:text-[var(--foreground)] hover:underline"
+        {item.screenshotSrc ? (
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-wedinfo-serif text-lg font-semibold italic text-[var(--w-gold-deep)]">
+                {item.couple}
+              </p>
+              <p className="mt-1 text-xs font-medium uppercase tracking-wider text-[var(--foreground)]/55">
+                {item.date}
+              </p>
+            </div>
+            <span
+              className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                isLive
+                  ? "bg-[var(--w-gold-deep)]/92 text-[#fdfaf6]"
+                  : "bg-[var(--foreground)]/10 text-[var(--foreground)]/55"
+              }`}
             >
-              {item.urlDisplay ?? item.liveUrl.replace(/^https?:\/\//, "")}
-            </a>
-          </p>
+              {isLive ? "Na żywo" : "Demo"}
+            </span>
+          </div>
         ) : (
           <p className="text-xs text-[var(--foreground)]/55">
             <span className="font-mono text-[var(--foreground)]/40">{item.slug}</span>

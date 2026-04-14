@@ -7,10 +7,13 @@ type InquiryRow = InferSelectModel<typeof inquiries>;
 export type SafeInquiry = {
   publicId: string;
   status: string;
+  inquiryType: string;
   partner1FirstName: string;
   partner1LastName: string;
   partner2FirstName: string;
   partner2LastName: string;
+  contactFullName: string | null;
+  contactMessage: string | null;
   weddingDate: string | null;
   locationName: string | null;
   locationLat: string | null;
@@ -24,6 +27,8 @@ export type SafeInquiry = {
   rsvpEnabled: boolean;
   rsvpDeadline: string | null;
   extraNotes: string | null;
+  heroPhotoName: string | null;
+  inspirationFilesNames: string[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -32,10 +37,13 @@ function toSafe(row: InquiryRow): SafeInquiry {
   return {
     publicId: row.publicId,
     status: row.status,
+    inquiryType: row.inquiryType,
     partner1FirstName: row.partner1FirstName,
     partner1LastName: row.partner1LastName,
     partner2FirstName: row.partner2FirstName,
     partner2LastName: row.partner2LastName,
+    contactFullName: row.contactFullName,
+    contactMessage: row.contactMessage,
     weddingDate: row.weddingDate,
     locationName: row.locationName,
     locationLat: row.locationLat,
@@ -49,6 +57,8 @@ function toSafe(row: InquiryRow): SafeInquiry {
     rsvpEnabled: row.rsvpEnabled,
     rsvpDeadline: row.rsvpDeadline,
     extraNotes: row.extraNotes,
+    heroPhotoName: row.heroPhotoName,
+    inspirationFilesNames: row.inspirationFilesNames ?? [],
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
