@@ -9,7 +9,6 @@ import type { InquiryMessageRow } from "@/data/inquiry-messages";
 import type { RsvpResponseRow } from "@/data/rsvp-responses";
 import {
   adminAddAttachment,
-  adminCreateReplyLink,
   adminPostMessage,
   adminUpdateStatus,
 } from "./actions";
@@ -103,23 +102,6 @@ export function AdminInquiryPanel({
       }
     } finally {
       setAttPending(false);
-    }
-  }
-
-  const [linkOut, setLinkOut] = useState<string | null>(null);
-  const [linkErr, setLinkErr] = useState<string | null>(null);
-  const [linkPending, setLinkPending] = useState(false);
-
-  async function makeReplyLink() {
-    setLinkErr(null);
-    setLinkOut(null);
-    setLinkPending(true);
-    try {
-      const res = await adminCreateReplyLink(publicId);
-      if (!res.ok) setLinkErr(res.error);
-      else setLinkOut(res.url);
-    } finally {
-      setLinkPending(false);
     }
   }
 
@@ -218,29 +200,6 @@ export function AdminInquiryPanel({
             {msgPending ? "Wysyłanie…" : "Wyślij jako zespół"}
           </button>
         </form>
-      </section>
-
-      <section>
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-rose-900/80 dark:text-rose-200/90">
-          Link do jednorazowej odpowiedzi (7 dni)
-        </h2>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Gość może wysłać jedną wiadomość bez hasła. Link wygaśnie lub zdezaktywuje się po użyciu.
-        </p>
-        <button
-          type="button"
-          onClick={makeReplyLink}
-          disabled={linkPending}
-          className="mt-2 rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-100 disabled:opacity-60 dark:border-zinc-600 dark:hover:bg-zinc-800"
-        >
-          {linkPending ? "Generowanie…" : "Wygeneruj link"}
-        </button>
-        {linkErr ? <p className="mt-2 text-sm text-red-600">{linkErr}</p> : null}
-        {linkOut ? (
-          <p className="mt-2 break-all rounded-lg bg-zinc-100 p-2 font-mono text-xs dark:bg-zinc-900">
-            {linkOut}
-          </p>
-        ) : null}
       </section>
 
       <section>

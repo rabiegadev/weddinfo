@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { InquiryAttachmentRow } from "@/data/inquiry-attachments";
 import type { InquiryMessageRow } from "@/data/inquiry-messages";
+import type { RsvpResponseRow } from "@/data/rsvp-responses";
 import { postGuestMessage, submitGuestRsvp } from "./actions";
 
 function formatWhen(d: Date) {
@@ -18,12 +19,21 @@ export function GuestCorrespondenceSection({
   messages,
   attachments,
   rsvpEnabled,
+  inquiryStatus,
+  rsvps,
 }: {
   publicId: string;
   messages: InquiryMessageRow[];
   attachments: InquiryAttachmentRow[];
   rsvpEnabled: boolean;
+  inquiryStatus: string;
+  rsvps: RsvpResponseRow[];
 }) {
+  const showRsvpManagement =
+    rsvpEnabled && (inquiryStatus === "in_progress" || inquiryStatus === "closed");
+  const attendingCount = rsvps.filter((r) => r.attending).length;
+  const notAttendingCount = rsvps.length - attendingCount;
+
   return (
     <div className="space-y-8">
       {attachments.length > 0 ? (
@@ -84,7 +94,62 @@ export function GuestCorrespondenceSection({
         <GuestMessageForm publicId={publicId} />
       </section>
 
-      {rsvpEnabled ? <GuestRsvpForm publicId={publicId} /> : null}
+      {showRsvpManagement ? (
+        <section className="space-y-4 rounded-xl border border-zinc-200 bg-zinc-50/50 p-4 dark:border-zinc-700 dark:bg-zinc-950/40">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-rose-900/80 dark:text-rose-200/90">
+            RSVP (ręczne notowanie)
+          </h2>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            Uzupełnij odpowiedź ręcznie, np. gdy gość potwierdzi obecność telefonicznie lub osobiście.
+          </p>
+          <GuestRsvpForm publicId={publicId} />
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+              Odpowiedzi RSVP
+            </h3>
+            {rsvps.length === 0 ? (
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                Brak zapisanych odpowiedzi RSVP.
+              </p>
+            ) : (
+              <ul className="space-y-2">
+                {rsvps.map((rsvp) => (
+                  <li
+                    key={rsvp.id}
+                    className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                  >
+                    <p className="font-medium text-zinc-900 dark:text-zinc-100">
+                      {rsvp.guestName}
+                    </p>
+                    <p className="text-zinc-600 dark:text-zinc-400">
+                      Obecność: {rsvp.attending ? "Tak" : "Nie"}
+                      {rsvp.guestEmail ? ` · ${rsvp.guestEmail}` : ""}
+                    </p>
+                    {rsvp.dietaryNote ? (
+                      <p className="whitespace-pre-wrap text-zinc-600 dark:text-zinc-400">
+                        Uwagi: {rsvp.dietaryNote}
+                      </p>
+                    ) : null}
+                    <p className="text-xs text-zinc-500">{formatWhen(rsvp.createdAt)}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="rounded-lg border border-zinc-200 bg-white px-3 py-3 text-sm dark:border-zinc-700 dark:bg-zinc-900">
+            <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+              Podsumowanie RSVP
+            </p>
+            <p className="mt-1 text-zinc-600 dark:text-zinc-400">
+              Łącznie odpowiedzi: {rsvps.length}
+              {" · "}
+              Będzie: {attendingCount}
+              {" · "}
+              Nie będzie: {notAttendingCount}
+            </p>
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
@@ -179,14 +244,7 @@ function GuestRsvpForm({ publicId }: { publicId: string }) {
   }
 
   return (
-    <section className="rounded-xl border border-zinc-200 bg-zinc-50/50 p-4 dark:border-zinc-700 dark:bg-zinc-950/40">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-rose-900/80 dark:text-rose-200/90">
-        RSVP
-      </h2>
-      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        Potwierdź obecność — dane widzi wyłącznie para młoda i zespół.
-      </p>
-      <form onSubmit={handleSubmit} className="mt-4 space-y-3 text-sm">
+    <form onSubmit={handleSubmit} className="space-y-3 text-sm">
         {error ? (
           <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
         ) : null}
@@ -245,9 +303,8 @@ function GuestRsvpForm({ publicId }: { publicId: string }) {
           disabled={pending}
           className="rounded-full bg-rose-800 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-900 disabled:opacity-60 dark:bg-rose-700"
         >
-          {pending ? "Zapisywanie…" : "Wyślij RSVP"}
+          {pending ? "Zapisywanie…" : "Dodaj odpowiedź RSVP"}
         </button>
       </form>
-    </section>
   );
 }

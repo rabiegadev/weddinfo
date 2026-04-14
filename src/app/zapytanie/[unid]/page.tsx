@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { listAttachmentsByInquiryId } from "@/data/inquiry-attachments";
 import { listMessagesByInquiryId } from "@/data/inquiry-messages";
+import { listRsvpByInquiryId } from "@/data/rsvp-responses";
 import {
   getInquiryByPublicId,
   getInquiryInternalIdByPublicId,
@@ -34,6 +35,8 @@ export default async function InquiryPage({ params }: Props) {
     inquiry && inquiryId ? await listMessagesByInquiryId(inquiryId) : [];
   const attachments =
     inquiry && inquiryId ? await listAttachmentsByInquiryId(inquiryId) : [];
+  const rsvps =
+    inquiry && inquiryId ? await listRsvpByInquiryId(inquiryId) : [];
 
   return (
     <div className="mx-auto min-h-[60vh] max-w-3xl px-4 py-12 sm:px-6">
@@ -50,6 +53,7 @@ export default async function InquiryPage({ params }: Props) {
           inquiry={inquiry}
           messages={messages}
           attachments={attachments}
+          rsvps={rsvps}
         />
       ) : (
         <InquiryPasswordForm publicId={unid} />

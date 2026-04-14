@@ -1,6 +1,7 @@
 import type { InquiryAttachmentRow } from "@/data/inquiry-attachments";
 import type { InquiryMessageRow } from "@/data/inquiry-messages";
 import type { SafeInquiry } from "@/data/inquiries";
+import type { RsvpResponseRow } from "@/data/rsvp-responses";
 import { GuestCorrespondenceSection } from "./guest-correspondence";
 
 function row(label: string, value: string | null | undefined) {
@@ -19,10 +20,12 @@ export function InquiryDetails({
   inquiry,
   messages,
   attachments,
+  rsvps,
 }: {
   inquiry: SafeInquiry;
   messages: InquiryMessageRow[];
   attachments: InquiryAttachmentRow[];
+  rsvps: RsvpResponseRow[];
 }) {
   const names = `${inquiry.partner1FirstName} ${inquiry.partner1LastName} & ${inquiry.partner2FirstName} ${inquiry.partner2LastName}`;
 
@@ -89,6 +92,8 @@ export function InquiryDetails({
         messages={messages}
         attachments={attachments}
         rsvpEnabled={inquiry.rsvpEnabled}
+        inquiryStatus={inquiry.status}
+        rsvps={rsvps}
       />
     </div>
   );
