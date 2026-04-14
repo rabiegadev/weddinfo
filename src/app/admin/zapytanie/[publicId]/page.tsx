@@ -38,7 +38,7 @@ export default async function AdminInquiryPage({ params }: Props) {
       : `${inquiry.partner1FirstName} ${inquiry.partner1LastName} & ${inquiry.partner2FirstName} ${inquiry.partner2LastName}`;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 pb-10 pt-[calc(5.5rem+env(safe-area-inset-top,0px))] sm:px-6 sm:pb-10 sm:pt-[calc(6rem+env(safe-area-inset-top,0px))]">
       <header className="mb-8 flex flex-col gap-2 border-b border-zinc-200 pb-6 dark:border-zinc-800">
         <p className="font-mono text-sm text-rose-800 dark:text-rose-200">
           #{inquiry.publicId}
