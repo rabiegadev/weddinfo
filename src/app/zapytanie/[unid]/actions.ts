@@ -66,17 +66,7 @@ export async function inquiryViewCookieValid(
 ): Promise<boolean> {
   const jar = await cookies();
   const raw = jar.get(COOKIE)?.value;
-  const valid = verifyInquiryViewToken(raw, publicId);
-  if (!valid) return false;
-  const refreshed = signInquiryViewToken(publicId);
-  jar.set(COOKIE, refreshed, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/zapytanie",
-    maxAge: GUEST_SESSION_TTL_SECONDS,
-  });
-  return true;
+  return verifyInquiryViewToken(raw, publicId);
 }
 
 export type GuestActionResult = { ok: true } | { ok: false; error: string };
@@ -96,6 +86,15 @@ export async function postGuestMessage(
   const inquiryId = await getInquiryInternalIdByPublicId(publicId);
   if (!inquiryId) return { ok: false, error: "Nie znaleziono zapytania." };
   await insertInquiryMessage(inquiryId, "guest", body.data);
+  const jar = await cookies();
+  const refreshed = signInquiryViewToken(publicId);
+  jar.set(COOKIE, refreshed, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/zapytanie",
+    maxAge: GUEST_SESSION_TTL_SECONDS,
+  });
   revalidatePath(`/zapytanie/${publicId}`);
   return { ok: true };
 }
@@ -133,6 +132,15 @@ export async function submitGuestRsvp(
     guestEmail,
     attending: parsed.data.attending,
     dietaryNote: parsed.data.dietaryNote?.trim() || null,
+  });
+  const jar = await cookies();
+  const refreshed = signInquiryViewToken(publicId);
+  jar.set(COOKIE, refreshed, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/zapytanie",
+    maxAge: GUEST_SESSION_TTL_SECONDS,
   });
   revalidatePath(`/zapytanie/${publicId}`);
   revalidatePath(`/admin/zapytanie/${publicId}`);
