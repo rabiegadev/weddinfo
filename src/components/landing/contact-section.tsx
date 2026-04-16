@@ -19,8 +19,7 @@ export function ContactSection() {
           Kontakt
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-[var(--foreground)]/70">
-          Masz pytanie o wizytówkę, termin lub własną domenę? Napisz — odpowiemy
-          możliwie szybko.
+          Pytania o termin, domenę lub zakres — jedna wiadomość i wracamy z konkretami.
         </p>
         <div className="mx-auto mt-12 grid max-w-3xl gap-6 sm:grid-cols-2">
           <div className="rounded-2xl border border-[var(--w-gold-deep)]/18 bg-gradient-to-br from-[var(--w-pink-dust)]/35 to-white/90 p-6 shadow-sm">
@@ -28,8 +27,7 @@ export function ContactSection() {
               Zapytanie o stronę
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-[var(--foreground)]/72">
-              Najwygodniej przez formularz — dostaniesz numer referencyjny i link do
-              statusu.
+              Formularz = numer referencyjny + link do statusu w jednym kroku.
             </p>
             <Link
               href="/zloz-zapytanie"
@@ -43,7 +41,7 @@ export function ContactSection() {
               Autor rozwiązania
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-[var(--foreground)]/72">
-              Projekt i rozwój strony: zespół{" "}
+              Rozwój:{" "}
               <a
                 href="https://rabiegadevelopment.pl"
                 target="_blank"
@@ -51,8 +49,8 @@ export function ContactSection() {
                 className="font-medium text-[var(--w-gold-deep)] underline-offset-2 hover:underline"
               >
                 rabiegadevelopment.pl
-              </a>
-              . Tam znajdziesz też inne realizacje i kontakt bezpośredni.
+              </a>{" "}
+              — więcej realizacji i bezpośredni kontakt.
             </p>
           </div>
         </div>

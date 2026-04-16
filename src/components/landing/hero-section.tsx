@@ -46,12 +46,8 @@ export function HeroSection() {
           Jedno miejsce ze wszystkim, co ważne dla Twoich gości.
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-[var(--foreground)]/72 sm:text-lg">
-          Harmonogram, dojazd, noclegi, potwierdzenia obecności (RSVP) — wszystkie informacje zebrane w
-          jednym, pięknym miejscu.
-        </p>
-        <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-[var(--foreground)]/72 sm:text-lg">
-          Stwórz czytelną, elegancką wizytówkę weselną pod własnym adresem w domenie Weddinfo. Możesz ją
-          łatwo połączyć z pozostałymi narzędziami Wedding Assistant.
+          Harmonogram, dojazd, noclegi i RSVP w jednej, czytelnej wizytówce pod adresem Weddinfo — bez
+          chaosu na czacie i w załącznikach.
         </p>
         <div className="mt-10 flex w-full max-w-md flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           <Link
@@ -68,7 +64,7 @@ export function HeroSection() {
           </Link>
         </div>
         <p className="mx-auto mt-5 max-w-lg text-balance text-center text-sm leading-relaxed text-[var(--foreground)]/55 sm:text-base">
-          Po wysłaniu formularza od razu otrzymasz numer zapytania i link do statusu realizacji.
+          Numer zapytania i status dostaniesz od razu po wysłaniu briefu.
         </p>
       </div>
     </section>

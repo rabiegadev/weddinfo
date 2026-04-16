@@ -42,8 +42,11 @@ export function TestimonialsSection() {
           Opinie par
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-pretty text-center text-[var(--foreground)]/70">
-          Zamiast kolejnego wątku na czacie po prostu dawaliśmy gościom jeden konkretny adres w sieci.
-          Oto, co o tym mówią Pary Młode, które już skorzystały z naszych usług.
+          <span className="font-medium text-[var(--foreground)]/85">
+            Opinie przykładowe / symulowane
+          </span>{" "}
+          — cytaty ilustrują sposób komunikacji z gośćmi; nie są to recenzje od realnych par z bazy
+          klientów.
         </p>
         <ul className="mt-12 grid gap-6 md:grid-cols-3">
           {quotes.map((q) => (

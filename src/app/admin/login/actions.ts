@@ -1,16 +1,35 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import bcrypt from "bcryptjs";
 import { signAdminSessionToken } from "@/lib/admin-session";
 import { ADMIN_SESSION_TTL_SECONDS } from "@/lib/admin-session-config";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import { getClientIpFromHeaders } from "@/lib/client-ip";
+import { checkRateLimitMemory } from "@/lib/rate-limit-memory";
 
 export type AdminLoginResult =
   | { ok: true }
   | { ok: false; error: string };
 
+const ADMIN_LOGIN_PER_IP_MAX = 15;
+const ADMIN_LOGIN_PER_IP_WINDOW_MS = 15 * 60 * 1000;
+
 export async function adminLogin(password: string): Promise<AdminLoginResult> {
+  const headerList = await headers();
+  const ip = getClientIpFromHeaders(headerList);
+  const rl = checkRateLimitMemory(
+    `admin-login:ip:${ip}`,
+    ADMIN_LOGIN_PER_IP_MAX,
+    ADMIN_LOGIN_PER_IP_WINDOW_MS,
+  );
+  if (!rl.ok) {
+    return {
+      ok: false,
+      error: `Zbyt wiele prób logowania. Spróbuj ponownie za ${rl.retryAfterSec} s.`,
+    };
+  }
+
   const hash = process.env.WEDDINFO_ADMIN_PASSWORD_HASH?.trim();
   if (!hash) {
     return {

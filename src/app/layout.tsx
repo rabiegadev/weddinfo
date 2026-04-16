@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
+import { MobileStickyCta } from "@/components/mobile-sticky-cta";
 import { ScrollBackdrop } from "@/components/scroll-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -53,6 +54,7 @@ export default function RootLayout({
         <ScrollBackdrop />
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>
+        <MobileStickyCta />
         <SiteFooter />
       </body>
     </html>

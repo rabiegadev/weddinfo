@@ -7,7 +7,7 @@ import { WelcomeScreen } from "@/components/landing/welcome-screen";
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col pb-24 md:pb-0">
       <WelcomeScreen />
       <div id="glowna-tresc" className="scroll-mt-header flex flex-1 flex-col">
         <HeroSection />

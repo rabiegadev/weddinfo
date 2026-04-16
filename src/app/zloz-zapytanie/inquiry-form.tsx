@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
 import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { weddingTemplateOptions } from "@/data/wedding-templates";
 import { submitInquiry, type SubmitInquiryResult } from "./actions";
 
@@ -29,6 +29,10 @@ export function InquiryForm() {
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<SubmitInquiryResult | null>(null);
   const [uploadNotice, setUploadNotice] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaQuestion, setCaptchaQuestion] = useState("");
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [captchaLoadError, setCaptchaLoadError] = useState<string | null>(null);
   const [mode, setMode] = useState<InquiryMode>("wedding_website");
   const [ceremonyType, setCeremonyType] = useState<"church" | "civil" | "outdoor" | "other">("church");
   const [rsvpOnlineEnabled, setRsvpOnlineEnabled] = useState(false);
@@ -36,6 +40,41 @@ export function InquiryForm() {
   const [schedulePreferences, setSchedulePreferences] = useState("");
   const [selectedSuggestions, setSelectedSuggestions] = useState<string[]>([]);
   const submitLockRef = useRef(false);
+
+  const loadCaptcha = useCallback(async () => {
+    setCaptchaLoadError(null);
+    try {
+      const res = await fetch("/api/captcha");
+      if (!res.ok) {
+        const msg =
+          res.status === 429
+            ? "Zbyt wiele prób pobrania zadania. Odczekaj chwilę i odśwież stronę."
+            : "Nie udało się załadować zadania zabezpieczającego.";
+        setCaptchaLoadError(msg);
+        setCaptchaToken("");
+        setCaptchaQuestion("");
+        return;
+      }
+      const data = (await res.json()) as { token?: string; question?: string; error?: string };
+      if (!data.token || !data.question) {
+        setCaptchaLoadError(data.error ?? "Błąd ładowania zadania.");
+        setCaptchaToken("");
+        setCaptchaQuestion("");
+        return;
+      }
+      setCaptchaToken(data.token);
+      setCaptchaQuestion(data.question);
+      setCaptchaAnswer("");
+    } catch {
+      setCaptchaLoadError("Nie udało się załadować zadania zabezpieczającego.");
+      setCaptchaToken("");
+      setCaptchaQuestion("");
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadCaptcha();
+  }, [loadCaptcha]);
 
   function appendSuggestion(value: string) {
     setSelectedSuggestions((prev) => {
@@ -80,6 +119,8 @@ export function InquiryForm() {
             .filter((row) => row.time.trim() && row.action.trim())
             .map((row) => ({ time: row.time.trim(), action: row.action.trim() }))
         : [];
+
+    const honeypot = getOptionalText("wedinfoHp") ?? "";
 
     const raw = {
       inquiryType,
@@ -128,8 +169,20 @@ export function InquiryForm() {
 
     setPending(true);
     try {
-      const res = await submitInquiry(raw);
-      if (res.ok && (heroPhoto || inspirationFiles.length > 0) && inquiryType === "wedding_website") {
+      const res = await submitInquiry(raw, {
+        captchaToken,
+        captchaAnswer,
+        honeypot,
+      });
+      if (!res.ok) {
+        void loadCaptcha();
+      }
+      if (
+        res.ok &&
+        !res.duplicateRecentSubmit &&
+        (heroPhoto || inspirationFiles.length > 0) &&
+        inquiryType === "wedding_website"
+      ) {
         const uploadFormData = new FormData();
         uploadFormData.set("publicId", res.publicId);
         if (heroPhoto) {
@@ -159,14 +212,29 @@ export function InquiryForm() {
   }
 
   if (result?.ok) {
+    const dup = Boolean(result.duplicateRecentSubmit);
     return (
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-6 text-emerald-950 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-100">
-        <h2 className="text-lg font-semibold">Zapytanie zapisane</h2>
+      <div
+        className={`rounded-2xl border p-6 ${
+          dup
+            ? "border-amber-200 bg-amber-50/90 text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/35 dark:text-amber-100"
+            : "border-emerald-200 bg-emerald-50/80 text-emerald-950 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-100"
+        }`}
+      >
+        <h2 className="text-lg font-semibold">
+          {dup ? "Zgłoszenie rozpoznane" : "Zapytanie zapisane"}
+        </h2>
         <p className="mt-2 text-sm leading-relaxed">
           Numer referencyjny:{" "}
           <span className="font-mono font-medium">#{result.publicId}</span>
         </p>
-        {result.mailSent ? (
+        {dup ? (
+          <p className="mt-2 text-sm leading-relaxed">
+            Przed chwilą przyjęliśmy już identyczne zgłoszenie (ten sam adres e-mail i typ
+            formularza). Nie tworzymy duplikatu ani nie wysyłamy ponownie wiadomości — użyj
+            linku z poprzedniej wiadomości lub przejdź do podglądu poniżej.
+          </p>
+        ) : result.mailSent ? (
           <p className="mt-2 text-sm leading-relaxed">
             Wysłaliśmy wiadomość na podany adres e-mail z linkiem do podglądu i
             hasłem dostępu. Sprawdź też folder spam.
@@ -185,7 +253,7 @@ export function InquiryForm() {
             ) : null}
           </div>
         )}
-        {result.mailSent && result.guestPassword ? (
+        {!dup && result.mailSent && result.guestPassword ? (
           <p className="mt-3 rounded-lg bg-white/60 p-3 text-xs dark:bg-black/20">
             <strong>Tryb dev:</strong> hasło dostępu:{" "}
             <span className="font-mono">{result.guestPassword}</span>
@@ -209,7 +277,13 @@ export function InquiryForm() {
   }
 
   return (
-    <form action={handleSubmit} className="flex flex-col gap-8">
+    <form action={handleSubmit} className="relative flex flex-col gap-8">
+      <div className="absolute -left-[10000px] top-0 h-px w-px overflow-hidden" aria-hidden>
+        <label>
+          Firma (zostaw puste)
+          <input type="text" name="wedinfoHp" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
       <section className="space-y-3">
         <div className="inline-flex w-full rounded-full border border-zinc-200 bg-zinc-100/70 p-1 dark:border-zinc-700 dark:bg-zinc-900/80">
           <button
@@ -697,10 +771,41 @@ export function InquiryForm() {
         </label>
       ) : null}
 
+      <section className="rounded-xl border border-zinc-200 bg-zinc-50/80 p-4 dark:border-zinc-700 dark:bg-zinc-900/40">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <label className="flex max-w-xs flex-col gap-1 text-sm">
+            <span className="font-medium text-zinc-700 dark:text-zinc-200">
+              {captchaQuestion || "Ładowanie zadania…"}
+            </span>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={captchaAnswer}
+              onChange={(e) => setCaptchaAnswer(e.target.value)}
+              placeholder="np. 12"
+              autoComplete="off"
+              className={fieldClass}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => void loadCaptcha()}
+            className="touch-manipulation min-h-11 shrink-0 rounded-lg border border-zinc-300 bg-white px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-900"
+          >
+            Nowe zadanie
+          </button>
+        </div>
+        {captchaLoadError ? (
+          <p className="mt-2 text-xs text-red-700 dark:text-red-300" role="alert">
+            {captchaLoadError}
+          </p>
+        ) : null}
+      </section>
+
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
         <button
           type="submit"
-          disabled={pending}
+          disabled={pending || !captchaToken}
           className="touch-manipulation min-h-12 w-full rounded-full bg-rose-800 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-rose-900 disabled:opacity-60 active:bg-rose-950 dark:bg-rose-700 dark:hover:bg-rose-600 sm:w-auto sm:text-sm [-webkit-tap-highlight-color:transparent]"
         >
           {pending ? "Wysyłanie…" : "Wyślij zapytanie"}
@@ -708,8 +813,15 @@ export function InquiryForm() {
       </div>
 
       <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
-        Wysyłając formularz akceptujesz kontakt zwrotny w sprawie wizytówki weselnej.
-        Szczegóły przetwarzania danych dodamy w polityce prywatności.
+        Wysyłając formularz wyrażasz zgodę na kontakt zwrotny w sprawie zapytania. Dane
+        przetwarzamy zgodnie z{" "}
+        <Link
+          href="/polityka-prywatnosci"
+          className="font-medium text-rose-800 underline-offset-2 hover:underline dark:text-rose-200"
+        >
+          polityką prywatności i informacją o RODO
+        </Link>
+        .
       </p>
     </form>
   );

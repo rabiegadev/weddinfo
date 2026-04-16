@@ -57,11 +57,66 @@ export function SiteHeader() {
           >
             Opinie
           </Link>
+          <details className="relative shrink-0">
+            <summary className="touch-manipulation inline-flex min-h-11 list-none items-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5 [&::-webkit-details-marker]:hidden">
+              Oferta
+            </summary>
+            <div className="absolute right-0 z-[60] mt-1 min-w-[11.5rem] rounded-xl border border-white/10 bg-[#1f1b17]/96 py-2 text-left shadow-xl backdrop-blur-xl">
+              <Link
+                href="/oferta#cennik"
+                className="block px-4 py-2.5 text-sm text-[#f2ebe3]/88 hover:bg-white/5 hover:text-[#faf6ee]"
+              >
+                Cennik
+              </Link>
+              <Link
+                href="/oferta#uslugi"
+                className="block px-4 py-2.5 text-sm text-[#f2ebe3]/88 hover:bg-white/5 hover:text-[#faf6ee]"
+              >
+                Usługi
+              </Link>
+              <Link
+                href="/oferta#co-dostajesz"
+                className="block px-4 py-2.5 text-sm text-[#f2ebe3]/88 hover:bg-white/5 hover:text-[#faf6ee]"
+              >
+                Co dostajesz
+              </Link>
+              <Link
+                href="/oferta#wspolpraca"
+                className="block px-4 py-2.5 text-sm text-[#f2ebe3]/88 hover:bg-white/5 hover:text-[#faf6ee]"
+              >
+                Współpraca
+              </Link>
+              <Link
+                href="/oferta#sla"
+                className="block px-4 py-2.5 text-sm text-[#f2ebe3]/88 hover:bg-white/5 hover:text-[#faf6ee]"
+              >
+                SLA
+              </Link>
+              <Link
+                href="/oferta#faq"
+                className="block px-4 py-2.5 text-sm text-[#f2ebe3]/88 hover:bg-white/5 hover:text-[#faf6ee]"
+              >
+                FAQ
+              </Link>
+              <Link
+                href="/oferta"
+                className="block border-t border-white/10 px-4 py-2.5 text-sm font-medium text-[#f0d9a8] hover:bg-white/5"
+              >
+                Cała oferta
+              </Link>
+            </div>
+          </details>
           <Link
             href="/#kontakt"
             className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
           >
             Kontakt
+          </Link>
+          <Link
+            href="/polityka-prywatnosci"
+            className="touch-manipulation inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/55 transition active:bg-white/5 hover:text-[#f2ebe3]/85 [-webkit-tap-highlight-color:transparent] sm:px-2.5"
+          >
+            RODO
           </Link>
           <Link
             href="/zloz-zapytanie"

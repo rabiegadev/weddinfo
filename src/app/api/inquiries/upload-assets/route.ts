@@ -2,12 +2,23 @@ import { and, eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import { getDb, inquiries } from "@/db";
 import { insertInquiryAttachment } from "@/data/inquiry-attachments";
+import { getClientIpFromHeaders } from "@/lib/client-ip";
+import { checkRateLimitMemory } from "@/lib/rate-limit-memory";
 import { assertAllowedImageFile, storeInquiryImage } from "@/lib/uploads";
 
 const HERO_LIMIT_BYTES = 8 * 1024 * 1024;
 const INSP_LIMIT_BYTES = 12 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIpFromHeaders(request.headers);
+  const rl = checkRateLimitMemory(`upload:ip:${ip}`, 40, 60 * 60 * 1000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { ok: false, error: `Zbyt wiele uploadów. Spróbuj za ${rl.retryAfterSec} s.` },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
+  }
+
   const formData = await request.formData();
   const publicIdValue = formData.get("publicId");
   const publicId = typeof publicIdValue === "string" ? publicIdValue.trim() : "";

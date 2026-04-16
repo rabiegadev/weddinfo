@@ -2,7 +2,7 @@
 
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getDb, inquiries } from "@/db";
 import { insertInquiryMessage } from "@/data/inquiry-messages";
 import {
@@ -15,7 +15,9 @@ import {
   signInquiryViewToken,
   verifyInquiryViewToken,
 } from "@/lib/inquiry-session";
+import { getClientIpFromHeaders } from "@/lib/client-ip";
 import { verifyGuestPassword } from "@/lib/password";
+import { checkRateLimitMemory } from "@/lib/rate-limit-memory";
 import {
   messageBodySchema,
   rsvpFormSchema,
@@ -24,10 +26,27 @@ import { z } from "zod";
 
 const COOKIE = "weddinfo_guest_view";
 
+const GUEST_UNLOCK_PER_KEY_MAX = 25;
+const GUEST_UNLOCK_WINDOW_MS = 15 * 60 * 1000;
+
 export async function unlockInquiryWithPassword(
   publicId: string,
   password: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  const headerList = await headers();
+  const ip = getClientIpFromHeaders(headerList);
+  const rl = checkRateLimitMemory(
+    `guest-unlock:${ip}:${publicId}`,
+    GUEST_UNLOCK_PER_KEY_MAX,
+    GUEST_UNLOCK_WINDOW_MS,
+  );
+  if (!rl.ok) {
+    return {
+      ok: false,
+      error: `Zbyt wiele prób odblokowania. Spróbuj ponownie za ${rl.retryAfterSec} s.`,
+    };
+  }
+
   if (!password.trim()) {
     return { ok: false, error: "Podaj hasło dostępu." };
   }

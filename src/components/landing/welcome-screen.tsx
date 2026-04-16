@@ -59,12 +59,11 @@ export function WelcomeScreen() {
               Wizytówka Twojego wesela
             </p>
             <p className="mt-5 text-pretty text-sm leading-relaxed text-[#ebe4d8]/92 sm:text-base">
-              Harmonogram ślubu i wesela, wskazówki dojazdu oraz zaproszenie do potwierdzenia obecności —
-              wszystko w jednym miejscu.
+              Harmonogram, dojazd i RSVP w jednym, spokojnym adresie dla gości — zamiast łańcucha
+              wiadomości.
             </p>
             <p className="mt-4 text-pretty text-sm leading-relaxed text-[#ebe4d8]/88 sm:text-base">
-              Zamiast wielu wiadomości i telefonów, daj swoim gościom jedną, piękną stronę ze wszystkimi
-              szczegółami Waszego Dnia.
+              Przewiń w dół — zobacz przykłady i złóż zapytanie, gdy będziesz gotowy.
             </p>
           </div>
         </div>

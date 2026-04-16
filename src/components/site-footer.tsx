@@ -14,19 +14,27 @@ export function SiteFooter() {
           <div>
             <WedinfoLogo variant="light" size="md" className="select-none" />
             <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#c8bfb5]">
-              Ślubne witryny z harmonogramem dnia, danymi dla gości i potwierdzaniem obecności. Chodzi
-              o jedno, schludne miejsce w Internecie — wspólny adres dla Pary i zaproszonych.
+              Jedna strona dla gości: harmonogram, dojazd i RSVP — spokój przed ślubem.
             </p>
           </div>
-          <nav className="flex flex-col gap-1 text-sm sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-2">
+          <nav
+            aria-label="Stopka — linki"
+            className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:flex sm:flex-wrap sm:gap-x-8 sm:gap-y-2"
+          >
             <Link
               href="/zloz-zapytanie"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 font-medium text-[#f0d9a8] transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
             >
               Złóż zapytanie
             </Link>
             <Link
-              href="/#realizacje"
+              href="/oferta"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+            >
+              Oferta i cennik
+            </Link>
+            <Link
+              href="/realizacje"
               className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
             >
               Realizacje
@@ -44,8 +52,14 @@ export function SiteFooter() {
               Kontakt
             </Link>
             <Link
+              href="/polityka-prywatnosci"
+              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+            >
+              Polityka prywatności
+            </Link>
+            <Link
               href="/admin/login"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 text-[#9a9088] transition hover:text-[#e8dfd4] [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
+              className="touch-manipulation col-span-2 inline-flex min-h-11 items-center rounded-lg py-2 text-[#9a9088] transition hover:text-[#e8dfd4] [-webkit-tap-highlight-color:transparent] sm:col-span-1 sm:min-h-0 sm:py-0"
             >
               Panel
             </Link>

@@ -1,11 +1,22 @@
 "use server";
 
 import { and, desc, eq, gt } from "drizzle-orm";
+import { headers } from "next/headers";
 import { getDb, inquiries } from "@/db";
+import { verifyCaptchaAnswer } from "@/lib/captcha";
+import { getClientIpFromHeaders } from "@/lib/client-ip";
 import { createPublicId } from "@/lib/id";
 import { sendInquiryConfirmationEmail } from "@/lib/mail";
 import { generateGuestPassword, hashGuestPassword } from "@/lib/password";
+import { checkRateLimitMemory } from "@/lib/rate-limit-memory";
 import { inquiryFormSchema } from "@/lib/validation/inquiry";
+
+export type InquiryAntiAbuseInput = {
+  captchaToken: string;
+  captchaAnswer: string;
+  /** Pole pułapka — musi pozostać puste. */
+  honeypot: string;
+};
 
 export type SubmitInquiryResult =
   | {
@@ -14,8 +25,15 @@ export type SubmitInquiryResult =
       /** Tylko gdy e-mail nie został wysłany — zapisz hasło i przekaż parze. */
       guestPassword?: string;
       mailSent: boolean;
+      /** Zwracane, gdy w ciągu ~30 s ponownie wysłano identyczny typ + ten sam e-mail (bez nowego rekordu). */
+      duplicateRecentSubmit?: boolean;
     }
   | { ok: false; error: string };
+
+const INQUIRY_PER_IP_MAX = 40;
+const INQUIRY_PER_IP_WINDOW_MS = 60 * 60 * 1000;
+const INQUIRY_PER_EMAIL_MAX = 10;
+const INQUIRY_PER_EMAIL_WINDOW_MS = 60 * 60 * 1000;
 
 function splitNameParts(fullName: string): { firstName: string; lastName: string } {
   const normalized = fullName.trim();
@@ -33,12 +51,52 @@ function splitNameParts(fullName: string): { firstName: string; lastName: string
 
 export async function submitInquiry(
   raw: unknown,
+  antiAbuse: InquiryAntiAbuseInput,
 ): Promise<SubmitInquiryResult> {
+  const headerList = await headers();
+  const ip = getClientIpFromHeaders(headerList);
+
+  if (antiAbuse.honeypot.trim()) {
+    return { ok: false, error: "Nie udało się wysłać formularza." };
+  }
+
+  const rlIp = checkRateLimitMemory(
+    `inquiry:ip:${ip}`,
+    INQUIRY_PER_IP_MAX,
+    INQUIRY_PER_IP_WINDOW_MS,
+  );
+  if (!rlIp.ok) {
+    return {
+      ok: false,
+      error: `Zbyt wiele zgłoszeń z tej sieci. Spróbuj ponownie za ${rlIp.retryAfterSec} s.`,
+    };
+  }
+
+  if (!verifyCaptchaAnswer(antiAbuse.captchaToken, antiAbuse.captchaAnswer)) {
+    return {
+      ok: false,
+      error:
+        "Nieprawidłowa odpowiedź z zadania lub wygasła sesja zabezpieczenia. Odśwież stronę i spróbuj ponownie.",
+    };
+  }
+
   const parsed = inquiryFormSchema.safeParse(raw);
   if (!parsed.success) {
     return { ok: false, error: "Sprawdź poprawność pól formularza." };
   }
   const data = parsed.data;
+
+  const rlEmail = checkRateLimitMemory(
+    `inquiry:email:${data.clientEmail.toLowerCase()}`,
+    INQUIRY_PER_EMAIL_MAX,
+    INQUIRY_PER_EMAIL_WINDOW_MS,
+  );
+  if (!rlEmail.ok) {
+    return {
+      ok: false,
+      error: `Zbyt wiele zgłoszeń na ten adres e-mail. Spróbuj ponownie za ${rlEmail.retryAfterSec} s.`,
+    };
+  }
   const publicId = createPublicId();
   const guestPassword = generateGuestPassword();
   let guestPasswordHash: string;
@@ -79,7 +137,8 @@ export async function submitInquiry(
       return {
         ok: true,
         publicId: existingRecent.publicId,
-        mailSent: true,
+        mailSent: false,
+        duplicateRecentSubmit: true,
       };
     }
   } catch (e) {
