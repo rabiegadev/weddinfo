@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ZlozZapytaniePage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] pt-8 sm:px-6 sm:py-14 sm:pb-14 sm:pt-14">
+    <div className="page-below-header mx-auto max-w-3xl px-4 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:pb-14">
       <header className="mb-10 space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
           Formularze

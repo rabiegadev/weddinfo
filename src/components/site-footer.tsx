@@ -57,12 +57,6 @@ export function SiteFooter() {
             >
               Polityka prywatności
             </Link>
-            <Link
-              href="/admin/login"
-              className="touch-manipulation col-span-2 inline-flex min-h-11 items-center rounded-lg py-2 text-[#9a9088] transition hover:text-[#e8dfd4] [-webkit-tap-highlight-color:transparent] sm:col-span-1 sm:min-h-0 sm:py-0"
-            >
-              Panel
-            </Link>
           </nav>
         </div>
         <div className="mt-10 flex flex-col gap-2 border-t border-[var(--w-gold-deep)]/15 pt-8 text-sm text-[#9a9088] sm:flex-row sm:items-center sm:justify-between">

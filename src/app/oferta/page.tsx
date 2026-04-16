@@ -61,14 +61,14 @@ export default function OfertaPage() {
 
       <nav
         aria-label="Sekcje oferty"
-        className="sticky top-[max(3.5rem,env(safe-area-inset-top,0px))] z-30 mt-10 -mx-4 border-y border-zinc-200/80 bg-[var(--w-cream-b)]/95 px-4 py-3 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/90 sm:-mx-6 sm:px-6"
+        className="sticky top-[max(3.5rem,env(safe-area-inset-top,0px))] z-30 mt-10 -mx-4 border-y border-[var(--w-gold-deep)]/15 bg-gradient-to-b from-white/95 to-[var(--w-cream-b)]/90 px-4 py-4 shadow-[inset_0_1px_0_0_rgba(191,164,111,0.12)] backdrop-blur-md dark:border-zinc-700 dark:from-zinc-900/95 dark:to-zinc-950/90 sm:-mx-6 sm:px-6"
       >
-        <ul className="flex flex-wrap gap-2 text-sm font-medium">
+        <ul className="flex flex-wrap justify-center gap-2.5 sm:justify-start sm:gap-3">
           {nav.map((item) => (
             <li key={item.href}>
               <a
                 href={item.href}
-                className="inline-flex min-h-10 items-center rounded-full border border-zinc-300/80 bg-white/90 px-3 py-1.5 text-zinc-800 transition hover:border-[var(--w-gold-deep)]/50 hover:text-[var(--w-gold-deep)] dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-100 dark:hover:border-[var(--w-gold-soft-b)]/40"
+                className="inline-flex min-h-10 items-center rounded-full border border-[var(--w-gold-deep)]/22 bg-white/95 px-4 py-2 text-sm font-medium text-zinc-800 shadow-sm shadow-[var(--w-gold-deep)]/8 ring-1 ring-black/[0.03] transition hover:border-[var(--w-gold-deep)]/45 hover:bg-[var(--w-cream-a)]/90 hover:text-[var(--w-gold-deep)] hover:shadow-md dark:border-zinc-600 dark:bg-zinc-900/95 dark:text-zinc-100 dark:ring-white/5 dark:hover:border-[var(--w-gold-soft-b)]/50 dark:hover:bg-zinc-800"
               >
                 {item.label}
               </a>
