@@ -76,6 +76,17 @@ body {
   }
 }
 
+/* Treść pod stałym nagłówkiem — większy odstęp niż zwykły padding, żeby linki „wróć” nie stykały się z menu */
+.page-below-header {
+  padding-top: max(5.75rem, calc(4.15rem + env(safe-area-inset-top, 0px)));
+}
+
+@media (min-width: 640px) {
+  .page-below-header {
+    padding-top: max(6.25rem, calc(4.6rem + env(safe-area-inset-top, 0px)));
+  }
+}
+
 /* Bazowa „papierowa” warstwa — pod dynamicznym tłem przewijania */
 .bg-weddinfo-app {
   background-color: var(--w-cream-b);

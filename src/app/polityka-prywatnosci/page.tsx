@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 pb-[calc(3rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:py-14">
-      <p className="mb-6 text-sm">
+    <div className="page-below-header mx-auto max-w-3xl px-4 pb-[calc(3rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:pb-14">
+      <p className="mb-8 mt-1 text-sm">
         <Link href="/" className="text-rose-800 underline-offset-2 hover:underline dark:text-rose-200">
           ← Strona główna
         </Link>

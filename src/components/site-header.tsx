@@ -44,24 +44,30 @@ export function SiteHeader() {
         >
           <WedinfoLogo variant="light" size="md" />
         </Link>
-        <nav className="flex min-w-0 flex-nowrap items-center justify-end gap-x-0.5 overflow-x-auto whitespace-nowrap text-[11px] [scrollbar-width:none] sm:gap-x-1 sm:text-sm md:gap-x-2 [&::-webkit-scrollbar]:hidden">
-          <Link
-            href="/#realizacje"
-            className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
-          >
-            Realizacje
-          </Link>
-          <Link
-            href="/#opinie"
-            className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
-          >
-            Opinie
-          </Link>
-          <details className="relative shrink-0">
-            <summary className="touch-manipulation inline-flex min-h-11 list-none items-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5 [&::-webkit-details-marker]:hidden">
+        <nav className="flex min-w-0 flex-1 items-center justify-end gap-x-0.5 text-[11px] sm:gap-x-1 sm:text-sm md:gap-x-2">
+          {/*
+            overflow-x-auto obcina dropdown „Oferta” (overflow-y staje się ukryty) — przewijamy tylko
+            lewą grupę linków, a <details> zostaje poza kontenerem z overflow.
+          */}
+          <div className="flex min-w-0 max-w-[46vw] flex-nowrap items-center gap-x-0.5 overflow-x-auto whitespace-nowrap [scrollbar-width:none] sm:max-w-none sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+            <Link
+              href="/#realizacje"
+              className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
+            >
+              Realizacje
+            </Link>
+            <Link
+              href="/#opinie"
+              className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
+            >
+              Opinie
+            </Link>
+          </div>
+          <details className="relative z-[70] shrink-0">
+            <summary className="touch-manipulation inline-flex min-h-11 cursor-pointer list-none items-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5 [&::-webkit-details-marker]:hidden">
               Oferta
             </summary>
-            <div className="absolute right-0 z-[60] mt-1 min-w-[11.5rem] rounded-xl border border-white/10 bg-[#1f1b17]/96 py-2 text-left shadow-xl backdrop-blur-xl">
+            <div className="absolute right-0 top-full z-[80] mt-1 min-w-[11.5rem] rounded-xl border border-white/10 bg-[#1f1b17]/96 py-2 text-left shadow-xl backdrop-blur-xl">
               <Link
                 href="/oferta#cennik"
                 className="block px-4 py-2.5 text-sm text-[#f2ebe3]/88 hover:bg-white/5 hover:text-[#faf6ee]"
@@ -106,6 +112,7 @@ export function SiteHeader() {
               </Link>
             </div>
           </details>
+          <div className="flex shrink-0 flex-nowrap items-center gap-x-0.5 sm:gap-x-1 md:gap-x-2">
           <Link
             href="/#kontakt"
             className="touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
@@ -130,6 +137,7 @@ export function SiteHeader() {
           >
             Panel
           </Link>
+          </div>
         </nav>
       </div>
     </header>
