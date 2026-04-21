@@ -30,6 +30,24 @@ export const metadata: Metadata = {
   },
   description:
     "Złóż zapytanie o wizytówkę weselną: harmonogram, lokalizacja, RSVP i kontakt dla gości.",
+  icons: {
+    icon: [
+      { url: "/images/favicon/favicon.ico" },
+      { url: "/images/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/images/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/images/favicon/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      {
+        rel: "android-chrome",
+        url: "/images/favicon/android-chrome-192x192.png",
+      },
+      {
+        rel: "android-chrome",
+        url: "/images/favicon/android-chrome-512x512.png",
+      },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
