@@ -29,7 +29,7 @@ type InquiryMailParams = {
 type AdminInquiryNotificationParams = {
   to: string;
   publicId: string;
-  inquiryType: "wedding" | "contact";
+  inquiryType: "wedding_website" | "contact";
   coupleLabel: string;
   clientEmail: string;
   inquiryPath: string;
