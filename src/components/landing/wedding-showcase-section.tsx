@@ -8,6 +8,8 @@ const timeline = [
   { time: "15:30", label: "Ceremonia" },
   { time: "17:00", label: "Życzenia" },
   { time: "18:00", label: "Przejazd do sali weselnej" },
+  { time: "19:30", label: "Pierwszy taniec" },
+  { time: "00:30", label: "Zakończenie przyjęcia" },
 ] as const;
 
 export function WeddingShowcaseSection() {
@@ -66,13 +68,13 @@ export function WeddingShowcaseSection() {
           przekierowania do galerii, informacje kontaktowe i nie tylko.
         </p>
 
-        <div className="mt-16 grid min-w-0 gap-14 lg:grid-cols-3 lg:gap-10">
+        <div className="mt-16 grid min-w-0 gap-14 lg:grid-cols-3 lg:items-stretch lg:gap-10">
           {/* Harmonogram */}
-          <div className="flex flex-col">
-            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)] lg:text-left">
+          <div className="flex h-full flex-col items-center">
+            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)]">
               Harmonogram wesela
             </h3>
-            <div className="relative mt-6 pl-2 lg:mt-8">
+            <div className="relative mt-6 w-full max-w-[300px] flex-1 rounded-2xl border border-[var(--w-gold-deep)]/16 bg-white/55 p-4 pl-6 shadow-sm backdrop-blur-sm lg:mt-8 min-h-[340px]">
               <div
                 className="wedinfo-tl-line absolute bottom-2 left-[15px] top-2 w-px origin-top bg-[var(--w-gold-deep)]/35"
                 aria-hidden
@@ -101,57 +103,68 @@ export function WeddingShowcaseSection() {
           </div>
 
           {/* Mapa dojazdu */}
-          <div className="flex flex-col">
-            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)] lg:text-left">
+          <div className="flex h-full flex-col items-center">
+            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)]">
               Instrukcje dojazdu
             </h3>
-            <div className="mt-6 flex flex-1 items-center justify-center lg:mt-8">
+            <div className="mt-6 w-full max-w-[300px] flex-1 rounded-2xl border border-[var(--w-gold-deep)]/16 bg-white/55 p-4 shadow-sm backdrop-blur-sm lg:mt-8 min-h-[340px]">
               <svg
-                viewBox="0 0 220 160"
-                className="h-auto w-full max-w-[260px]"
+                viewBox="0 0 290 340"
+                className="h-full w-full"
                 fill="none"
                 aria-label="Schemat: miejsce ślubu, sala weselna i trasa"
               >
                 <defs>
-                  <linearGradient id={`${routeId}-blk`} x1="0" y1="0" x2="220" y2="160">
-                    <stop stopColor="var(--w-gold-deep)" stopOpacity="0.12" />
-                    <stop offset="1" stopColor="var(--w-gold-deep)" stopOpacity="0.22" />
+                  <linearGradient id={`${routeId}-bg`} x1="0" y1="0" x2="290" y2="340">
+                    <stop stopColor="var(--w-gold-deep)" stopOpacity="0.1" />
+                    <stop offset="1" stopColor="var(--w-gold-deep)" stopOpacity="0.18" />
                   </linearGradient>
                 </defs>
-                <rect width="220" height="160" rx="14" fill={`url(#${routeId}-blk)`} />
-                <path
-                  d="M20 120h180M40 40h140M0 80h220"
-                  stroke="var(--w-gold-deep)"
-                  strokeOpacity="0.14"
-                  strokeWidth="1"
-                />
-                <path
-                  d="M30 130 L55 95 L95 88 L130 62 L175 48"
-                  stroke="var(--w-gold-deep)"
-                  strokeOpacity="0.2"
-                  strokeWidth="0.9"
-                  strokeDasharray="4 5"
-                />
+                <rect x="8" y="8" width="274" height="324" rx="16" fill={`url(#${routeId}-bg)`} fillOpacity="0.14" />
+                <text x="18" y="30" fill="#3d3429" style={{ fontSize: "14px", fontWeight: 600 }}>
+                  Wesele odbędzie się w
+                </text>
+                <text
+                  x="18"
+                  y="54"
+                  fill="#3d3429"
+                  style={{
+                    fontFamily: "var(--font-serif), Georgia, serif",
+                    fontSize: "17px",
+                    fontWeight: 700,
+                  }}
+                >
+                  Radwanów 36, 67-120 Radwanów
+                </text>
+                <rect x="18" y="74" width="254" height="212" rx="14" fill="white" fillOpacity="0.22" />
+                <path d="M30 108 C88 88 124 116 176 102 C210 94 236 80 264 90" stroke="var(--w-gold-deep)" strokeOpacity="0.14" strokeWidth="7" strokeLinecap="round" />
+                <path d="M26 160 C76 144 118 170 162 158 C210 146 238 158 266 146" stroke="var(--w-gold-deep)" strokeOpacity="0.14" strokeWidth="7" strokeLinecap="round" />
+                <path d="M24 220 C64 202 108 224 144 212 C188 196 226 210 268 198" stroke="var(--w-gold-deep)" strokeOpacity="0.14" strokeWidth="7" strokeLinecap="round" />
                 <path
                   className="wedinfo-map-route"
-                  d="M52 102 Q108 108 168 58"
+                  d="M50 250 C108 228 150 202 190 170 C216 150 238 128 254 112"
                   stroke="var(--w-gold-deep)"
-                  strokeWidth="2.4"
+                  strokeWidth="3"
                   strokeLinecap="round"
                   fill="none"
-                  strokeDasharray="120"
-                  strokeDashoffset="120"
+                  strokeDasharray="320"
+                  strokeDashoffset="320"
                 />
                 <g className="wedinfo-map-a">
-                  <circle cx="52" cy="102" r="9" fill="var(--w-cream-a)" stroke="var(--w-gold-deep)" strokeWidth="1.8" />
+                  <path
+                    d="M50 228c-7 0-13 6-13 13 0 9 13 22 13 22s13-13 13-22c0-7-6-13-13-13z"
+                    fill="white"
+                    stroke="var(--w-gold-deep)"
+                    strokeWidth="1.8"
+                  />
                   <text
-                    x="52"
-                    y="106"
+                    x="50"
+                    y="247"
                     textAnchor="middle"
                     fill="var(--w-gold-deep)"
                     style={{
                       fontFamily: "var(--font-serif), Georgia, serif",
-                      fontSize: "12px",
+                      fontSize: "13px",
                       fontWeight: 600,
                     }}
                   >
@@ -159,15 +172,20 @@ export function WeddingShowcaseSection() {
                   </text>
                 </g>
                 <g className="wedinfo-map-b">
-                  <circle cx="168" cy="58" r="9" fill="var(--w-cream-a)" stroke="var(--w-gold-deep)" strokeWidth="1.8" />
+                  <path
+                    d="M254 90c-7 0-13 6-13 13 0 9 13 22 13 22s13-13 13-22c0-7-6-13-13-13z"
+                    fill="white"
+                    stroke="var(--w-gold-deep)"
+                    strokeWidth="1.8"
+                  />
                   <text
-                    x="168"
-                    y="62"
+                    x="256"
+                    y="109"
                     textAnchor="middle"
                     fill="var(--w-gold-deep)"
                     style={{
                       fontFamily: "var(--font-serif), Georgia, serif",
-                      fontSize: "12px",
+                      fontSize: "13px",
                       fontWeight: 600,
                     }}
                   >
@@ -175,35 +193,47 @@ export function WeddingShowcaseSection() {
                   </text>
                 </g>
                 <text
-                  x="52"
-                  y="125"
-                  textAnchor="middle"
+                  x="54"
+                  y="286"
                   fill="#3d3429"
-                  fillOpacity={0.45}
-                  style={{ fontSize: "9px" }}
+                  fillOpacity={0.7}
+                  style={{ fontSize: "13px", fontWeight: 600 }}
                 >
-                  ślub
+                  Zielona Góra
                 </text>
                 <text
-                  x="168"
-                  y="78"
+                  x="256"
+                  y="137"
                   textAnchor="middle"
                   fill="#3d3429"
-                  fillOpacity={0.45}
-                  style={{ fontSize: "9px" }}
+                  fillOpacity={0.7}
+                  style={{ fontSize: "13px", fontWeight: 600 }}
                 >
-                  sala
+                  Radwanów
+                </text>
+                <text
+                  x="164"
+                  y="316"
+                  textAnchor="middle"
+                  fill="#3d3429"
+                  fillOpacity={0.6}
+                  style={{ fontSize: "14px" }}
+                >
+                  Jak dojechać z Zielonej Góry
                 </text>
               </svg>
             </div>
           </div>
 
           {/* RSVP */}
-          <div className="flex flex-col">
-            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)] lg:text-left">
+          <div className="flex h-full flex-col items-center">
+            <h3 className="font-wedinfo-serif text-center text-lg font-semibold text-[var(--foreground)]">
               Potwierdzenie obecności
             </h3>
-            <div className="mt-6 rounded-2xl border border-[var(--w-gold-deep)]/18 bg-white/55 p-5 shadow-sm backdrop-blur-sm lg:mt-8">
+            <div className="mt-6 flex w-full max-w-[300px] flex-1 flex-col rounded-2xl border border-[var(--w-gold-deep)]/16 bg-white/55 p-5 shadow-sm backdrop-blur-sm lg:mt-8 min-h-[340px]">
+              <p className="mb-4 text-center text-sm font-semibold text-[var(--foreground)]/82">
+                Czy będziesz obecny?
+              </p>
               <ul className="space-y-3">
                 {[
                   "Będę na ceremonii",
@@ -240,12 +270,12 @@ export function WeddingShowcaseSection() {
                 type="button"
                 onClick={sendDemo}
                 disabled={sent}
-                className="touch-manipulation mt-5 min-h-12 w-full rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] py-3 text-base font-semibold text-white shadow-md shadow-[var(--w-gold-deep)]/15 transition hover:brightness-105 active:brightness-95 disabled:cursor-default disabled:opacity-75 sm:text-sm [-webkit-tap-highlight-color:transparent]"
+                className="touch-manipulation mt-auto min-h-12 w-full rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] py-3 text-base font-semibold text-white shadow-md shadow-[var(--w-gold-deep)]/15 transition hover:brightness-105 active:brightness-95 disabled:cursor-default disabled:opacity-75 sm:text-sm [-webkit-tap-highlight-color:transparent]"
               >
                 {sent ? "Wysłano" : "Wyślij odpowiedź"}
               </button>
               <p
-                className={`mt-3 min-h-[2.75rem] text-center text-xs leading-relaxed text-[var(--foreground)]/55 transition ${sent ? "opacity-100" : "opacity-0"}`}
+                className={`mt-2 mb-1 text-center text-xs leading-relaxed text-[var(--foreground)]/55 transition ${sent ? "opacity-100" : "opacity-0"}`}
                 aria-live="polite"
               >
                 Odpowiedź zapisana — w prawdziwej wizytówce trafi bezpośrednio do pary młodej (to tylko

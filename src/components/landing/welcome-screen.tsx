@@ -56,14 +56,7 @@ export function WelcomeScreen() {
             <WedinfoLogo size="hero" priority />
             <GoldFlourishDivider className="mx-auto mt-8 w-[min(100%,20rem)] text-[#d4b87a]/85" />
             <p className="mt-6 text-xs font-medium uppercase tracking-[0.28em] text-[#d4c9b4]/95 sm:text-sm">
-              Wizytówka Twojego wesela
-            </p>
-            <p className="mt-5 text-pretty text-sm leading-relaxed text-[#ebe4d8]/92 sm:text-base">
-              Harmonogram, dojazd i RSVP w jednym, spokojnym adresie dla gości — zamiast łańcucha
-              wiadomości.
-            </p>
-            <p className="mt-4 text-pretty text-sm leading-relaxed text-[#ebe4d8]/88 sm:text-base">
-              Przewiń w dół — zobacz przykłady i złóż zapytanie, gdy będziesz gotowy.
+              Wizytówka Twojego Wesela
             </p>
           </div>
         </div>

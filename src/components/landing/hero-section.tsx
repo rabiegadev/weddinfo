@@ -43,11 +43,10 @@ export function HeroSection() {
           Wizytówka Wesela
         </p>
         <h1 className="font-wedinfo-serif mt-5 text-balance text-[1.65rem] font-semibold leading-snug tracking-tight text-[var(--foreground)] sm:text-4xl sm:leading-tight md:text-5xl lg:text-[2.85rem]">
-          Jedno miejsce ze wszystkim, co ważne dla Twoich gości.
+          Wszystko, czego potrzebują Twoi goście - w jednym miejscu
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-[var(--foreground)]/72 sm:text-lg">
-          Harmonogram, dojazd, noclegi i RSVP w jednej, czytelnej wizytówce pod adresem Weddinfo — bez
-          chaosu na czacie i w załącznikach.
+        Plan dnia, dojazd, noclegi i potwierdzenie obecności zebrane w prostej, czytelnej formie — bez dziesiątek wiadomości.
         </p>
         <div className="mt-10 flex w-full max-w-md flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           <Link
@@ -64,7 +63,7 @@ export function HeroSection() {
           </Link>
         </div>
         <p className="mx-auto mt-5 max-w-lg text-balance text-center text-sm leading-relaxed text-[var(--foreground)]/55 sm:text-base">
-          Numer zapytania i status dostaniesz od razu po wysłaniu briefu.
+          Numer zapytania wraz z linkiem do monitorowania statusu dostaniesz od razu po wysłaniu formularza.
         </p>
       </div>
     </section>

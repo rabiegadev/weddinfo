@@ -6,7 +6,7 @@ import { getDb, inquiries } from "@/db";
 import { verifyCaptchaAnswer } from "@/lib/captcha";
 import { getClientIpFromHeaders } from "@/lib/client-ip";
 import { createPublicId } from "@/lib/id";
-import { sendInquiryConfirmationEmail } from "@/lib/mail";
+import { sendAdminInquiryNotificationEmail, sendInquiryConfirmationEmail } from "@/lib/mail";
 import { generateGuestPassword, hashGuestPassword } from "@/lib/password";
 import { checkRateLimitMemory } from "@/lib/rate-limit-memory";
 import { inquiryFormSchema } from "@/lib/validation/inquiry";
@@ -217,6 +217,20 @@ export async function submitInquiry(
   const mailSent = mail.ok;
   if (!mailSent) {
     console.error("[submitInquiry] E-mail nie wysłany:", mail.error);
+  }
+  const adminNotifyEmail = process.env.WEDDINFO_ADMIN_NOTIFY_EMAIL?.trim();
+  if (adminNotifyEmail) {
+    const adminMail = await sendAdminInquiryNotificationEmail({
+      to: adminNotifyEmail,
+      publicId,
+      inquiryType: data.inquiryType,
+      coupleLabel,
+      clientEmail: data.clientEmail,
+      inquiryPath,
+    });
+    if (!adminMail.ok) {
+      console.error("[submitInquiry] Admin e-mail nie wysłany:", adminMail.error);
+    }
   }
 
   const devShowPassword = process.env.WEDDINFO_DEV_RETURN_PASSWORD === "true";
