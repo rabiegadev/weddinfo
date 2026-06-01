@@ -1,24 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import { MobileStickyCta } from "@/components/mobile-sticky-cta";
-import { ScrollBackdrop } from "@/components/scroll-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
 });
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
 });
@@ -55,7 +50,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#faf7f2",
+  themeColor: "#111111",
 };
 
 export default function RootLayout({
@@ -66,10 +61,9 @@ export default function RootLayout({
   return (
     <html
       lang="pl"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${cormorant.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="bg-weddinfo-app relative flex min-h-dvh min-h-[100dvh] flex-col overflow-x-clip text-[var(--foreground)]">
-        <ScrollBackdrop />
+      <body className="relative flex min-h-dvh min-h-[100dvh] flex-col overflow-x-clip bg-[var(--bg-white)] text-[var(--text-dark)]">
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>
         <MobileStickyCta />

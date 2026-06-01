@@ -1,65 +1,60 @@
+import Image from "next/image";
 import Link from "next/link";
-import { WedinfoLogo } from "@/components/wedinfo-logo";
+import { LandingSectionInner } from "@/components/landing/landing-section-inner";
+
+const footerLinks = [
+  { href: "/#o-nas", label: "O nas" },
+  { href: "/realizacje", label: "Realizacje" },
+  { href: "/#cennik", label: "Cennik" },
+  { href: "/#faq", label: "FAQ" },
+  { href: "/zloz-zapytanie", label: "Kontakt" },
+  { href: "/polityka-prywatnosci", label: "RODO" },
+] as const;
 
 export function SiteFooter() {
   return (
-    <footer
-      className="border-t border-[var(--w-gold-deep)]/25 text-[#e8dfd4]"
-      style={{
-        background: "linear-gradient(180deg, #2e2822 0%, #1a1614 100%)",
-      }}
-    >
-      <div className="mx-auto max-w-6xl px-4 pt-12 pb-[calc(3rem+env(safe-area-inset-bottom,0px))] sm:px-6">
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
-          <div>
-            <WedinfoLogo variant="light" size="md" className="select-none" />
-            <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#c8bfb5]">
-              Jedna strona dla gości: harmonogram, dojazd i RSVP — spokój przed ślubem.
-            </p>
-          </div>
-          <nav
-            aria-label="Stopka — linki"
-            className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:flex sm:flex-wrap sm:gap-x-8 sm:gap-y-2"
-          >
-            <Link
-              href="/zloz-zapytanie"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 font-medium text-[#f0d9a8] transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
-            >
-              Złóż zapytanie
-            </Link>
-            <Link
-              href="/oferta"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
-            >
-              Oferta i cennik
-            </Link>
-            <Link
-              href="/realizacje"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
-            >
-              Realizacje
-            </Link>
-            <Link
-              href="/#opinie"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
-            >
-              Opinie
-            </Link>
-            <Link
-              href="/#kontakt"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
-            >
-              Kontakt
-            </Link>
-            <Link
-              href="/polityka-prywatnosci"
-              className="touch-manipulation inline-flex min-h-11 items-center rounded-lg py-2 transition hover:text-white [-webkit-tap-highlight-color:transparent] sm:min-h-0 sm:py-0"
-            >
-              Polityka prywatności
-            </Link>
-          </nav>
+    <footer id="kontakt" className="scroll-mt-header bg-[var(--bg-dark)] text-white">
+      <div className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
+          <Image
+            src="/images/napisz.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-[center_40%]"
+          />
         </div>
-        <div className="mt-10 flex flex-col gap-2 border-t border-[var(--w-gold-deep)]/15 pt-8 text-sm text-[#9a9088] sm:flex-row sm:items-center sm:justify-between">
+        <div
+          className="absolute inset-0 bg-[var(--bg-dark)]/82"
+          aria-hidden
+        />
+        <LandingSectionInner className="relative z-10 py-14 text-center sm:py-16">
+          <p className="font-wedinfo-serif text-2xl text-white sm:text-3xl">
+            Masz pytania? Napisz do nas!
+          </p>
+          <Link href="/zloz-zapytanie" className="btn-primary mt-8">
+            Formularz kontaktowy
+          </Link>
+        </LandingSectionInner>
+      </div>
+
+      <LandingSectionInner className="border-t border-white/10 py-10 sm:py-12">
+        <nav
+          aria-label="Stopka — linki"
+          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-medium uppercase tracking-[0.12em]"
+        >
+          {footerLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="touch-manipulation text-white/65 transition hover:text-[var(--gold)] [-webkit-tap-highlight-color:transparent]"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="mt-10 space-y-2 text-center text-sm text-white/45">
           <p>© {new Date().getFullYear()} Weddinfo. Wszelkie prawa zastrzeżone.</p>
           <p>
             Realizacja:{" "}
@@ -67,13 +62,13 @@ export function SiteFooter() {
               href="https://rabiegadevelopment.pl"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--w-gold-soft-b)] underline-offset-2 transition hover:text-[var(--w-gold-shine)] hover:underline"
+              className="text-[var(--gold)] underline-offset-2 transition hover:underline"
             >
               rabiegadevelopment.pl
             </a>
           </p>
         </div>
-      </div>
+      </LandingSectionInner>
     </footer>
   );
 }

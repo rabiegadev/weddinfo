@@ -3,21 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { OfferMenu } from "@/components/offer-menu";
 import { RealizacjeNavLink } from "@/components/realizacje-nav-link";
-import { WedinfoLogo } from "@/components/wedinfo-logo";
+import { WeddinfoWordmark } from "@/components/weddinfo-wordmark";
+import { landingNavCta, landingNavLinks } from "@/data/landing-nav-links";
 
-const SCROLL_REVEAL_PX = 56;
+const SCROLL_REVEAL_PX = 72;
 
 const navLinkClass =
-  "touch-manipulation inline-flex min-h-11 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/72 transition active:bg-white/5 hover:text-[#faf6ee] [-webkit-tap-highlight-color:transparent] sm:px-2.5";
+  "touch-manipulation inline-flex min-h-10 items-center justify-center px-1.5 py-2 text-[10px] font-medium uppercase tracking-[0.14em] text-white/80 transition hover:text-[var(--gold)] [-webkit-tap-highlight-color:transparent] lg:px-2 lg:text-[11px]";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(pathname !== "/");
+  const isHome = pathname === "/";
+  const [visible, setVisible] = useState(!isHome);
 
   useEffect(() => {
-    if (pathname !== "/") {
+    if (!isHome) {
       setVisible(true);
       return;
     }
@@ -27,54 +28,47 @@ export function SiteHeader() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [pathname]);
+  }, [isHome]);
+
+  const linkHref = (hash: string) => (isHome ? hash : `/${hash}`);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#1c1815]/52 shadow-[inset_0_-1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-xl backdrop-saturate-150 transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none supports-[backdrop-filter]:bg-[#1c1815]/44 ${
-        visible
-          ? "translate-y-0 opacity-100"
-          : "pointer-events-none -translate-y-full opacity-0"
+      className={`fixed top-0 right-0 left-0 z-50 border-b border-white/10 bg-[var(--bg-dark)]/95 backdrop-blur-md transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${
+        visible ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0"
       }`}
       style={{
-        WebkitBackfaceVisibility: "hidden",
-        backfaceVisibility: "hidden",
         paddingTop: "env(safe-area-inset-top, 0px)",
       }}
     >
-      <div className="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-2 px-3 sm:min-h-16 sm:gap-4 sm:px-6">
-        <Link
-          href="/"
-          className="touch-manipulation min-w-0 shrink-0 py-2 pt-2.5 transition-opacity hover:opacity-90 [-webkit-tap-highlight-color:transparent] sm:pt-3"
-        >
-          <WedinfoLogo variant="light" size="md" />
-        </Link>
-        <nav className="flex min-w-0 flex-1 items-center justify-end gap-x-0.5 text-[11px] sm:gap-x-1 sm:text-sm md:gap-x-2">
-          <div className="flex min-w-0 max-w-[46vw] flex-nowrap items-center gap-x-0.5 overflow-x-auto whitespace-nowrap [scrollbar-width:none] sm:max-w-none sm:overflow-visible [&::-webkit-scrollbar]:hidden">
-            <RealizacjeNavLink className={navLinkClass} />
-            <Link href="/#opinie" className={navLinkClass}>
-              Opinie
-            </Link>
-          </div>
-          <OfferMenu />
-          <div className="flex shrink-0 flex-nowrap items-center gap-x-0.5 sm:gap-x-1 md:gap-x-2">
-            <Link href="/#kontakt" className={navLinkClass}>
-              Kontakt
-            </Link>
-            <Link
-              href="/polityka-prywatnosci"
-              className="touch-manipulation inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg px-2 py-2 text-[#f2ebe3]/55 transition active:bg-white/5 hover:text-[#f2ebe3]/85 [-webkit-tap-highlight-color:transparent] sm:px-2.5"
-            >
-              RODO
-            </Link>
-            <Link
-              href="/zloz-zapytanie"
-              className="touch-manipulation inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg px-2 py-2 font-medium text-[#f0d9a8] transition active:bg-white/5 hover:text-[#faf0dc] [-webkit-tap-highlight-color:transparent] sm:px-2.5"
-            >
-              Złóż zapytanie
-            </Link>
-          </div>
-        </nav>
+      <div className="flex min-h-[3.75rem] w-full items-center justify-between gap-4 px-5 sm:min-h-[4.25rem] sm:px-8 md:px-12 lg:px-16 xl:px-20">
+        <WeddinfoWordmark size="header" />
+
+        <div className="ml-auto flex items-center">
+          <nav aria-label="Menu główne" className="hidden sm:block">
+            <ul className="flex items-center gap-4 lg:gap-5 xl:gap-6">
+              {landingNavLinks.map((item) =>
+                item.href === "#realizacje" ? (
+                  <li key={item.href}>
+                    <RealizacjeNavLink className={navLinkClass} label="Portfolio" />
+                  </li>
+                ) : (
+                  <li key={item.href}>
+                    <a href={linkHref(item.href)} className={navLinkClass}>
+                      {item.label}
+                    </a>
+                  </li>
+                ),
+              )}
+            </ul>
+          </nav>
+          <Link
+            href={landingNavCta.href}
+            className="btn-primary ml-4 shrink-0 px-3 py-2 text-[9px] sm:ml-5 sm:px-5 sm:text-[11px] lg:ml-6"
+          >
+            {landingNavCta.label}
+          </Link>
+        </div>
       </div>
     </header>
   );

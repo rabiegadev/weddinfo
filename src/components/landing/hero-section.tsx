@@ -1,70 +1,64 @@
+import Image from "next/image";
 import Link from "next/link";
-import { SectionDivider } from "./section-divider";
-import { SectionTexture } from "./section-texture";
+import { LandingNav } from "./landing-nav";
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-[min(78vh,100dvh)] flex-col justify-center overflow-x-clip bg-[var(--w-cream-b)] px-4 py-14 sm:min-h-[78vh] sm:px-6 sm:py-20">
-      <SectionTexture variant="pattern" />
-      <div
-        className="pointer-events-none absolute left-1/2 top-1/2 z-[1] h-[min(110vw,560px)] w-[min(110vw,560px)] -translate-x-1/2 -translate-y-[55%] opacity-[0.09]"
-        aria-hidden
-      >
-        <svg viewBox="0 0 200 200" className="h-full w-full" fill="none">
-          <circle cx="78" cy="100" r="52" stroke="var(--w-gold-deep)" strokeWidth="1.2" />
-          <circle cx="122" cy="100" r="52" stroke="var(--w-gold-soft-b)" strokeWidth="1.2" />
-          <path
-            d="M100 28c-8 18-28 32-48 38 6 4 10 12 12 20 14-16 36-28 58-30-8-8-14-18-22-28z"
-            fill="var(--w-mauve)"
-            opacity="0.35"
-          />
-        </svg>
+    <section
+      id="hero"
+      className="relative flex min-h-[100dvh] flex-col overflow-hidden"
+      aria-label="Strona główna"
+    >
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+        <Image
+          src="/images/para8.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[center_30%]"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              linear-gradient(
+                100deg,
+                rgba(0, 0, 0, 0.88) 0%,
+                rgba(0, 0, 0, 0.78) 22%,
+                rgba(0, 0, 0, 0.58) 45%,
+                rgba(0, 0, 0, 0.35) 68%,
+                rgba(0, 0, 0, 0.18) 100%
+              )
+            `,
+          }}
+        />
       </div>
-      <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-white/75 via-[var(--w-cream-a)]/40 to-transparent"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -left-1/4 top-0 z-[1] h-[min(85vw,480px)] w-[min(85vw,480px)] rounded-full bg-[var(--w-pink-dust)]/35 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -right-1/4 bottom-0 z-[1] h-[min(70vw,400px)] w-[min(70vw,400px)] rounded-full bg-[var(--w-gold-soft-a)]/25 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-white/55 to-transparent"
-        aria-hidden
-      />
 
-      <div className="relative z-10 mx-auto w-full max-w-3xl text-center">
-        <SectionDivider className="mb-5 w-[min(100%,22rem)]" />
-        <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--w-gold-deep)] sm:text-sm">
-          Wizytówka Wesela
-        </p>
-        <h1 className="font-wedinfo-serif mt-5 text-balance text-[1.65rem] font-semibold leading-snug tracking-tight text-[var(--foreground)] sm:text-4xl sm:leading-tight md:text-5xl lg:text-[2.85rem]">
-          Wszystko, czego potrzebują Twoi goście - w jednym miejscu
-        </h1>
-        <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-[var(--foreground)]/72 sm:text-lg">
-        Plan dnia, dojazd, noclegi i potwierdzenie obecności zebrane w prostej, czytelnej formie — bez dziesiątek wiadomości.
-        </p>
-        <div className="mt-10 flex w-full max-w-md flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
-          <Link
-            href="/zloz-zapytanie"
-            className="touch-manipulation inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] px-8 text-base font-semibold text-white shadow-lg shadow-[var(--w-gold-deep)]/20 transition hover:brightness-105 active:brightness-95 sm:w-auto sm:min-w-[200px] sm:text-sm [-webkit-tap-highlight-color:transparent]"
-          >
-            Złóż zapytanie
-          </Link>
-          <Link
-            href="#realizacje"
-            className="touch-manipulation inline-flex min-h-12 w-full items-center justify-center rounded-full border border-[var(--w-gold-deep)]/35 bg-white/65 px-6 text-base font-medium text-[var(--w-gold-deep)] backdrop-blur-sm transition hover:border-[var(--w-gold-deep)]/55 hover:bg-white active:bg-white/90 sm:w-auto sm:text-sm [-webkit-tap-highlight-color:transparent]"
-          >
-            Zobacz przykłady
-          </Link>
+      <div
+        className="relative z-10 flex min-h-[100dvh] flex-col px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-16 sm:px-8 md:px-12 lg:px-16 xl:px-20 2xl:px-24"
+      >
+        <LandingNav variant="hero" />
+
+        <div className="flex w-full max-w-3xl flex-1 flex-col items-start justify-center text-left lg:max-w-4xl">
+          <h1 className="font-wedinfo-serif text-balance text-[2rem] font-medium leading-[1.12] tracking-tight sm:text-5xl md:text-[3.25rem] lg:text-[3.5rem]">
+            <span className="text-white">Wszystkie informacje </span>
+            <span className="text-[var(--gold)]">o Waszym weselu</span>
+            <span className="text-white"> w jednym miejscu</span>
+          </h1>
+          <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-white/88 sm:text-lg">
+            Plan dnia, dojazd, noclegi i potwierdzenie obecności w eleganckiej, czytelnej formie — bez
+            dziesiątek wiadomości od gości.
+          </p>
+          <div className="mt-10 flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <Link href="#realizacje" className="btn-primary w-full sm:w-auto sm:min-w-[220px]">
+              Zobacz realizacje
+            </Link>
+            <Link href="/zloz-zapytanie" className="btn-secondary w-full sm:w-auto sm:min-w-[220px]">
+              Wyceń stronę
+            </Link>
+          </div>
         </div>
-        <p className="mx-auto mt-5 max-w-lg text-balance text-center text-sm leading-relaxed text-[var(--foreground)]/55 sm:text-base">
-          Numer zapytania wraz z linkiem do monitorowania statusu dostaniesz od razu po wysłaniu formularza.
-        </p>
       </div>
     </section>
   );

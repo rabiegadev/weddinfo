@@ -1,36 +1,25 @@
 @import "tailwindcss";
 
-/*
-  Motyw jasny z dwiema harmonijnymi paletami (krem / złoto / beż + róż puder / mauve).
-  Klasy dark:* działają tylko po class="dark" na <html>.
-*/
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Paleta A — czysta biel, krem, złoto, beż, rumieniec */
-  --w-white: #ffffff;
-  --w-cream-a: #faf6ee;
-  --w-gold-soft-a: #e5c18f;
-  --w-gold-deep: #bfa46f;
-  --w-beige-a: #ede6d9;
-  --w-blush-a: #e8d4c8;
+  --bg-light: #f8f5f0;
+  --bg-white: #fcfbf8;
+  --bg-dark: #111111;
 
-  /* Paleta B — alternatywny krem, róż, beż, złoto, mauve */
-  --w-cream-b: #faf7f2;
-  --w-pink-dust: #efd4d9;
-  --w-beige-b: #ede4e0;
-  --w-gold-soft-b: #d9b88a;
-  --w-mauve: #c9a8b9;
-  --w-blush-b: #e8c7d4;
+  --gold: #c6a06a;
+  --gold-hover: #b48d56;
+  --gold-line: #e7d4b8;
 
-  /* Semantyka */
-  --background: var(--w-cream-b);
-  --foreground: #3d3429;
-  --w-gold-line: var(--w-gold-deep);
-  --w-gold-shine: #f1d38e;
-  /* Odcień złota „wyciągnięty” z tekstury pergaminu (jaśniejszy, do nałożeń) */
-  --w-texture-gold: #c9a26a;
-  --w-texture-gold-soft: #ddbc8c;
+  --text-dark: #1a1a1a;
+  --text-light: #ffffff;
+  --text-muted: #6e6e6e;
+
+  --border-light: #e7e0d8;
+  --border-dark: rgba(255, 255, 255, 0.15);
+
+  --background: var(--bg-white);
+  --foreground: var(--text-dark);
 
   color-scheme: light;
 }
@@ -38,16 +27,15 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-cormorant), ui-serif, "Times New Roman", serif;
-  --color-w-white: var(--w-white);
-  --color-w-cream: var(--w-cream-b);
-  --color-w-gold: var(--w-gold-deep);
-  --color-w-gold-soft: var(--w-gold-soft-b);
-  --color-w-blush: var(--w-blush-b);
-  --color-w-mauve: var(--w-mauve);
-  --color-w-beige: var(--w-beige-b);
+  --color-bg-light: var(--bg-light);
+  --color-bg-white: var(--bg-white);
+  --color-bg-dark: var(--bg-dark);
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --color-text-muted: var(--text-muted);
+  --color-border-light: var(--border-light);
 }
 
 html {
@@ -57,15 +45,17 @@ html {
 }
 
 body {
-  background-color: transparent;
+  background-color: var(--bg-white);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
   overflow-x: clip;
-  /* iOS: stabilna wysokość przy pasku adresu */
   min-height: 100dvh;
 }
 
-/* Kotwice pod stały nagłówek + notch (safe-area) */
+.font-wedinfo-serif {
+  font-family: var(--font-serif);
+}
+
 .scroll-mt-header {
   scroll-margin-top: max(4.5rem, calc(3.75rem + env(safe-area-inset-top, 0px)));
 }
@@ -76,7 +66,6 @@ body {
   }
 }
 
-/* Treść pod stałym nagłówkiem — większy odstęp niż zwykły padding, żeby linki „wróć” nie stykały się z menu */
 .page-below-header {
   padding-top: max(5.75rem, calc(4.15rem + env(safe-area-inset-top, 0px)));
 }
@@ -87,127 +76,121 @@ body {
   }
 }
 
-/* Bazowa „papierowa” warstwa — pod dynamicznym tłem przewijania */
-.bg-weddinfo-app {
-  background-color: var(--w-cream-b);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+/* Przyciski */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  background: var(--gold);
+  border: none;
+  transition: background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.font-wedinfo-serif {
-  font-family: var(--font-serif);
+.btn-primary:hover {
+  background: var(--gold-hover);
 }
 
-/* Metaliczne złoto (tekst / akcenty) */
-.text-gold-metallic {
-  background: linear-gradient(
-    105deg,
-    var(--w-gold-deep) 0%,
-    var(--w-gold-shine) 45%,
-    var(--w-gold-soft-a) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-/* Strzałka powitalna — tylko lekki ruch w pionie (bez translateX, mniej konfliktów z GPU) */
-@keyframes wedinfo-scroll-nudge-y {
-  0%,
-  100% {
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--gold);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-secondary:hover {
+  background: var(--gold);
+  color: var(--text-light);
+}
+
+/* FAQ accordion */
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item[open] .faq-plus-vertical {
+  transform: scaleY(0);
+}
+
+/* Cennik — wejście w widok */
+@keyframes pricing-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(8px);
+}
+
+.pricing-card {
+  opacity: 0;
+}
+
+.pricing-extras {
+  opacity: 0;
+}
+
+.pricing-visible .pricing-card {
+  animation: pricing-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.pricing-visible .pricing-extras {
+  animation: pricing-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pricing-card,
+  .pricing-extras {
+    opacity: 1;
+    animation: none;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .wedinfo-welcome-scroll-inner {
-    animation: wedinfo-scroll-nudge-y 2.6s ease-in-out infinite;
+  .pricing-visible .pricing-card-highlight {
+    animation:
+      pricing-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      pricing-glow 4s ease-in-out 0.8s infinite;
   }
 }
 
-/* Sekcja demonstracyjna wizytówki (harmonogram / mapa / RSVP) */
-@keyframes wedinfo-draw-stroke {
-  to {
-    stroke-dashoffset: 0;
+@keyframes pricing-glow {
+  0%,
+  100% {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
   }
-}
-
-@keyframes wedinfo-pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.88);
+  50% {
+    box-shadow: 0 24px 56px rgba(198, 160, 106, 0.22);
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes wedinfo-tl-item-in {
-  from {
-    opacity: 0;
-    transform: translateX(-14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes wedinfo-line-grow-y {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-
-.wedinfo-showcase .wedinfo-tl-line {
-  transform: scaleY(0);
-  transform-origin: top center;
-}
-
-.wedinfo-showcase-on .wedinfo-tl-line {
-  animation: wedinfo-line-grow-y 0.95s ease forwards 0.08s;
-}
-
-.wedinfo-showcase .wedinfo-tl-item {
-  opacity: 0;
-}
-
-.wedinfo-showcase-on .wedinfo-tl-item {
-  animation: wedinfo-tl-item-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.wedinfo-showcase .wedinfo-map-route {
-  opacity: 1;
-}
-
-.wedinfo-showcase-on .wedinfo-map-route {
-  animation: wedinfo-draw-stroke 1.45s ease forwards 0.28s;
-}
-
-.wedinfo-showcase .wedinfo-map-a,
-.wedinfo-showcase .wedinfo-map-b {
-  opacity: 0;
-  transform: scale(0.82);
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.wedinfo-showcase-on .wedinfo-map-a {
-  animation: wedinfo-pop-in 0.55s ease forwards 0.52s;
-}
-
-.wedinfo-showcase-on .wedinfo-map-b {
-  animation: wedinfo-pop-in 0.55s ease forwards 0.88s;
-}
-
-.wedinfo-rsvp-tick {
-  transition:
-    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.22s ease;
 }

@@ -7,7 +7,13 @@ const RESET_MS = 3000;
 const ADMIN_AFTER = 6;
 
 /** Link do #realizacje; 6 szybkich kliknięć z rzędu (w oknie czasowym) otwiera logowanie admina. */
-export function RealizacjeNavLink({ className }: { className?: string }) {
+export function RealizacjeNavLink({
+  className,
+  label = "Realizacje",
+}: {
+  className?: string;
+  label?: string;
+}) {
   const router = useRouter();
   const countRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -39,7 +45,7 @@ export function RealizacjeNavLink({ className }: { className?: string }) {
         }
       }}
     >
-      Realizacje
+      {label}
     </a>
   );
 }
