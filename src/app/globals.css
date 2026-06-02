@@ -194,3 +194,17 @@ body {
     box-shadow: 0 24px 56px rgba(198, 160, 106, 0.22);
   }
 }
+
+/*
+  TEST — delikatna tekstura kropek na ciemnym tle.
+  Wyłączenie: usuń klasę landing-dots-dark z komponentów (portfolio, panel statusu).
+*/
+.landing-dots-dark {
+  background-color: var(--bg-dark);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.055) 0.65px, transparent 0.65px),
+    radial-gradient(rgba(255, 255, 255, 0.035) 0.9px, transparent 0.9px),
+    radial-gradient(rgba(255, 255, 255, 0.025) 1.1px, transparent 1.1px);
+  background-size: 27px 31px, 19px 23px, 33px 29px;
+  background-position: 0 0, 9px 6px, 15px 12px;
+}

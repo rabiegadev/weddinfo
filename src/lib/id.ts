@@ -1,5 +1,5 @@
-import { customAlphabet } from "nanoid";
+import { randomInt } from "node:crypto";
 
-const alphabet = "23456789abcdefghjkmnpqrstuvwxyz";
-
-export const createPublicId = customAlphabet(alphabet, 10);
+export function generatePublicInquiryId(): string {
+  return String(randomInt(100000, 999999));
+}

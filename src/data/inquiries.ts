@@ -1,169 +1,82 @@
-import { desc, eq, type InferSelectModel } from "drizzle-orm";
-import { getDb, inquiries } from "@/db";
-import type { ScheduleRow, ScheduleSuggestion } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { getDb } from "@/db";
+import { inquiries, inquiryAttachments, type InquiryType } from "@/db/schema";
+import type { SavedAttachment } from "@/lib/inquiry-uploads";
 
-type InquiryRow = InferSelectModel<typeof inquiries>;
-
-export type SafeInquiry = {
+export type InsertInquiryData = {
   publicId: string;
-  status: string;
-  inquiryType: string;
-  partner1FirstName: string;
-  partner1LastName: string;
-  partner2FirstName: string;
-  partner2LastName: string;
-  contactFullName: string | null;
-  contactMessage: string | null;
-  weddingDate: string | null;
-  locationName: string | null;
-  locationLat: string | null;
-  locationLng: string | null;
-  weddingVenueName: string | null;
-  weddingVenuePostalCode: string | null;
-  weddingVenueCity: string | null;
-  weddingVenueStreet: string | null;
-  weddingVenueMapLink: string | null;
-  ceremonyType: string | null;
-  ceremonyName: string | null;
-  ceremonyPostalCode: string | null;
-  ceremonyCity: string | null;
-  ceremonyStreet: string | null;
-  ceremonyMapLink: string | null;
-  ceremonyOtherDetails: string | null;
-  travelDetails: string | null;
-  colorPalette: string | null;
-  themes: string | null;
-  templateName: string | null;
+  guestPasswordHash: string;
+  inquiryType: InquiryType;
   clientEmail: string;
-  clientPhone: string | null;
-  schedule: ScheduleRow[];
-  schedulePreferences: string | null;
-  scheduleSuggestions: ScheduleSuggestion[];
-  accommodationNote: string | null;
-  overnightTransportNote: string | null;
-  afterpartyNote: string | null;
-  guestInfoNote: string | null;
-  rsvpEnabled: boolean;
-  rsvpDeadline: string | null;
-  rsvpNotes: string | null;
-  extraNotes: string | null;
-  heroPhotoName: string | null;
-  inspirationFilesNames: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  clientPhone?: string | null;
+  contactFullName?: string | null;
+  contactMessage?: string | null;
+  brideName?: string | null;
+  groomName?: string | null;
+  weddingDate?: string | null;
+  ceremonyLocation?: string | null;
+  receptionLocation?: string | null;
+  scheduleNotes?: string | null;
+  lodgingInfo?: string | null;
+  afterpartyInfo?: string | null;
+  guestInfo?: string | null;
+  colorPreferences?: string | null;
+  moodClimate?: string | null;
+  themesMotifs?: string | null;
+  suggestions?: string | null;
+  additionalInfo?: string | null;
+  correctionRequests?: string | null;
+  templateName?: string | null;
+  wantsQrCode?: boolean | null;
+  qrCodeNotes?: string | null;
+  wantsRsvp?: boolean | null;
+  rsvpNotes?: string | null;
+  wantsPasswordProtection?: boolean | null;
+  wantsGallery?: boolean | null;
 };
 
-function toSafe(row: InquiryRow): SafeInquiry {
-  return {
-    publicId: row.publicId,
-    status: row.status,
-    inquiryType: row.inquiryType,
-    partner1FirstName: row.partner1FirstName,
-    partner1LastName: row.partner1LastName,
-    partner2FirstName: row.partner2FirstName,
-    partner2LastName: row.partner2LastName,
-    contactFullName: row.contactFullName,
-    contactMessage: row.contactMessage,
-    weddingDate: row.weddingDate,
-    locationName: row.locationName,
-    locationLat: row.locationLat,
-    locationLng: row.locationLng,
-    weddingVenueName: row.weddingVenueName,
-    weddingVenuePostalCode: row.weddingVenuePostalCode,
-    weddingVenueCity: row.weddingVenueCity,
-    weddingVenueStreet: row.weddingVenueStreet,
-    weddingVenueMapLink: row.weddingVenueMapLink,
-    ceremonyType: row.ceremonyType,
-    ceremonyName: row.ceremonyName,
-    ceremonyPostalCode: row.ceremonyPostalCode,
-    ceremonyCity: row.ceremonyCity,
-    ceremonyStreet: row.ceremonyStreet,
-    ceremonyMapLink: row.ceremonyMapLink,
-    ceremonyOtherDetails: row.ceremonyOtherDetails,
-    travelDetails: row.travelDetails,
-    colorPalette: row.colorPalette,
-    themes: row.themes,
-    templateName: row.templateName,
-    clientEmail: row.clientEmail,
-    clientPhone: row.clientPhone,
-    schedule: row.schedule ?? [],
-    schedulePreferences: row.schedulePreferences,
-    scheduleSuggestions: row.scheduleSuggestions ?? [],
-    accommodationNote: row.accommodationNote,
-    overnightTransportNote: row.overnightTransportNote,
-    afterpartyNote: row.afterpartyNote,
-    guestInfoNote: row.guestInfoNote,
-    rsvpEnabled: row.rsvpEnabled,
-    rsvpDeadline: row.rsvpDeadline,
-    rsvpNotes: row.rsvpNotes,
-    extraNotes: row.extraNotes,
-    heroPhotoName: row.heroPhotoName,
-    inspirationFilesNames: row.inspirationFilesNames ?? [],
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-  };
-}
-
-export async function getInquiryByPublicId(
-  publicId: string,
-): Promise<SafeInquiry | null> {
+export async function insertInquiry(data: InsertInquiryData, attachments: SavedAttachment[]) {
   const db = getDb();
-  const [row] = await db
-    .select()
-    .from(inquiries)
-    .where(eq(inquiries.publicId, publicId))
-    .limit(1);
-  if (!row) return null;
-  return toSafe(row);
+  const now = new Date();
+
+  await db.insert(inquiries).values({
+    ...data,
+    weddingDate: data.weddingDate ? new Date(data.weddingDate) : null,
+    status: "new",
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  const created = await getInquiryByPublicId(data.publicId);
+  if (!created) {
+    throw new Error("Nie udało się zapisać zgłoszenia.");
+  }
+  const inquiryId = created.id;
+
+  if (attachments.length > 0) {
+    await db.insert(inquiryAttachments).values(
+      attachments.map((a) => ({
+        inquiryId,
+        attachmentKind: a.kind,
+        storedName: a.storedName,
+        originalName: a.originalName,
+        mimeType: a.mimeType,
+        byteSize: a.byteSize,
+        createdAt: now,
+      })),
+    );
+  }
+
+  return { inquiryId };
 }
 
-export type AdminInquiryListItem = SafeInquiry & { id: string };
-
-function toAdminListItem(row: InquiryRow): AdminInquiryListItem {
-  return { id: row.id, ...toSafe(row) };
-}
-
-export async function listInquiriesForAdmin(): Promise<AdminInquiryListItem[]> {
+export async function getInquiryByPublicId(publicId: string) {
   const db = getDb();
-  const rows = await db
-    .select()
-    .from(inquiries)
-    .orderBy(desc(inquiries.createdAt));
-  return rows.map(toAdminListItem);
+  const rows = await db.select().from(inquiries).where(eq(inquiries.publicId, publicId)).limit(1);
+  return rows[0] ?? null;
 }
 
-export async function updateInquiryStatusByPublicId(
-  publicId: string,
-  status: string,
-): Promise<void> {
+export async function getInquiryAttachments(inquiryId: number) {
   const db = getDb();
-  await db
-    .update(inquiries)
-    .set({ status, updatedAt: new Date() })
-    .where(eq(inquiries.publicId, publicId));
-}
-
-export async function getInquiryInternalIdByPublicId(
-  publicId: string,
-): Promise<string | null> {
-  const db = getDb();
-  const [row] = await db
-    .select({ id: inquiries.id })
-    .from(inquiries)
-    .where(eq(inquiries.publicId, publicId))
-    .limit(1);
-  return row?.id ?? null;
-}
-
-export async function getInquiryAdminByPublicId(
-  publicId: string,
-): Promise<AdminInquiryListItem | null> {
-  const db = getDb();
-  const [row] = await db
-    .select()
-    .from(inquiries)
-    .where(eq(inquiries.publicId, publicId))
-    .limit(1);
-  if (!row) return null;
-  return toAdminListItem(row);
+  return db.select().from(inquiryAttachments).where(eq(inquiryAttachments.inquiryId, inquiryId));
 }

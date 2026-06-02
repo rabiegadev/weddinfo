@@ -1,4 +1,6 @@
 import nodemailer from "nodemailer";
+import type { InquiryType } from "@/db/schema";
+import { getInquiryTabLabel, RESPONSE_TIME_LABEL } from "@/config/inquiry-tabs";
 
 function escapeHtml(s: string): string {
   return s
@@ -18,173 +20,145 @@ export function getPublicSiteBaseUrl(): string {
   return "https://weddinfo.pl";
 }
 
-type InquiryMailParams = {
+type SmtpConfig = {
+  host: string;
+  port: number;
+  secure: boolean;
+  user: string;
+  pass: string;
+  from: string;
+};
+
+function readSmtpConfig(): { ok: true; config: SmtpConfig } | { ok: false; error: string } {
+  const host = process.env.SMTP_HOST?.trim();
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS?.trim();
+  const portRaw = process.env.SMTP_PORT?.trim();
+  const secureRaw = process.env.SMTP_SECURE?.trim().toLowerCase();
+  const port = portRaw ? Number(portRaw) : 587;
+  const secure = secureRaw ? secureRaw === "true" : port === 465;
+
+  if (!host || !user || !pass || Number.isNaN(port)) {
+    return { ok: false, error: "Brak konfiguracji SMTP." };
+  }
+
+  const from = process.env.WEDDINFO_MAIL_FROM?.trim() ?? `Weddinfo <${user}>`;
+  return { ok: true, config: { host, port, secure, user, pass, from } };
+}
+
+async function sendHtmlMail(p: {
   to: string;
+  subject: string;
+  html: string;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  const smtp = readSmtpConfig();
+  if (!smtp.ok) return smtp;
+
+  const transporter = nodemailer.createTransport({
+    host: smtp.config.host,
+    port: smtp.config.port,
+    secure: smtp.config.secure,
+    auth: { user: smtp.config.user, pass: smtp.config.pass },
+  });
+
+  try {
+    await transporter.sendMail({ from: smtp.config.from, to: p.to, subject: p.subject, html: p.html });
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : "SMTP send failed";
+    console.error("[mail]", errMsg);
+    return { ok: false, error: errMsg };
+  }
+  return { ok: true };
+}
+
+export function getAdminNotifyEmail(): string | null {
+  return (
+    process.env.WEDDINFO_CONTACT_NOTIFY_EMAIL?.trim() ||
+    process.env.WEDDINFO_ADMIN_NOTIFY_EMAIL?.trim() ||
+    process.env.SMTP_USER?.trim() ||
+    null
+  );
+}
+
+export type InquiryMailPayload = {
   publicId: string;
   guestPassword: string;
-  coupleLabel: string;
-  inquiryPath: string;
-};
-
-type AdminInquiryNotificationParams = {
-  to: string;
-  publicId: string;
-  inquiryType: "wedding_website" | "contact";
-  coupleLabel: string;
+  inquiryType: InquiryType;
   clientEmail: string;
-  inquiryPath: string;
+  displayName: string;
 };
 
-function buildInquiryEmailHtml(p: InquiryMailParams): string {
-  const base = getPublicSiteBaseUrl();
-  const link = `${base}${p.inquiryPath}`;
+function statusUrl(publicId: string): string {
+  return `${getPublicSiteBaseUrl()}/zapytanie/${encodeURIComponent(publicId)}`;
+}
+
+function buildClientConfirmationHtml(p: InquiryMailPayload): string {
   const safe = {
-    couple: escapeHtml(p.coupleLabel),
+    name: escapeHtml(p.displayName),
+    type: escapeHtml(getInquiryTabLabel(p.inquiryType)),
     id: escapeHtml(p.publicId),
     pass: escapeHtml(p.guestPassword),
-    link: escapeHtml(link),
+    link: escapeHtml(statusUrl(p.publicId)),
+    eta: escapeHtml(RESPONSE_TIME_LABEL),
   };
+
   return `
 <!DOCTYPE html>
 <html lang="pl">
-<body style="font-family: system-ui, sans-serif; line-height: 1.5; color: #18181b;">
-  <p>Dzień dobry,</p>
-  <p>Dziękujemy za złożenie zapytania w <strong>Weddinfo</strong> (${safe.couple}).</p>
-  <p><strong>Numer referencyjny:</strong> <code style="background:#f4f4f5;padding:2px 6px;border-radius:4px;">#${safe.id}</code></p>
-  <p><strong>Hasło do podglądu zapytania:</strong> <code style="background:#fff1f2;padding:2px 8px;border-radius:4px;font-size:1.05em;">${safe.pass}</code></p>
-  <p><a href="${safe.link}" style="color:#9f1239;">Otwórz stronę zapytania</a><br/>
+<body style="font-family: system-ui, sans-serif; line-height: 1.55; color: #18181b; max-width: 560px;">
+  <p>Dzień dobry ${safe.name},</p>
+  <p>Dziękujemy za przesłanie formularza <strong>${safe.type}</strong> w Weddinfo.</p>
+  <p><strong>Numer zgłoszenia:</strong> <code style="background:#f4f4f5;padding:2px 8px;border-radius:4px;">#${safe.id}</code></p>
+  <p><strong>Hasło do statusu:</strong> <code style="background:#fff8eb;padding:2px 10px;border-radius:4px;font-size:1.05em;">${safe.pass}</code></p>
+  <p>Przewidywany czas odpowiedzi: <strong>${safe.eta}</strong>.</p>
+  <p><a href="${safe.link}" style="color:#9f1239;">Sprawdź status zgłoszenia</a><br/>
   <span style="font-size:0.85em;color:#71717a;">${safe.link}</span></p>
-  <p style="font-size:0.9em;color:#71717a;">Hasło jest potrzebne przy pierwszym wejściu na stronę zapytania.</p>
+  <p style="font-size:0.9em;color:#71717a;">Zachowaj numer i hasło — będą potrzebne do podglądu statusu i dalszej korespondencji.</p>
+  <p style="font-size:0.9em;color:#71717a;">Pozdrawiamy,<br/>Zespół Weddinfo</p>
 </body>
 </html>`.trim();
 }
 
-/**
- * Wysyła potwierdzenie przez SMTP (np. konto e-mail w SeoHost).
- * Wymaga: SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS.
- */
-export async function sendInquiryConfirmationEmail(
-  p: InquiryMailParams,
-): Promise<{ ok: true } | { ok: false; error: string }> {
-  const smtpHost = process.env.SMTP_HOST?.trim();
-  const smtpUser = process.env.SMTP_USER?.trim();
-  const smtpPass = process.env.SMTP_PASS?.trim();
-  const smtpPortRaw = process.env.SMTP_PORT?.trim();
-  const smtpSecureRaw = process.env.SMTP_SECURE?.trim().toLowerCase();
-  const smtpPort = smtpPortRaw ? Number(smtpPortRaw) : 587;
-  const smtpSecure = smtpSecureRaw ? smtpSecureRaw === "true" : smtpPort === 465;
-  if (!smtpHost || !smtpUser || !smtpPass || Number.isNaN(smtpPort)) {
-    return { ok: false, error: "Brak konfiguracji SMTP (SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS)." };
-  }
-
-  const from =
-    process.env.WEDDINFO_MAIL_FROM?.trim() ?? `Weddinfo <${smtpUser}>`;
-
-  const subject = `Weddinfo — potwierdzenie zapytania #${p.publicId}`;
-  const transporter = nodemailer.createTransport({
-    host: smtpHost,
-    port: smtpPort,
-    secure: smtpSecure,
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
-  });
-
-  try {
-    await transporter.sendMail({
-      from,
-      to: p.to,
-      subject,
-      html: buildInquiryEmailHtml(p),
-    });
-  } catch (error) {
-    const errMsg = error instanceof Error ? error.message : "SMTP send failed";
-    console.error("[mail] SMTP error", errMsg);
-    return { ok: false, error: errMsg };
-  }
-
-  return { ok: true };
-}
-
-function buildAdminInquiryNotificationHtml(p: AdminInquiryNotificationParams): string {
-  const base = getPublicSiteBaseUrl();
-  const inquiryUrl = `${base}${p.inquiryPath}`;
-  const adminUrl = `${base}/admin/zapytanie/${encodeURIComponent(p.publicId)}`;
+function buildAdminNotificationHtml(p: InquiryMailPayload): string {
   const safe = {
+    type: escapeHtml(getInquiryTabLabel(p.inquiryType)),
     id: escapeHtml(p.publicId),
-    type: escapeHtml(p.inquiryType === "contact" ? "kontaktowy" : "wizytowki weselnej"),
-    couple: escapeHtml(p.coupleLabel),
+    name: escapeHtml(p.displayName),
     email: escapeHtml(p.clientEmail),
-    inquiryUrl: escapeHtml(inquiryUrl),
-    adminUrl: escapeHtml(adminUrl),
+    link: escapeHtml(statusUrl(p.publicId)),
   };
 
   return `
 <!DOCTYPE html>
 <html lang="pl">
-<body style="font-family: system-ui, sans-serif; line-height: 1.5; color: #18181b;">
-  <p>Nowe zapytanie zostalo przeslane w <strong>Weddinfo</strong>.</p>
-  <p><strong>Typ formularza:</strong> ${safe.type}</p>
-  <p><strong>Nazwa / para:</strong> ${safe.couple}</p>
-  <p><strong>E-mail klienta:</strong> ${safe.email}</p>
-  <p><strong>ID zapytania:</strong> <code style="background:#f4f4f5;padding:2px 6px;border-radius:4px;">#${safe.id}</code></p>
-  <p>
-    <a href="${safe.adminUrl}" style="color:#9f1239;">Otworz panel admina</a><br/>
-    <span style="font-size:0.85em;color:#71717a;">${safe.adminUrl}</span>
-  </p>
-  <p>
-    <a href="${safe.inquiryUrl}" style="color:#9f1239;">Otworz widok klienta</a><br/>
-    <span style="font-size:0.85em;color:#71717a;">${safe.inquiryUrl}</span>
-  </p>
+<body style="font-family: system-ui, sans-serif; line-height: 1.55; color: #18181b;">
+  <p>Nowe zgłoszenie w <strong>Weddinfo</strong>.</p>
+  <p><strong>Formularz:</strong> ${safe.type}</p>
+  <p><strong>Numer:</strong> #${safe.id}</p>
+  <p><strong>Kontakt:</strong> ${safe.name} &lt;${safe.email}&gt;</p>
+  <p><a href="${safe.link}">Podgląd statusu (widok klienta)</a></p>
 </body>
 </html>`.trim();
 }
 
-export async function sendAdminInquiryNotificationEmail(
-  p: AdminInquiryNotificationParams,
+export async function sendInquiryConfirmationEmail(
+  p: InquiryMailPayload,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  const smtpHost = process.env.SMTP_HOST?.trim();
-  const smtpUser = process.env.SMTP_USER?.trim();
-  const smtpPass = process.env.SMTP_PASS?.trim();
-  const smtpPortRaw = process.env.SMTP_PORT?.trim();
-  const smtpSecureRaw = process.env.SMTP_SECURE?.trim().toLowerCase();
-  const smtpPort = smtpPortRaw ? Number(smtpPortRaw) : 587;
-  const smtpSecure = smtpSecureRaw ? smtpSecureRaw === "true" : smtpPort === 465;
-  if (!smtpHost || !smtpUser || !smtpPass || Number.isNaN(smtpPort)) {
-    return { ok: false, error: "Brak konfiguracji SMTP (SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS)." };
-  }
-
-  const from =
-    process.env.WEDDINFO_MAIL_FROM?.trim() ?? `Weddinfo <${smtpUser}>`;
-  const subjectPrefix =
-    p.inquiryType === "contact"
-      ? "Nowe zapytanie kontaktowe"
-      : "Nowe zapytanie wizytowki weselnej";
-  const subject = `Weddinfo admin — ${subjectPrefix} #${p.publicId}`;
-
-  const transporter = nodemailer.createTransport({
-    host: smtpHost,
-    port: smtpPort,
-    secure: smtpSecure,
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
+  return sendHtmlMail({
+    to: p.clientEmail,
+    subject: `Weddinfo — potwierdzenie zgłoszenia #${p.publicId}`,
+    html: buildClientConfirmationHtml(p),
   });
+}
 
-  try {
-    await transporter.sendMail({
-      from,
-      to: p.to,
-      subject,
-      html: buildAdminInquiryNotificationHtml(p),
-    });
-  } catch (error) {
-    const errMsg = error instanceof Error ? error.message : "SMTP send failed";
-    console.error("[mail] SMTP admin notification error", errMsg);
-    return { ok: false, error: errMsg };
-  }
-
-  return { ok: true };
+export async function sendInquiryAdminNotificationEmail(
+  p: InquiryMailPayload,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const to = getAdminNotifyEmail();
+  if (!to) return { ok: false, error: "Brak adresu powiadomień admina." };
+  return sendHtmlMail({
+    to,
+    subject: `Weddinfo admin — ${getInquiryTabLabel(p.inquiryType)} #${p.publicId}`,
+    html: buildAdminNotificationHtml(p),
+  });
 }

@@ -1,50 +1,62 @@
-import { createHmac, timingSafeEqual } from "crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
+import { cookies } from "next/headers";
 
-type Payload = { publicId: string; exp: number };
-export const GUEST_SESSION_TTL_SECONDS = 30 * 60;
+const COOKIE_NAME = "weddinfo_guest_view";
+const TTL_SECONDS = 60 * 60 * 24 * 30;
 
 function getSecret(): string {
-  const s = process.env.WEDDINFO_COOKIE_SECRET;
-  if (!s || s.length < 16) {
-    throw new Error("WEDDINFO_COOKIE_SECRET must be set (min. 16 znaków)");
+  const secret = process.env.WEDDINFO_COOKIE_SECRET?.trim();
+  if (!secret || secret.length < 16) {
+    throw new Error("WEDDINFO_COOKIE_SECRET must be set.");
   }
-  return s;
+  return secret;
 }
 
-export function signInquiryViewToken(publicId: string): string {
-  const exp = Date.now() + GUEST_SESSION_TTL_SECONDS * 1000;
-  const payload: Payload = { publicId, exp };
-  const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const sig = createHmac("sha256", getSecret())
-    .update(payloadB64)
-    .digest("base64url");
-  return `${payloadB64}.${sig}`;
+function hmac(payload: string): string {
+  return createHmac("sha256", getSecret()).update(payload).digest("base64url");
 }
 
-export function verifyInquiryViewToken(
-  token: string | undefined,
-  expectedPublicId: string,
-): boolean {
-  if (!token || !token.includes(".")) return false;
-  const [payloadB64, sig] = token.split(".") as [string, string];
-  if (!payloadB64 || !sig) return false;
-  const expectedSig = createHmac("sha256", getSecret())
-    .update(payloadB64)
-    .digest("base64url");
-  try {
-    const a = Buffer.from(sig);
-    const b = Buffer.from(expectedSig);
-    if (a.length !== b.length || !timingSafeEqual(a, b)) return false;
-  } catch {
-    return false;
-  }
-  let payload: Payload;
-  try {
-    payload = JSON.parse(Buffer.from(payloadB64, "base64url").toString("utf8"));
-  } catch {
-    return false;
-  }
-  if (payload.publicId !== expectedPublicId) return false;
-  if (typeof payload.exp !== "number" || Date.now() > payload.exp) return false;
-  return true;
+function sign(publicId: string, exp: number): string {
+  const payload = `${publicId}:${exp}`;
+  return `${payload}.${hmac(payload)}`;
+}
+
+function verifyToken(token: string, publicId: string): boolean {
+  const dot = token.lastIndexOf(".");
+  if (dot <= 0) return false;
+  const payload = token.slice(0, dot);
+  const signature = token.slice(dot + 1);
+  const [id, expRaw] = payload.split(":");
+  const exp = Number(expRaw);
+  if (id !== publicId || !Number.isFinite(exp) || exp < Date.now()) return false;
+
+  const expected = hmac(payload);
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+export async function setGuestViewCookie(publicId: string): Promise<void> {
+  const exp = Date.now() + TTL_SECONDS * 1000;
+  const token = sign(publicId, exp);
+  const jar = await cookies();
+  jar.set(COOKIE_NAME, `${publicId}:${token}`, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: TTL_SECONDS,
+  });
+}
+
+export async function hasGuestViewAccess(publicId: string): Promise<boolean> {
+  const jar = await cookies();
+  const raw = jar.get(COOKIE_NAME)?.value;
+  if (!raw) return false;
+  const colon = raw.indexOf(":");
+  if (colon <= 0) return false;
+  const id = raw.slice(0, colon);
+  const token = raw.slice(colon + 1);
+  if (id !== publicId) return false;
+  return verifyToken(token, publicId);
 }

@@ -98,7 +98,7 @@ export default function PrivacyPolicyPage() {
         <h2>8. Kontakt w sprawach ochrony danych</h2>
         <p>
           W sprawach związanych z ochroną danych skontaktuj się przez{" "}
-          <Link href="/zloz-zapytanie" className="text-rose-800 underline-offset-2 hover:underline">
+          <Link href="/kontakt" className="text-rose-800 underline-offset-2 hover:underline">
             formularz kontaktowy
           </Link>{" "}
           lub dane podane w stopce strony.

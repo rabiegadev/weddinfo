@@ -1,60 +1,57 @@
-import { createHmac, randomInt, timingSafeEqual } from "crypto";
+import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 
-type CaptchaPayload = { a: number; b: number; exp: number };
+const CAPTCHA_TTL_MS = 10 * 60 * 1000;
 
 function getSecret(): string {
-  const s = process.env.WEDDINFO_COOKIE_SECRET;
-  if (!s || s.length < 16) {
-    throw new Error("WEDDINFO_COOKIE_SECRET must be set (min. 16 znaków)");
+  const secret = process.env.WEDDINFO_COOKIE_SECRET?.trim();
+  if (!secret || secret.length < 16) {
+    throw new Error("WEDDINFO_COOKIE_SECRET must be set (min. 16 characters).");
   }
-  return s;
+  return secret;
 }
 
-function signCaptchaPayload(payload: CaptchaPayload): string {
-  const body = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const sig = createHmac("sha256", getSecret())
-    .update(`captcha:${body}`)
-    .digest("base64url");
-  return `${body}.${sig}`;
+function sign(payload: string): string {
+  return createHmac("sha256", getSecret()).update(payload).digest("base64url");
 }
 
-export function mintCaptchaChallenge(): { token: string; question: string } {
-  const a = randomInt(1, 10);
-  const b = randomInt(1, 10);
-  const exp = Date.now() + 10 * 60 * 1000;
-  const token = signCaptchaPayload({ a, b, exp });
-  return { token, question: `Ile wynosi ${a} + ${b}?` };
+export type CaptchaChallenge = {
+  question: string;
+  token: string;
+};
+
+export function createCaptchaChallenge(): CaptchaChallenge {
+  const a = randomInt(2, 12);
+  const b = randomInt(2, 12);
+  const issuedAt = Date.now();
+  const payload = `${a}+${b}:${issuedAt}`;
+  return {
+    question: `Ile to jest ${a} + ${b}?`,
+    token: `${payload}.${sign(payload)}`,
+  };
 }
 
 export function verifyCaptchaAnswer(token: string, answerRaw: string): boolean {
-  if (!token || !token.includes(".")) return false;
-  const [bodyB64, sig] = token.split(".") as [string, string];
-  if (!bodyB64 || !sig) return false;
-  const expectedSig = createHmac("sha256", getSecret())
-    .update(`captcha:${bodyB64}`)
-    .digest("base64url");
-  try {
-    const a = Buffer.from(sig);
-    const b = Buffer.from(expectedSig);
-    if (a.length !== b.length || !timingSafeEqual(a, b)) return false;
-  } catch {
-    return false;
-  }
-  let payload: CaptchaPayload;
-  try {
-    payload = JSON.parse(Buffer.from(bodyB64, "base64url").toString("utf8")) as CaptchaPayload;
-  } catch {
-    return false;
-  }
-  if (
-    typeof payload.a !== "number" ||
-    typeof payload.b !== "number" ||
-    typeof payload.exp !== "number"
-  ) {
-    return false;
-  }
-  if (Date.now() > payload.exp) return false;
-  const answer = Number(String(answerRaw).trim());
+  const answer = Number.parseInt(answerRaw.trim(), 10);
   if (!Number.isFinite(answer)) return false;
-  return answer === payload.a + payload.b;
+
+  const dot = token.lastIndexOf(".");
+  if (dot <= 0) return false;
+  const payload = token.slice(0, dot);
+  const signature = token.slice(dot + 1);
+  const expected = sign(payload);
+  const sigBuf = Buffer.from(signature);
+  const expBuf = Buffer.from(expected);
+  if (sigBuf.length !== expBuf.length || !timingSafeEqual(sigBuf, expBuf)) {
+    return false;
+  }
+
+  const [expr, issuedAtRaw] = payload.split(":");
+  const issuedAt = Number(issuedAtRaw);
+  if (!expr || !Number.isFinite(issuedAt) || Date.now() - issuedAt > CAPTCHA_TTL_MS) {
+    return false;
+  }
+
+  const [aRaw, bRaw] = expr.split("+");
+  const expectedSum = Number(aRaw) + Number(bRaw);
+  return Number.isFinite(expectedSum) && expectedSum === answer;
 }

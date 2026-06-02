@@ -7,10 +7,10 @@ export function PortfolioSection() {
   return (
     <section
       id="realizacje"
-      className="scroll-mt-header bg-[var(--bg-dark)] pt-16 pb-12 sm:pt-24 sm:pb-14"
+      className="scroll-mt-header landing-dots-dark relative pt-16 pb-12 sm:pt-24 sm:pb-14"
       aria-labelledby="portfolio-heading"
     >
-      <LandingSectionInner>
+      <LandingSectionInner className="relative z-[1]">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--gold)] sm:text-sm">
           Portfolio
         </p>

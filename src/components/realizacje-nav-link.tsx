@@ -33,7 +33,6 @@ export function RealizacjeNavLink({
         if (countRef.current >= ADMIN_AFTER) {
           countRef.current = 0;
           if (timerRef.current) clearTimeout(timerRef.current);
-          router.push("/admin/login");
           return;
         }
 

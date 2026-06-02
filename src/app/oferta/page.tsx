@@ -127,7 +127,7 @@ export default function OfertaPage() {
                 ))}
               </ul>
               <Link
-                href="/zloz-zapytanie"
+                href="/kontakt?typ=individual"
                 className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-rose-800 px-4 text-sm font-semibold text-white transition hover:bg-rose-900"
               >
                 Zapytaj o ten pakiet
@@ -285,7 +285,7 @@ export default function OfertaPage() {
 
       <p className="mt-12 text-center">
         <Link
-          href="/zloz-zapytanie"
+          href="/kontakt?typ=individual"
           className="inline-flex min-h-12 items-center justify-center rounded-full bg-gradient-to-r from-[var(--w-gold-deep)] to-[var(--w-gold-soft-b)] px-8 text-base font-semibold text-white shadow-md hover:brightness-105"
         >
           Złóż zapytanie z briefem

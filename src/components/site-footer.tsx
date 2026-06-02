@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { LandingSectionInner } from "@/components/landing/landing-section-inner";
 
@@ -7,38 +6,14 @@ const footerLinks = [
   { href: "/realizacje", label: "Realizacje" },
   { href: "/#cennik", label: "Cennik" },
   { href: "/#faq", label: "FAQ" },
-  { href: "/zloz-zapytanie", label: "Kontakt" },
+  { href: "/kontakt", label: "Kontakt" },
   { href: "/polityka-prywatnosci", label: "RODO" },
 ] as const;
 
 export function SiteFooter() {
   return (
-    <footer id="kontakt" className="scroll-mt-header bg-[var(--bg-dark)] text-white">
-      <div className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0" aria-hidden>
-          <Image
-            src="/images/napisz.jpg"
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover object-[center_40%]"
-          />
-        </div>
-        <div
-          className="absolute inset-0 bg-[var(--bg-dark)]/82"
-          aria-hidden
-        />
-        <LandingSectionInner className="relative z-10 py-14 text-center sm:py-16">
-          <p className="font-wedinfo-serif text-2xl text-white sm:text-3xl">
-            Masz pytania? Napisz do nas!
-          </p>
-          <Link href="/zloz-zapytanie" className="btn-primary mt-8">
-            Formularz kontaktowy
-          </Link>
-        </LandingSectionInner>
-      </div>
-
-      <LandingSectionInner className="border-t border-white/10 py-10 sm:py-12">
+    <footer className="bg-[var(--bg-dark)] text-white">
+      <LandingSectionInner className="py-10 sm:py-12">
         <nav
           aria-label="Stopka — linki"
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-medium uppercase tracking-[0.12em]"

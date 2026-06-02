@@ -5,10 +5,10 @@ export const landingNavLinks = [
   { href: "#wspolpraca", label: "Współpraca" },
   { href: "#cennik", label: "Cennik" },
   { href: "#faq", label: "FAQ" },
-  { href: "#kontakt", label: "Kontakt" },
+  { href: "/kontakt", label: "Kontakt" },
 ] as const;
 
 export const landingNavCta = {
-  href: "/zloz-zapytanie",
+  href: "/kontakt?typ=individual",
   label: "Wyceń stronę",
 } as const;

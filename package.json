@@ -11,13 +11,12 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
-    "admin:hash-password": "node scripts/hash-admin-password.cjs"
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.2",
+    "mysql2": "^3.14.0",
     "nanoid": "^5.1.7",
     "next": "16.2.2",
     "nodemailer": "^8.0.5",

@@ -7,13 +7,13 @@ const steps = [
   {
     num: "01",
     title: "Formularz",
-    description: "Wypełniasz brief — otrzymujesz numer zgłoszenia i hasło do panelu.",
+    description: "Wypełniasz brief w wybranej zakładce — otrzymujesz numer zgłoszenia i hasło e-mailem.",
     icon: "/images/ic1.png",
   },
   {
     num: "02",
-    title: "Numer zgłoszenia",
-    description: "Śledzisz postęp i wymieniasz wiadomości bez logowania do konta.",
+    title: "Status",
+    description: "Śledzisz postęp na stronie statusu — numer i hasło z wiadomości potwierdzającej.",
     icon: "/images/ic2.png",
   },
   {

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s — Weddinfo",
   },
   description:
-    "Złóż zapytanie o wizytówkę weselną: harmonogram, lokalizacja, RSVP i kontakt dla gości.",
+    "Wizytówki weselne Weddinfo — harmonogram, lokalizacja, RSVP i kontakt dla gości. Napisz do nas w sprawie wyceny.",
   icons: {
     icon: [
       { url: "/images/favicon/favicon.ico" },

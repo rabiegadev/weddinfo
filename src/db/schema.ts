@@ -1,113 +1,87 @@
 import {
+  bigint,
   boolean,
-  jsonb,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
   date,
-} from "drizzle-orm/pg-core";
+  datetime,
+  index,
+  mysqlEnum,
+  mysqlTable,
+  text,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
-export type ScheduleRow = { time: string; action: string };
-export type ScheduleSuggestion = string;
+export const inquiryTypeEnum = ["individual", "premium", "basic", "contact"] as const;
+export const inquiryStatusEnum = ["new", "in_progress", "closed"] as const;
+export const attachmentKindEnum = ["inspiration", "couple_photo", "contact_file"] as const;
+export type AttachmentKind = (typeof attachmentKindEnum)[number];
+export const messageAuthorEnum = ["guest", "staff"] as const;
 
-export const inquiries = pgTable("inquiries", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  publicId: text("public_id").notNull().unique(),
-  status: text("status").notNull().default("new"),
-  inquiryType: text("inquiry_type").notNull().default("wedding_website"),
+export type InquiryType = (typeof inquiryTypeEnum)[number];
+export type InquiryStatus = (typeof inquiryStatusEnum)[number];
 
-  partner1FirstName: text("partner1_first_name").notNull(),
-  partner1LastName: text("partner1_last_name").notNull(),
-  partner2FirstName: text("partner2_first_name").notNull(),
-  partner2LastName: text("partner2_last_name").notNull(),
+export const inquiries = mysqlTable(
+  "inquiries",
+  {
+    id: bigint("id", { mode: "number", unsigned: true }).primaryKey().autoincrement(),
+    publicId: varchar("public_id", { length: 12 }).notNull().unique(),
+    guestPasswordHash: varchar("guest_password_hash", { length: 255 }).notNull(),
+    inquiryType: mysqlEnum("inquiry_type", inquiryTypeEnum).notNull(),
+    status: mysqlEnum("status", inquiryStatusEnum).notNull().default("new"),
+    clientEmail: varchar("client_email", { length: 255 }).notNull(),
+    clientPhone: varchar("client_phone", { length: 30 }),
+    contactFullName: varchar("contact_full_name", { length: 120 }),
+    contactMessage: text("contact_message"),
+    brideName: varchar("bride_name", { length: 120 }),
+    groomName: varchar("groom_name", { length: 120 }),
+    weddingDate: date("wedding_date"),
+    ceremonyLocation: varchar("ceremony_location", { length: 500 }),
+    receptionLocation: varchar("reception_location", { length: 500 }),
+    scheduleNotes: text("schedule_notes"),
+    lodgingInfo: text("lodging_info"),
+    afterpartyInfo: text("afterparty_info"),
+    guestInfo: text("guest_info"),
+    colorPreferences: text("color_preferences"),
+    moodClimate: text("mood_climate"),
+    themesMotifs: text("themes_motifs"),
+    suggestions: text("suggestions"),
+    additionalInfo: text("additional_info"),
+    correctionRequests: text("correction_requests"),
+    templateName: varchar("template_name", { length: 120 }),
+    wantsQrCode: boolean("wants_qr_code"),
+    qrCodeNotes: text("qr_code_notes"),
+    wantsRsvp: boolean("wants_rsvp"),
+    rsvpNotes: text("rsvp_notes"),
+    wantsPasswordProtection: boolean("wants_password_protection"),
+    wantsGallery: boolean("wants_gallery"),
+    createdAt: datetime("created_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
+    updatedAt: datetime("updated_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
+  },
+  (table) => [
+    index("idx_inquiries_email").on(table.clientEmail),
+    index("idx_inquiries_type").on(table.inquiryType),
+    index("idx_inquiries_status").on(table.status),
+  ],
+);
 
-  weddingDate: date("wedding_date"),
-  locationName: text("location_name"),
-  locationLat: text("location_lat"),
-  locationLng: text("location_lng"),
-  weddingVenueName: text("wedding_venue_name"),
-  weddingVenuePostalCode: text("wedding_venue_postal_code"),
-  weddingVenueCity: text("wedding_venue_city"),
-  weddingVenueStreet: text("wedding_venue_street"),
-  weddingVenueMapLink: text("wedding_venue_map_link"),
-  ceremonyType: text("ceremony_type"),
-  ceremonyName: text("ceremony_name"),
-  ceremonyPostalCode: text("ceremony_postal_code"),
-  ceremonyCity: text("ceremony_city"),
-  ceremonyStreet: text("ceremony_street"),
-  ceremonyMapLink: text("ceremony_map_link"),
-  ceremonyOtherDetails: text("ceremony_other_details"),
-  travelDetails: text("travel_details"),
-
-  colorPalette: text("color_palette"),
-  themes: text("themes"),
-  templateName: text("template_name"),
-  heroPhotoName: text("hero_photo_name"),
-  inspirationFilesNames: jsonb("inspiration_files_names").$type<string[]>().default([]),
-  schedulePreferences: text("schedule_preferences"),
-  scheduleSuggestions: jsonb("schedule_suggestions").$type<ScheduleSuggestion[]>().default([]),
-
-  clientEmail: text("client_email").notNull(),
-  clientPhone: text("client_phone"),
-
-  schedule: jsonb("schedule").$type<ScheduleRow[]>().notNull(),
-  accommodationNote: text("accommodation_note"),
-  overnightTransportNote: text("overnight_transport_note"),
-  afterpartyNote: text("afterparty_note"),
-  guestInfoNote: text("guest_info_note"),
-  rsvpEnabled: boolean("rsvp_enabled").notNull().default(false),
-  rsvpDeadline: text("rsvp_deadline"),
-  rsvpNotes: text("rsvp_notes"),
-  extraNotes: text("extra_notes"),
-  contactFullName: text("contact_full_name"),
-  contactMessage: text("contact_message"),
-
-  guestPasswordHash: text("guest_password_hash").notNull(),
-
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
-});
-
-export const inquiryAttachments = pgTable("inquiry_attachments", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  inquiryId: uuid("inquiry_id")
+export const inquiryAttachments = mysqlTable("inquiry_attachments", {
+  id: bigint("id", { mode: "number", unsigned: true }).primaryKey().autoincrement(),
+  inquiryId: bigint("inquiry_id", { mode: "number", unsigned: true })
     .notNull()
     .references(() => inquiries.id, { onDelete: "cascade" }),
-  url: text("url").notNull(),
-  role: text("role").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  attachmentKind: mysqlEnum("attachment_kind", attachmentKindEnum).notNull(),
+  storedName: varchar("stored_name", { length: 255 }).notNull(),
+  originalName: varchar("original_name", { length: 255 }).notNull(),
+  mimeType: varchar("mime_type", { length: 100 }).notNull(),
+  byteSize: bigint("byte_size", { mode: "number", unsigned: true }).notNull(),
+  createdAt: datetime("created_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
 });
 
-export const inquiryMessages = pgTable("inquiry_messages", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  inquiryId: uuid("inquiry_id")
+export const inquiryMessages = mysqlTable("inquiry_messages", {
+  id: bigint("id", { mode: "number", unsigned: true }).primaryKey().autoincrement(),
+  inquiryId: bigint("inquiry_id", { mode: "number", unsigned: true })
     .notNull()
     .references(() => inquiries.id, { onDelete: "cascade" }),
-  authorRole: text("author_role").notNull(),
+  authorRole: mysqlEnum("author_role", messageAuthorEnum).notNull(),
   body: text("body").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
-
-export const replyTokens = pgTable("reply_tokens", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  inquiryId: uuid("inquiry_id")
-    .notNull()
-    .references(() => inquiries.id, { onDelete: "cascade" }),
-  tokenHash: text("token_hash").notNull(),
-  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-  usedAt: timestamp("used_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
-
-export const rsvpResponses = pgTable("rsvp_responses", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  inquiryId: uuid("inquiry_id")
-    .notNull()
-    .references(() => inquiries.id, { onDelete: "cascade" }),
-  guestName: text("guest_name").notNull(),
-  guestEmail: text("guest_email"),
-  attending: boolean("attending").notNull(),
-  dietaryNote: text("dietary_note"),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  createdAt: datetime("created_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
 });

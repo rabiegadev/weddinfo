@@ -1,8 +1,9 @@
+/** Lista szablonów — aktualizuj ręcznie po dodaniu nowych realizacji. */
 export const weddingTemplateOptions = [
-  "Klasyczny Elegancki",
-  "Nowoczesny Minimal",
-  "Romantyczny Kwiatowy",
-  "Boho Naturalny",
+  "Classic Elegance",
+  "Modern Minimal",
+  "Romantic Bloom",
+  "Boho Natural",
 ] as const;
 
 export type WeddingTemplateOption = (typeof weddingTemplateOptions)[number];

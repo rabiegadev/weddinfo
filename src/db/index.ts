@@ -1,20 +1,27 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle, type MySql2Database } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 import * as schema from "./schema";
 
-type Db = ReturnType<typeof drizzle<typeof schema>>;
+export type Db = MySql2Database<typeof schema>;
 
-let cached: Db | null = null;
+let pool: mysql.Pool | null = null;
+let db: Db | null = null;
 
-export function getDb(): Db {
-  if (cached) return cached;
-  const url = process.env.DATABASE_URL;
+function getPool(): mysql.Pool {
+  if (pool) return pool;
+  const url = process.env.DATABASE_URL?.trim();
   if (!url) {
     throw new Error("DATABASE_URL is not set");
   }
-  const sql = neon(url);
-  cached = drizzle(sql, { schema });
-  return cached;
+  pool = mysql.createPool(url);
+  return pool;
 }
 
-export * from "./schema";
+export function getDb(): Db {
+  if (!db) {
+    db = drizzle(getPool(), { schema, mode: "default" });
+  }
+  return db;
+}
+
+export { schema };

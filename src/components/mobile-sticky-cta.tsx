@@ -13,7 +13,7 @@ export function MobileStickyCta() {
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))" }}
     >
       <div className="pointer-events-auto mx-auto flex max-w-md justify-center px-4">
-        <Link href="/zloz-zapytanie" className="btn-primary w-full max-w-sm shadow-lg shadow-black/25">
+        <Link href="/kontakt?typ=individual" className="btn-primary w-full max-w-sm shadow-lg shadow-black/25">
           Wyceń stronę
         </Link>
       </div>

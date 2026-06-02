@@ -54,7 +54,7 @@ export function HeroSection() {
             <Link href="#realizacje" className="btn-primary w-full sm:w-auto sm:min-w-[220px]">
               Zobacz realizacje
             </Link>
-            <Link href="/zloz-zapytanie" className="btn-secondary w-full sm:w-auto sm:min-w-[220px]">
+            <Link href="/kontakt?typ=individual" className="btn-secondary w-full sm:w-auto sm:min-w-[220px]">
               Wyceń stronę
             </Link>
           </div>

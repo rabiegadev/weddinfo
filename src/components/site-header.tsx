@@ -30,7 +30,10 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
 
-  const linkHref = (hash: string) => (isHome ? hash : `/${hash}`);
+  const linkHref = (href: string) => {
+    if (href.startsWith("/")) return href;
+    return isHome ? href : `/${href}`;
+  };
 
   return (
     <header
