@@ -2,13 +2,22 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PortfolioExample } from "@/data/portfolio-examples";
 
-export function PortfolioExampleCard({ item }: { item: PortfolioExample }) {
+type PortfolioExampleCardProps = {
+  item: PortfolioExample;
+  featured?: boolean;
+};
+
+export function PortfolioExampleCard({ item, featured = false }: PortfolioExampleCardProps) {
   const badge = item.badge ?? "demo";
   const isLive = badge === "live";
 
   return (
     <article
-      className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--w-gold-deep)]/15 bg-white/70 shadow-sm shadow-[var(--w-gold-deep)]/8 transition hover:border-[var(--w-gold-deep)]/28 hover:shadow-md"
+      className={`group flex h-full flex-col overflow-hidden border bg-white transition ${
+        featured
+          ? "border-[var(--gold)]/50 shadow-[0_16px_48px_rgba(0,0,0,0.08)]"
+          : "border-[var(--border-light)] shadow-[0_8px_28px_rgba(0,0,0,0.04)] hover:border-[var(--gold)]/40"
+      }`}
     >
       {item.screenshotSrc ? (
         item.liveUrl ? (
@@ -16,7 +25,7 @@ export function PortfolioExampleCard({ item }: { item: PortfolioExample }) {
             href={item.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="relative block h-48 w-full overflow-hidden"
+            className="relative block h-52 w-full overflow-hidden sm:h-56"
             aria-label={`Otwórz stronę: ${item.couple}`}
           >
             <Image
@@ -27,91 +36,74 @@ export function PortfolioExampleCard({ item }: { item: PortfolioExample }) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority={isLive}
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
           </Link>
         ) : (
-          <div className="relative h-48 w-full overflow-hidden">
+          <div className="relative h-52 w-full overflow-hidden sm:h-56">
             <Image
               src={item.screenshotSrc}
               alt={`Wizytówka weselna — ${item.couple}`}
               fill
               className="object-cover object-top"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              priority={isLive}
             />
           </div>
         )
       ) : (
-        <div className={`relative h-36 bg-gradient-to-br ${item.palette} px-4 pt-6`}>
-          <div className="absolute inset-0 bg-gradient-to-t from-white/45 to-transparent" />
+        <div className={`relative h-44 bg-gradient-to-br ${item.palette} px-5 pt-6`}>
+          <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent" />
           <div className="relative flex items-start justify-between gap-2">
             <div>
-              <p className={`font-wedinfo-serif text-lg font-semibold italic ${item.accent}`}>
-                {item.couple}
-              </p>
-              <p className="mt-1 text-xs font-medium uppercase tracking-wider text-[var(--foreground)]/50">
+              <p className={`font-wedinfo-serif text-lg font-medium ${item.accent}`}>{item.couple}</p>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
                 {item.date}
               </p>
             </div>
-            <span className="rounded-full bg-white/75 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-[var(--foreground)]/50 backdrop-blur-sm">
-              Demo
+            <span className="rounded-none border border-[var(--border-light)] bg-white/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
+              Wkrótce
             </span>
-          </div>
-          <div className="relative mx-auto mt-4 h-14 w-[88%] rounded-t-lg border border-white/85 bg-white/92 px-3 pt-2 shadow-sm">
-            <div className="flex gap-1">
-              <span className="size-1.5 rounded-full bg-[var(--w-pink-dust)]" />
-              <span className="size-1.5 rounded-full bg-[var(--w-gold-soft-a)]/70" />
-              <span className="size-1.5 rounded-full bg-[var(--w-beige-b)]" />
-            </div>
-            <div className="mt-2 h-1.5 w-2/3 rounded bg-[var(--w-blush-a)]/60" />
           </div>
         </div>
       )}
-      <div className="flex flex-1 flex-col gap-3 p-5">
-        {item.screenshotSrc ? (
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="font-wedinfo-serif text-lg font-semibold italic text-[var(--w-gold-deep)]">
-                {item.couple}
-              </p>
-              <p className="mt-1 text-xs font-medium uppercase tracking-wider text-[var(--foreground)]/55">
-                {item.date}
-              </p>
-            </div>
-            <span
-              className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                isLive
-                  ? "bg-[var(--w-gold-deep)]/92 text-[#fdfaf6]"
-                  : "bg-[var(--foreground)]/10 text-[var(--foreground)]/55"
-              }`}
-            >
-              {isLive ? "Na żywo" : "Demo"}
-            </span>
+
+      <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--gold)]">
+              {item.urlDisplay ?? `${item.slug}.weddinfo.pl`}
+            </p>
+            <p className="font-wedinfo-serif mt-2 text-xl text-[var(--text-dark)]">{item.couple}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[var(--text-muted)]">{item.date}</p>
           </div>
-        ) : (
-          <p className="text-xs text-[var(--foreground)]/55">
-            <span className="font-mono text-[var(--foreground)]/40">{item.slug}</span>
-            .weddinfo.pl
-          </p>
-        )}
-        <p className="text-sm leading-relaxed text-[var(--foreground)]/72">
+          <span
+            className={`shrink-0 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
+              isLive
+                ? "bg-[var(--gold)] text-white"
+                : "border border-[var(--border-light)] text-[var(--text-muted)]"
+            }`}
+          >
+            {isLive ? "Na żywo" : "Demo"}
+          </span>
+        </div>
+
+        <p className="flex-1 text-sm leading-relaxed text-[var(--text-muted)]">
           {item.summary ??
-            "Spersonalizowane kolory, sekcja RSVP i prosty harmonogram dnia — wszystko w jednej, lekkiej stronie."}
+            "Spersonalizowane kolory, sekcja RSVP i harmonogram dnia — wszystko w jednej, lekkiej stronie."}
         </p>
-        <div className="mt-auto pt-2">
+
+        <div className="border-t border-[var(--border-light)] pt-4">
           {item.liveUrl ? (
             <Link
               href={item.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--w-gold-deep)] transition group-hover:text-[var(--foreground)]"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold uppercase tracking-[0.1em] text-[var(--gold)] transition-opacity hover:opacity-80"
             >
               Otwórz stronę
-              <span className="text-xs opacity-80" aria-hidden>
-                ↗
-              </span>
+              <span aria-hidden>↗</span>
             </Link>
           ) : (
-            <span className="text-sm font-medium text-[var(--w-gold-deep)]/90">Wkrótce podgląd na żywo</span>
+            <span className="text-sm text-[var(--text-muted)]">Podgląd w przygotowaniu</span>
           )}
         </div>
       </div>

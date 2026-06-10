@@ -46,65 +46,88 @@ export function HoneypotField() {
   );
 }
 
-export function YesNoField({
-  name,
+export function ControlledYesNoField({
+  id,
   label,
-  notesName,
+  checked,
   notesLabel,
-  defaultChecked,
+  notesValue,
+  onCheckedChange,
+  onNotesChange,
 }: {
-  name: string;
+  id: string;
   label: string;
-  notesName: string;
+  checked: boolean;
   notesLabel: string;
-  defaultChecked?: boolean;
+  notesValue: string;
+  onCheckedChange: (checked: boolean) => void;
+  onNotesChange: (value: string) => void;
 }) {
   return (
     <div className="rounded border border-[var(--border-light)] bg-[var(--bg-light)]/40 p-4">
       <label className="flex cursor-pointer items-start gap-3">
         <input
           type="checkbox"
-          name={name}
-          value="true"
-          defaultChecked={defaultChecked}
+          checked={checked}
+          onChange={(e) => onCheckedChange(e.target.checked)}
           className="mt-1 size-4 accent-[var(--gold)]"
         />
         <span className="text-sm text-[var(--text-dark)]">{label}</span>
       </label>
       <div className="mt-3">
-        <label htmlFor={notesName} className="mb-2 block text-xs text-[var(--text-muted)]">
+        <label htmlFor={`${id}-notes`} className="mb-2 block text-xs text-[var(--text-muted)]">
           {notesLabel}
         </label>
-        <textarea id={notesName} name={notesName} rows={2} className={textareaClass} />
+        <textarea
+          id={`${id}-notes`}
+          rows={2}
+          value={notesValue}
+          onChange={(e) => onNotesChange(e.target.value)}
+          className={textareaClass}
+        />
       </div>
     </div>
   );
 }
 
-export function FileUploadField({
-  name,
+export function ControlledFileUploadField({
+  id,
   label,
   hint,
+  files,
   multiple = false,
+  onChange,
 }: {
-  name: string;
+  id: string;
   label: string;
   hint: string;
+  files: File[];
   multiple?: boolean;
+  onChange: (files: File[]) => void;
 }) {
   return (
     <div>
-      <label htmlFor={name} className={labelClass}>
+      <label htmlFor={id} className={labelClass}>
         {label}
       </label>
       <input
-        id={name}
-        name={name}
+        id={id}
         type="file"
         accept="image/jpeg,image/png,image/webp"
         multiple={multiple}
+        onChange={(e) => {
+          const selected = Array.from(e.target.files ?? []);
+          onChange(selected);
+        }}
         className="block w-full text-sm text-[var(--text-muted)] file:mr-4 file:border-0 file:bg-[var(--bg-light)] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-wider file:text-[var(--text-dark)]"
       />
+      {files.length > 0 ? (
+        <ul className="mt-2 space-y-1 text-xs text-[var(--text-dark)]">
+          {files.map((file) => (
+            <li key={`${file.name}-${file.size}`}>{file.name}</li>
+          ))}
+        </ul>
+      ) : null}
       <p className={hintClass}>{hint}</p>
     </div>
   );

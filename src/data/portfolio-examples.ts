@@ -14,6 +14,10 @@ export type PortfolioExample = {
   summary?: string;
   /** Tekst pod nagłówkiem zamiast `slug.weddinfo.pl` */
   urlDisplay?: string;
+  /** Krótka etykieta stylu na karcie landingowej */
+  styleLabel?: string;
+  /** Wyróżnione sekcje na karcie landingowej (np. RSVP, harmonogram) */
+  featureHighlights?: readonly string[];
   badge?: PortfolioExampleBadge;
 };
 
@@ -29,6 +33,8 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     urlDisplay: "example1.weddinfo.pl",
     summary:
       "Kompletna strona weselna: powitanie z licznikiem, harmonogram, RSVP, dojazd, nocleg, galeria i kontakt — spójna typografia i stonowana kolorystyka.",
+    styleLabel: "Klasyczna elegancja",
+    featureHighlights: ["RSVP", "Harmonogram", "Galeria"],
     badge: "live",
   },
   {
@@ -42,6 +48,8 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     urlDisplay: "example2.weddinfo.pl",
     summary:
       "Lawendowe tło z delikatnym wzorem, złote kaligraficzne imiona i fioletowe akcenty w menu oraz etykietach; treść na białych kartach z miękkim cieniem — harmonogram, RSVP, dojazd, kontakt i odliczanie do ślubu w jednej spójnej całości.",
+    styleLabel: "Lawenda i złoto",
+    featureHighlights: ["Harmonogram", "Mapa dojazdu", "Galeria gości"],
     badge: "live",
   },
   {
@@ -56,6 +64,8 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     urlDisplay: "example3.weddinfo.pl",
     summary:
       "Żywa wizytówka szablonu „eukaliptus · lawenda · biel”: zaproszenie z datą i miejscem (Żabi Dwór Radwanów), odliczanie do ślubu, harmonogram dnia, RSVP (demonstracja zapisu w przeglądarce), mapa Google, nocleg i poprawiny, kontakt oraz odnośnik do galerii gości. Podgląd działa pod adresem HTTP — po konfiguracji domeny na Vercel pojawi się standardowy certyfikat HTTPS.",
+    styleLabel: "Eukaliptus · lawenda",
+    featureHighlights: ["Odliczanie", "RSVP", "Dojazd i noclegi"],
     badge: "live",
   },
   {
@@ -66,6 +76,8 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     date: "6 lipca",
     liveUrl: "https://example4.weddinfo.pl/",
     urlDisplay: "example4.weddinfo.pl",
+    styleLabel: "Ciepły minimalizm",
+    featureHighlights: ["RSVP", "Harmonogram", "Kontakt"],
   },
   {
     couple: "Natalia & Paweł",

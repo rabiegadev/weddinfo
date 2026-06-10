@@ -15,11 +15,10 @@ const navLinkClass =
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const [visible, setVisible] = useState(!isHome);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (!isHome) {
-      setVisible(true);
       return;
     }
     const onScroll = () => {
@@ -30,9 +29,13 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
 
+  if (!isHome) {
+    return null;
+  }
+
   const linkHref = (href: string) => {
     if (href.startsWith("/")) return href;
-    return isHome ? href : `/${href}`;
+    return `/${href}`;
   };
 
   return (
@@ -44,14 +47,14 @@ export function SiteHeader() {
         paddingTop: "env(safe-area-inset-top, 0px)",
       }}
     >
-      <div className="flex min-h-[3.75rem] w-full items-center justify-between gap-4 px-5 sm:min-h-[4.25rem] sm:px-8 md:px-12 lg:px-16 xl:px-20">
+      <div className="flex w-full items-center justify-between gap-4 px-5 py-1.5 sm:px-8 sm:py-2 md:px-12 lg:px-16 xl:px-20">
         <WeddinfoWordmark size="header" />
 
         <div className="ml-auto flex items-center">
           <nav aria-label="Menu główne" className="hidden sm:block">
             <ul className="flex items-center gap-4 lg:gap-5 xl:gap-6">
               {landingNavLinks.map((item) =>
-                item.href === "#realizacje" ? (
+                item.href === "/realizacje" ? (
                   <li key={item.href}>
                     <RealizacjeNavLink className={navLinkClass} label="Portfolio" />
                   </li>

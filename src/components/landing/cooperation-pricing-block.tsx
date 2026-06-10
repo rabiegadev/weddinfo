@@ -1,34 +1,8 @@
 import Image from "next/image";
+import { cooperationSteps as steps } from "@/data/cooperation-steps";
 import { LandingSectionInner } from "./landing-section-inner";
 import { PricingSection } from "./pricing-section";
 import { StatusCheckPanel } from "./status-check-panel";
-
-const steps = [
-  {
-    num: "01",
-    title: "Formularz",
-    description: "Wypełniasz brief w wybranej zakładce — otrzymujesz numer zgłoszenia i hasło e-mailem.",
-    icon: "/images/ic1.png",
-  },
-  {
-    num: "02",
-    title: "Status",
-    description: "Śledzisz postęp na stronie statusu — numer i hasło z wiadomości potwierdzającej.",
-    icon: "/images/ic2.png",
-  },
-  {
-    num: "03",
-    title: "Projekt",
-    description: "Przygotowujemy wizytówkę, treści i sekcje dopasowane do Waszego dnia.",
-    icon: "/images/ic3.png",
-  },
-  {
-    num: "04",
-    title: "Publikacja",
-    description: "Po akceptacji strona trafia pod docelowy adres — gotowa dla gości.",
-    icon: "/images/ic4.png",
-  },
-] as const;
 
 export function CooperationPricingBlock() {
   return (

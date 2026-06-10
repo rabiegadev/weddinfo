@@ -1,7 +1,8 @@
 # Konfiguracja poczty — Weddinfo
 
-Stan na: czerwiec 2026. Plik opisuje **wyłącznie** ustawienia wysyłki e-mail (bez haseł i sekretów).
-Wartości produkcyjne trzymamy w `.env.local` (nie commitujemy).
+Stan na: czerwiec 2026. Opisuje wysyłkę e-mail po wysłaniu formularza `/kontakt`.
+
+Pełna instrukcja uruchomienia (baza + maile + konta gości): **[konfiguracja-start.md](./konfiguracja-start.md)**.
 
 ## Zmienne środowiskowe (SMTP)
 
@@ -14,7 +15,7 @@ Wartości produkcyjne trzymamy w `.env.local` (nie commitujemy).
 | `SMTP_PASS` | tak | Hasło do konta SMTP | *(w .env.local)* |
 | `WEDDINFO_MAIL_FROM` | nie | Nagłówek nadawcy | `Weddinfo <powiadomienia@twoja-domena.pl>` — jeśli puste: `Weddinfo <SMTP_USER>` |
 
-## Powiadomienia o wiadomościach z formularza
+## Powiadomienia o zgłoszeniach
 
 | Zmienna | Wymagana | Opis |
 |---------|----------|------|
@@ -28,37 +29,33 @@ Wartości produkcyjne trzymamy w `.env.local` (nie commitujemy).
 | `NEXT_PUBLIC_SITE_URL` | nie | Zapasowy publiczny URL |
 | `VERCEL_URL` | auto | Używany na Vercel, gdy brak powyższych |
 
-Kolejność w kodzie (`getPublicSiteBaseUrl`): `WEDDINFO_SITE_URL` → `NEXT_PUBLIC_SITE_URL` → `VERCEL_URL` → `https://weddinfo.pl`.
+Kolejność w kodzie: `WEDDINFO_SITE_URL` → `NEXT_PUBLIC_SITE_URL` → `VERCEL_URL` → `https://weddinfo.pl`.
+
+## Co wysyła system
+
+Po poprawnym zapisie zgłoszenia w MySQL:
+
+1. **Mail do klienta** — numer zgłoszenia (6 cyfr), hasło gościa, link `/zapytanie/[numer]`, przewidywany czas odpowiedzi.
+2. **Mail do admina** — powiadomienie z typem formularza i linkiem do widoku statusu.
+
+Błąd maila do klienta = błąd dla użytkownika (rekord w bazie już istnieje).  
+Błąd maila admina = tylko log serwera, klient dostaje sukces.
 
 ## Gdzie to jest w kodzie
 
-- `src/lib/mail.ts` — transport nodemailer, wysyłka potwierdzeń i powiadomień z formularza kontaktowego
-- `src/app/kontakt/actions.ts` — server action `submitContactForm`
-- `.env.example` — szablon zmiennych (bez wartości wrażliwych)
+- `src/lib/mail.ts` — transport nodemailer
+- `src/app/kontakt/actions.ts` — `submitInquiryForm`
+- `.env.example` — szablon zmiennych
 
-## Usunięte (poprzedni stack)
+## Powiązane zmienne (nie SMTP)
 
-Poniższe **nie są już używane** po migracji z Neon Postgres + formularzy zapytania:
+| Zmienna | Opis |
+|---------|------|
+| `DATABASE_URL` | MySQL — zapis zgłoszeń |
+| `WEDDINFO_COOKIE_SECRET` | Captcha + sesja statusu |
+| `WEDDINFO_UPLOAD_DIR` | Katalog załączników |
+| `WEDDINFO_DEV_RETURN_PASSWORD` | Dev: hasło na ekranie zamiast tylko w mailu |
 
-- `DATABASE_URL` (Neon / Drizzle)
-- `WEDDINFO_COOKIE_SECRET`, `WEDDINFO_ADMIN_PASSWORD_HASH` (panel admina, captcha, sesje gościa)
-- `WEDDINFO_ADMIN_NOTIFY_EMAIL` (powiadomienia o zapytaniach w starym systemie)
-- `WEDDINFO_DEV_RETURN_PASSWORD`
-- `FILES_UPLOAD_ENDPOINT`, `FILES_UPLOAD_TOKEN`, `FILES_PUBLIC_BASE_URL` (upload zdjęć z briefu)
+## Usunięte (stary stack)
 
-## Planowana baza MySQL (SeoHost)
-
-Docelowa baza: **`srv91710_weddinfo`** na SeoHost.pl.
-
-Po podłączeniu MySQL formularz `/kontakt` będzie zapisywał zgłoszenia w bazie (numer referencyjny, status itd.).
-Na razie wiadomości są obsługiwane **wyłącznie przez e-mail SMTP**.
-
-Planowane zmienne (do uzupełnienia po utworzeniu użytkownika DB):
-
-```
-MYSQL_HOST=
-MYSQL_PORT=3306
-MYSQL_DATABASE=srv91710_weddinfo
-MYSQL_USER=
-MYSQL_PASSWORD=
-```
+Nieużywane: Neon Postgres, `FILES_UPLOAD_*`, panel `/admin`, `WEDDINFO_ADMIN_PASSWORD_HASH`.

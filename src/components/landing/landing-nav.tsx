@@ -7,6 +7,11 @@ type LandingNavProps = {
   variant?: "hero" | "default";
 };
 
+function navHref(href: string): string {
+  if (href.startsWith("#")) return `/${href}`;
+  return href;
+}
+
 export function LandingNav({ variant = "hero" }: LandingNavProps) {
   const isHero = variant === "hero";
   const linkClass = isHero
@@ -26,10 +31,10 @@ export function LandingNav({ variant = "hero" }: LandingNavProps) {
         <ul className="hidden items-center gap-4 sm:flex lg:gap-5 xl:gap-6">
           {landingNavLinks.map((item) => (
             <li key={item.href}>
-              {item.href === "#realizacje" ? (
+              {item.href === "/realizacje" ? (
                 <RealizacjeNavLink className={linkClass} label="Portfolio" />
               ) : (
-                <a href={item.href} className={linkClass}>
+                <a href={navHref(item.href)} className={linkClass}>
                   {item.label}
                 </a>
               )}

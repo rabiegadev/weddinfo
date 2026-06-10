@@ -1,46 +1,102 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LandingSectionInner } from "@/components/landing/landing-section-inner";
+import { SubpageHero } from "@/components/subpage-hero";
 import { PortfolioExampleCard } from "@/components/landing/portfolio-example-card";
-import { SectionDivider } from "@/components/landing/section-divider";
-import { SectionTexture } from "@/components/landing/section-texture";
 import { portfolioExamples } from "@/data/portfolio-examples";
 
 export const metadata: Metadata = {
   title: "Realizacje",
   description:
-    "Katalog przykładowych wizytówek weselnych: kolorystyka, harmonogram i RSVP w jednym miejscu.",
+    "Przykładowe wizytówki weselne Weddinfo — szablony, kolorystyka, harmonogram i RSVP w jednym miejscu.",
 };
 
 export default function RealizacjePage() {
+  const featured = portfolioExamples.filter((item) => item.badge === "live");
+  const more = portfolioExamples.filter((item) => item.badge !== "live");
+
   return (
-    <div className="relative flex flex-1 flex-col overflow-hidden bg-gradient-to-b from-[var(--w-cream-b)] via-white/40 to-[var(--w-cream-a)]">
-      <SectionTexture variant="pattern" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-32 bg-gradient-to-b from-white/80 to-transparent" />
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        <p className="text-sm text-[var(--foreground)]/65">
-          <Link
-            href="/#realizacje"
-            className="text-[var(--w-gold-deep)] underline-offset-4 transition hover:text-[var(--foreground)] hover:underline"
-          >
-            ← Wróć na stronę główną
-          </Link>
+    <div className="flex flex-1 flex-col pb-24 md:pb-0">
+      <SubpageHero>
+        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)] sm:mt-8">Portfolio</p>
+        <h1 className="font-wedinfo-serif mt-4 text-3xl font-medium sm:text-4xl lg:text-5xl">Nasze realizacje</h1>
+        <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
+          Zobacz przykładowe wizytówki — od gotowych szablonów po dopasowane projekty. Każda strona działa na
+          telefonie i komputerze.
         </p>
-        <header className="mt-8 text-center">
-          <SectionDivider className="mx-auto w-[min(100%,24rem)]" />
-          <h1 className="font-wedinfo-serif mt-5 text-balance text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl">
-            Realizacje
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-[var(--foreground)]/72 sm:text-base">
-            Szerszy wybór przykładowych szablonów i stylów — ta sama idea co na stronie głównej: spójny
-            wygląd, jasne informacje i lekki podgląd na urządzeniach mobilnych.
+      </SubpageHero>
+
+      {featured.length > 0 ? (
+        <section className="bg-white py-14 sm:py-20" aria-labelledby="realizacje-featured-heading">
+          <LandingSectionInner>
+            <div className="mx-auto max-w-2xl text-center">
+              <h2
+                id="realizacje-featured-heading"
+                className="font-wedinfo-serif text-2xl font-medium text-[var(--text-dark)] sm:text-3xl"
+              >
+                Na żywo — podgląd
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-[var(--text-muted)]">
+                Działające przykłady z pełnym zakresem sekcji: harmonogram, RSVP, dojazd i kontakt.
+              </p>
+            </div>
+            <ul className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+              {featured.map((item) => (
+                <li key={item.slug}>
+                  <PortfolioExampleCard item={item} featured />
+                </li>
+              ))}
+            </ul>
+          </LandingSectionInner>
+        </section>
+      ) : null}
+
+      {more.length > 0 ? (
+        <section
+          className="border-t border-[var(--border-light)] bg-[var(--bg-light)]/30 py-14 sm:py-20"
+          aria-labelledby="realizacje-more-heading"
+        >
+          <LandingSectionInner>
+            <div className="mx-auto max-w-2xl text-center">
+              <h2
+                id="realizacje-more-heading"
+                className="font-wedinfo-serif text-2xl font-medium text-[var(--text-dark)] sm:text-3xl"
+              >
+                Więcej przykładów
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-[var(--text-muted)]">
+                Kolejne szablony i style — wkrótce z podglądem na żywo.
+              </p>
+            </div>
+            <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {more.map((item) => (
+                <li key={item.slug}>
+                  <PortfolioExampleCard item={item} />
+                </li>
+              ))}
+            </ul>
+          </LandingSectionInner>
+        </section>
+      ) : null}
+
+      <section className="bg-[var(--bg-dark)] py-16 text-center sm:py-20">
+        <LandingSectionInner>
+          <p className="font-wedinfo-serif text-2xl text-[var(--gold)] sm:text-3xl">
+            Chcecie podobną stronę?
           </p>
-        </header>
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {portfolioExamples.map((item) => (
-            <PortfolioExampleCard key={item.slug} item={item} />
-          ))}
-        </div>
-      </div>
+          <p className="mx-auto mt-4 max-w-lg text-sm text-white/55">
+            Porównaj pakiety w cenniku albo od razu złóż zapytanie — dopasujemy szablon do Waszego stylu.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/cennik" className="btn-secondary min-w-[200px]">
+              Zobacz cennik
+            </Link>
+            <Link href="/kontakt" className="btn-primary min-w-[200px]">
+              Złóż zapytanie
+            </Link>
+          </div>
+        </LandingSectionInner>
+      </section>
     </div>
   );
 }

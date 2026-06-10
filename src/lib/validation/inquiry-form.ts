@@ -2,7 +2,13 @@ import { z } from "zod";
 import { weddingTemplateOptions } from "@/data/wedding-templates";
 import { inquiryTypeEnum } from "@/db/schema";
 
-const optionalText = z.string().trim().optional().transform((v) => (v && v.length > 0 ? v : undefined));
+const MAX_OPTIONAL_TEXT = 5000;
+const optionalText = z
+  .string()
+  .trim()
+  .max(MAX_OPTIONAL_TEXT, "Tekst jest zbyt długi.")
+  .optional()
+  .transform((v) => (v && v.length > 0 ? v : undefined));
 const requiredText = (min: number, max: number, label: string) =>
   z.string().trim().min(min, `${label} — minimum ${min} znaków.`).max(max, `${label} jest zbyt długie.`);
 
@@ -15,8 +21,11 @@ const phone = z
   .transform((v) => (v && v.length > 0 ? v : undefined));
 
 const captchaFields = {
-  captchaToken: z.string().min(1, "Odśwież zadanie captcha."),
-  captchaAnswer: z.string().min(1, "Rozwiąż działanie."),
+  // Captcha matematyczna (gdy Turnstile wyłączony) — weryfikowana w akcji serwerowej.
+  captchaToken: z.string().max(512).optional().default(""),
+  captchaAnswer: z.string().max(16).optional().default(""),
+  // Token Cloudflare Turnstile (gdy włączony) — weryfikowany w akcji serwerowej.
+  turnstileToken: z.string().max(4096).optional().default(""),
   website: z.string().max(0).optional(),
 };
 
@@ -110,6 +119,7 @@ export function parseInquiryFormData(fd: FormData): ParsedInquiryForm {
   const base = {
     captchaToken: String(fd.get("captchaToken") ?? ""),
     captchaAnswer: String(fd.get("captchaAnswer") ?? ""),
+    turnstileToken: String(fd.get("turnstileToken") ?? ""),
     website: String(fd.get("website") ?? ""),
     clientEmail: String(fd.get("clientEmail") ?? ""),
     clientPhone: fd.get("clientPhone") != null ? String(fd.get("clientPhone")) : undefined,
@@ -188,6 +198,7 @@ export function parseInquiryFormData(fd: FormData): ParsedInquiryForm {
       inquiryType: "contact",
       captchaToken: base.captchaToken,
       captchaAnswer: base.captchaAnswer,
+      turnstileToken: base.turnstileToken,
       website: base.website,
       contactFullName: String(fd.get("contactFullName") ?? ""),
       clientEmail: String(fd.get("clientEmail") ?? ""),

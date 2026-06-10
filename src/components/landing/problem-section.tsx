@@ -37,10 +37,16 @@ export function ProblemSection() {
           >
             Jedna strona rozwiązuje wszystko
           </h2>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--text-muted)] sm:text-lg">
-            Zamiast powtarzać te same odpowiedzi, udostępnijcie gościom jeden elegancki adres — z
-            harmonogramem, mapą, RSVP i wszystkim, co ważne.
-          </p>
+          <div className="mt-10 max-w-xl border-l-2 border-[var(--gold)] py-1 pl-6 sm:pl-8">
+            <p className="font-wedinfo-serif text-xl leading-snug text-[var(--text-dark)] sm:text-2xl">
+              Oszczędź czas na odpowiadaniu na powtarzające się pytania.
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
+              Udostępnij gościom stronę, na której znajdą{" "}
+              <span className="text-[var(--text-dark)]">wszystkie niezbędne informacje</span> dotyczące
+              Waszego ślubu i wesela.
+            </p>
+          </div>
         </div>
       </LandingSectionInner>
 

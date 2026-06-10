@@ -4,6 +4,7 @@ import {
   date,
   datetime,
   index,
+  int,
   mysqlEnum,
   mysqlTable,
   text,
@@ -11,7 +12,7 @@ import {
 } from "drizzle-orm/mysql-core";
 
 export const inquiryTypeEnum = ["individual", "premium", "basic", "contact"] as const;
-export const inquiryStatusEnum = ["new", "in_progress", "closed"] as const;
+export const inquiryStatusEnum = ["new", "in_progress", "closed", "cancelled_by_client"] as const;
 export const attachmentKindEnum = ["inspiration", "couple_photo", "contact_file"] as const;
 export type AttachmentKind = (typeof attachmentKindEnum)[number];
 export const messageAuthorEnum = ["guest", "staff"] as const;
@@ -53,8 +54,8 @@ export const inquiries = mysqlTable(
     rsvpNotes: text("rsvp_notes"),
     wantsPasswordProtection: boolean("wants_password_protection"),
     wantsGallery: boolean("wants_gallery"),
-    createdAt: datetime("created_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
-    updatedAt: datetime("updated_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
+    createdAt: datetime("created_at", { mode: "string", fsp: 0 }).notNull(),
+    updatedAt: datetime("updated_at", { mode: "string", fsp: 0 }).notNull(),
   },
   (table) => [
     index("idx_inquiries_email").on(table.clientEmail),
@@ -73,7 +74,18 @@ export const inquiryAttachments = mysqlTable("inquiry_attachments", {
   originalName: varchar("original_name", { length: 255 }).notNull(),
   mimeType: varchar("mime_type", { length: 100 }).notNull(),
   byteSize: bigint("byte_size", { mode: "number", unsigned: true }).notNull(),
-  createdAt: datetime("created_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
+  createdAt: datetime("created_at", { mode: "string", fsp: 0 }).notNull(),
+});
+
+/**
+ * Liczniki rate-limit / anty-brute-force (okno stałe).
+ * Jeden wiersz na „bucket", np. `inquiry:1.2.3.4` lub `admin-login:1.2.3.4`.
+ */
+export const rateLimits = mysqlTable("rate_limits", {
+  bucket: varchar("bucket", { length: 191 }).primaryKey(),
+  count: int("count").notNull().default(0),
+  windowStartedAt: datetime("window_started_at", { mode: "string", fsp: 0 }).notNull(),
+  updatedAt: datetime("updated_at", { mode: "string", fsp: 0 }).notNull(),
 });
 
 export const inquiryMessages = mysqlTable("inquiry_messages", {
@@ -83,5 +95,5 @@ export const inquiryMessages = mysqlTable("inquiry_messages", {
     .references(() => inquiries.id, { onDelete: "cascade" }),
   authorRole: mysqlEnum("author_role", messageAuthorEnum).notNull(),
   body: text("body").notNull(),
-  createdAt: datetime("created_at", { mode: "date" }).notNull().$defaultFn(() => new Date()),
+  createdAt: datetime("created_at", { mode: "string", fsp: 0 }).notNull(),
 });

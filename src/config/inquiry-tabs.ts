@@ -1,8 +1,7 @@
-import type { InquiryType } from "@/db/schema";
+export type InquiryFormMode = "individual" | "premium" | "contact";
+export type InquiryTabId = InquiryFormMode;
 
-export type InquiryTabId = InquiryType;
-
-export const inquiryTabs = [
+export const inquiryFormModes = [
   {
     id: "individual" as const,
     label: "Individual",
@@ -14,31 +13,38 @@ export const inquiryTabs = [
     description: "Pakiet Premium — szablon, RSVP, kod QR i więcej.",
   },
   {
-    id: "basic" as const,
-    label: "Basic",
-    description: "Pakiet Start — szablon i podstawowe dopasowanie.",
-  },
-  {
     id: "contact" as const,
     label: "Kontakt",
     description: "Pytanie ogólne lub krótka wiadomość.",
   },
 ] as const;
 
+/** @deprecated Użyj inquiryFormModes */
+export const inquiryTabs = inquiryFormModes;
+
+export function resolveInquiryModeFromSearchParams(
+  typ: string | null,
+  pakiet: string | null,
+): InquiryFormMode {
+  const t = (typ ?? pakiet ?? "").toLowerCase();
+  if (t === "individual" || t === "wycena" || t === "indywidual") return "individual";
+  if (t === "premium") return "premium";
+  if (t === "contact" || t === "kontakt") return "contact";
+  if (t === "basic" || t === "start" || t === "podstawowy") return "premium";
+  return "individual";
+}
+
+/** @deprecated Użyj resolveInquiryModeFromSearchParams */
 export function resolveInquiryTabFromSearchParams(
   typ: string | null,
   pakiet: string | null,
 ): InquiryTabId {
-  const t = (typ ?? pakiet ?? "").toLowerCase();
-  if (t === "individual" || t === "wycena" || t === "indywidual") return "individual";
-  if (t === "premium") return "premium";
-  if (t === "basic" || t === "start") return "basic";
-  if (t === "contact" || t === "kontakt") return "contact";
-  return "individual";
+  return resolveInquiryModeFromSearchParams(typ, pakiet);
 }
 
-export function getInquiryTabLabel(id: InquiryTabId): string {
-  return inquiryTabs.find((tab) => tab.id === id)?.label ?? id;
+export function getInquiryTabLabel(id: InquiryTabId | "basic"): string {
+  if (id === "basic") return "Basic";
+  return inquiryFormModes.find((tab) => tab.id === id)?.label ?? id;
 }
 
 export const RESPONSE_TIME_LABEL = "1–2 dni robocze";

@@ -7,8 +7,16 @@ import { generatePublicInquiryId } from "@/lib/id";
 import { MAX_INQUIRY_FILES, saveInquiryFiles, validateUploadFile } from "@/lib/inquiry-uploads";
 import { sendInquiryAdminNotificationEmail, sendInquiryConfirmationEmail } from "@/lib/mail";
 import { generateGuestPassword, hashGuestPassword } from "@/lib/password";
+import { consumeRateLimit, formatRetryAfter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request-context";
+import { checkInquiryForSpam } from "@/lib/spam-heuristics";
+import { isTurnstileEnabled, verifyTurnstileToken } from "@/lib/turnstile";
 import { parseInquiryFormData } from "@/lib/validation/inquiry-form";
+import { extractMysqlErrorCode, extractMysqlErrorMessage } from "@/lib/mysql-errors";
 import { ZodError } from "zod";
+
+const INQUIRY_RATE_LIMIT = 6;
+const INQUIRY_RATE_WINDOW_SECONDS = 10 * 60;
 
 export type SubmitInquiryResult =
   | { ok: true; publicId: string; guestPassword?: string }
@@ -90,16 +98,95 @@ function mapParsedToInsert(parsed: ReturnType<typeof parseInquiryFormData>) {
   };
 }
 
+function formatSubmitError(error: unknown): string {
+  if (error instanceof ZodError) {
+    return error.issues[0]?.message ?? "Sprawdź poprawność pól formularza.";
+  }
+
+  const mysqlMessage = extractMysqlErrorMessage(error);
+  const mysqlCode = extractMysqlErrorCode(error);
+  const message = error instanceof Error ? error.message : String(error);
+  const code =
+    mysqlCode ??
+    (error && typeof error === "object" && "code" in error ? String(error.code) : "");
+
+  if (process.env.NODE_ENV !== "production") {
+    if (code === "ECONNREFUSED" && message.includes("3306")) {
+      return "Brak połączenia z MySQL. Na localu użyj hosta SeoHost (np. h63.seohost.pl), nie localhost.";
+    }
+    if (code === "ER_ACCESS_DENIED_ERROR") {
+      return "MySQL odrzucił połączenie — dodaj swój adres IP w panelu SeoHost (zdalny dostęp MySQL).";
+    }
+    if (code === "ER_NO_DEFAULT_FOR_FIELD" || mysqlMessage?.includes("doesn't have a default value")) {
+      return "Tabela inquiries wymaga AUTO_INCREMENT na kolumnie id — uruchom SQL z drizzle/fix_inquiries_autoincrement.sql w phpMyAdmin.";
+    }
+    if (message.includes("DATABASE_URL is not set")) {
+      return "Brak DATABASE_URL w .env.local.";
+    }
+    if (mysqlMessage) {
+      return `Błąd MySQL (${code ?? "?"}): ${mysqlMessage}`;
+    }
+    return `Błąd serwera (dev): ${code ? `${code} — ` : ""}${message}`;
+  }
+
+  return "Nie udało się wysłać formularza. Spróbuj ponownie później.";
+}
+
+function collectTextFields(parsed: ReturnType<typeof parseInquiryFormData>): string[] {
+  const keys = [
+    "contactMessage",
+    "scheduleNotes",
+    "lodgingInfo",
+    "afterpartyInfo",
+    "guestInfo",
+    "colorPreferences",
+    "moodClimate",
+    "themesMotifs",
+    "suggestions",
+    "additionalInfo",
+    "correctionRequests",
+    "qrCodeNotes",
+    "rsvpNotes",
+  ] as const;
+  const out: string[] = [];
+  for (const key of keys) {
+    if (key in parsed) {
+      const value = (parsed as Record<string, unknown>)[key];
+      if (typeof value === "string") out.push(value);
+    }
+  }
+  return out;
+}
+
 export async function submitInquiryForm(fd: FormData): Promise<SubmitInquiryResult> {
   try {
+    const ip = await getClientIp();
+    const limit = await consumeRateLimit(`inquiry:${ip}`, INQUIRY_RATE_LIMIT, INQUIRY_RATE_WINDOW_SECONDS);
+    if (limit.blocked) {
+      return {
+        ok: false,
+        error: `Zbyt wiele zgłoszeń z tego urządzenia. Spróbuj ponownie za ${formatRetryAfter(limit.retryAfterSeconds)}.`,
+      };
+    }
+
     const parsed = parseInquiryFormData(fd);
 
     if (parsed.website) {
       return { ok: true, publicId: "000000" };
     }
 
-    if (!verifyCaptchaAnswer(parsed.captchaToken, parsed.captchaAnswer)) {
+    if (isTurnstileEnabled()) {
+      const passed = await verifyTurnstileToken(parsed.turnstileToken, ip);
+      if (!passed) {
+        return { ok: false, error: "Weryfikacja antyspamowa nie powiodła się — odśwież stronę i spróbuj ponownie." };
+      }
+    } else if (!verifyCaptchaAnswer(parsed.captchaToken, parsed.captchaAnswer)) {
       return { ok: false, error: "Niepoprawna captcha — spróbuj ponownie." };
+    }
+
+    const spam = checkInquiryForSpam({ email: parsed.clientEmail, textFields: collectTextFields(parsed) });
+    if (!spam.ok) {
+      return { ok: false, error: spam.reason };
     }
 
     const files = collectFiles(fd);
@@ -178,11 +265,7 @@ export async function submitInquiryForm(fd: FormData): Promise<SubmitInquiryResu
 
     return { ok: true, publicId, guestPassword: devReturn ? guestPassword : undefined };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const first = error.issues[0]?.message ?? "Sprawdź poprawność pól formularza.";
-      return { ok: false, error: first };
-    }
     console.error("[submitInquiryForm]", error);
-    return { ok: false, error: "Nie udało się wysłać formularza. Spróbuj ponownie później." };
+    return { ok: false, error: formatSubmitError(error) };
   }
 }

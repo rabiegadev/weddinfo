@@ -4,7 +4,9 @@ import { LandingSectionInner } from "@/components/landing/landing-section-inner"
 const footerLinks = [
   { href: "/#o-nas", label: "O nas" },
   { href: "/realizacje", label: "Realizacje" },
-  { href: "/#cennik", label: "Cennik" },
+  { href: "/wspolpraca", label: "Współpraca" },
+  { href: "/zapytanie", label: "Status zlecenia" },
+  { href: "/cennik", label: "Cennik" },
   { href: "/#faq", label: "FAQ" },
   { href: "/kontakt", label: "Kontakt" },
   { href: "/polityka-prywatnosci", label: "RODO" },

@@ -6,7 +6,7 @@ import { useRef } from "react";
 const RESET_MS = 3000;
 const ADMIN_AFTER = 6;
 
-/** Link do #realizacje; 6 szybkich kliknięć z rzędu (w oknie czasowym) otwiera logowanie admina. */
+/** Link do /realizacje; 6 szybkich kliknięć z rzędu (w oknie czasowym) otwiera logowanie admina. */
 export function RealizacjeNavLink({
   className,
   label = "Realizacje",
@@ -20,7 +20,7 @@ export function RealizacjeNavLink({
 
   return (
     <a
-      href="/#realizacje"
+      href="/realizacje"
       className={className}
       onClick={(e) => {
         e.preventDefault();
@@ -33,15 +33,11 @@ export function RealizacjeNavLink({
         if (countRef.current >= ADMIN_AFTER) {
           countRef.current = 0;
           if (timerRef.current) clearTimeout(timerRef.current);
+          router.push("/admin");
           return;
         }
 
-        const el = document.getElementById("realizacje");
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          router.push("/#realizacje");
-        }
+        router.push("/realizacje");
       }}
     >
       {label}

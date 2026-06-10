@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { LandingSectionInner } from "@/components/landing/landing-section-inner";
-import { StatusCheckPanel } from "@/components/landing/status-check-panel";
+import { InquiryStatusShell } from "@/components/inquiry/inquiry-status-shell";
+import { StatusCheckForm } from "@/components/inquiry/status-check-form";
 
 export const metadata: Metadata = {
   title: "Status zgłoszenia",
@@ -10,17 +9,12 @@ export const metadata: Metadata = {
 
 export default function StatusLookupPage() {
   return (
-    <div className="page-below-header pb-16">
-      <LandingSectionInner className="max-w-lg">
-        <p className="mb-8 text-sm">
-          <Link href="/kontakt" className="text-[var(--gold)] hover:underline">
-            ← Formularze kontaktowe
-          </Link>
-        </p>
-        <div className="overflow-hidden rounded border border-[var(--border-light)] bg-white shadow-sm">
-          <StatusCheckPanel />
-        </div>
-      </LandingSectionInner>
-    </div>
+    <InquiryStatusShell
+      title="Sprawdź postęp"
+      subtitle="Numer i hasło znajdziesz w e-mailu wysłanym po złożeniu formularza."
+      width="narrow"
+    >
+      <StatusCheckForm />
+    </InquiryStatusShell>
   );
 }

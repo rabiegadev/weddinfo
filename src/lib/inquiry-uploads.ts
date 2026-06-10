@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { AttachmentKind } from "@/db/schema";
 
@@ -61,4 +61,22 @@ export async function saveInquiryFiles(
   }
 
   return saved;
+}
+
+export function getInquiryAttachmentPath(publicId: string, storedName: string): string {
+  const safeName = path.basename(storedName);
+  return path.join(storageRoot(), publicId, safeName);
+}
+
+export async function readInquiryAttachment(
+  publicId: string,
+  storedName: string,
+): Promise<Buffer | null> {
+  const filePath = getInquiryAttachmentPath(publicId, storedName);
+  try {
+    await access(filePath);
+    return readFile(filePath);
+  } catch {
+    return null;
+  }
 }

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { LandingNav } from "./landing-nav";
 
 export function HeroSection() {
@@ -50,14 +49,20 @@ export function HeroSection() {
             Plan dnia, dojazd, noclegi i potwierdzenie obecności w eleganckiej, czytelnej formie — bez
             dziesiątek wiadomości od gości.
           </p>
-          <div className="mt-10 flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <Link href="#realizacje" className="btn-primary w-full sm:w-auto sm:min-w-[220px]">
-              Zobacz realizacje
-            </Link>
-            <Link href="/kontakt?typ=individual" className="btn-secondary w-full sm:w-auto sm:min-w-[220px]">
-              Wyceń stronę
-            </Link>
-          </div>
+          <a
+            href="#korzysci"
+            className="group mt-10 inline-flex flex-col items-start gap-3 text-white/80 transition-colors hover:text-white"
+            aria-label="Dowiedz się więcej — przewiń w dół"
+          >
+            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-white/90 group-hover:text-[var(--gold)]">
+              Dowiedz się więcej
+            </span>
+            <span className="hero-scroll-arrow inline-flex text-[var(--gold)]" aria-hidden>
+              <svg viewBox="0 0 24 24" fill="none" className="size-6" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 5v14M6 13l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </a>
         </div>
       </div>
     </section>

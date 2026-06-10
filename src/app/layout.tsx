@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { CookieConsent } from "@/components/cookie-consent";
 import { MobileStickyCta } from "@/components/mobile-sticky-cta";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -68,6 +69,7 @@ export default function RootLayout({
         <div className="flex flex-1 flex-col">{children}</div>
         <MobileStickyCta />
         <SiteFooter />
+        <CookieConsent />
       </body>
     </html>
   );

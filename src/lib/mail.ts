@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
-import type { InquiryType } from "@/db/schema";
+import type { InquiryStatus, InquiryType } from "@/db/schema";
 import { getInquiryTabLabel, RESPONSE_TIME_LABEL } from "@/config/inquiry-tabs";
+import { inquiryStatusLabels } from "@/lib/inquiry-status";
 
 function escapeHtml(s: string): string {
   return s
@@ -92,6 +93,123 @@ function statusUrl(publicId: string): string {
   return `${getPublicSiteBaseUrl()}/zapytanie/${encodeURIComponent(publicId)}`;
 }
 
+function adminUrl(publicId: string): string {
+  return `${getPublicSiteBaseUrl()}/admin/zapytania/${encodeURIComponent(publicId)}`;
+}
+
+export type InquiryEventType =
+  | "guest_comment"
+  | "guest_cancelled"
+  | "staff_reply"
+  | "status_changed";
+
+export type InquiryEventMailPayload = {
+  publicId: string;
+  inquiryType: InquiryType;
+  clientEmail: string;
+  displayName: string;
+  event: InquiryEventType;
+  messagePreview?: string;
+  newStatus?: InquiryStatus;
+};
+
+function eventSubject(p: InquiryEventMailPayload, forAdmin: boolean): string {
+  const id = `#${p.publicId}`;
+  switch (p.event) {
+    case "guest_comment":
+      return forAdmin
+        ? `Weddinfo admin — nowy komentarz klienta ${id}`
+        : `Weddinfo — dodano komentarz do zgłoszenia ${id}`;
+    case "guest_cancelled":
+      return forAdmin
+        ? `Weddinfo admin — klient anulował zgłoszenie ${id}`
+        : `Weddinfo — anulowano zgłoszenie ${id}`;
+    case "staff_reply":
+      return `Weddinfo — odpowiedź do zgłoszenia ${id}`;
+    case "status_changed":
+      return `Weddinfo — zmiana statusu zgłoszenia ${id}`;
+    default:
+      return `Weddinfo — aktualizacja zgłoszenia ${id}`;
+  }
+}
+
+function eventIntro(p: InquiryEventMailPayload, forAdmin: boolean): string {
+  const safeName = escapeHtml(p.displayName);
+  const safeId = escapeHtml(p.publicId);
+  switch (p.event) {
+    case "guest_comment":
+      return forAdmin
+        ? `<p>Klient <strong>${safeName}</strong> dodał komentarz do zgłoszenia <strong>#${safeId}</strong>.</p>`
+        : `<p>Dodałeś komentarz do zgłoszenia <strong>#${safeId}</strong>. Poniżej potwierdzenie.</p>`;
+    case "guest_cancelled":
+      return forAdmin
+        ? `<p>Klient <strong>${safeName}</strong> anulował zgłoszenie <strong>#${safeId}</strong>.</p>`
+        : `<p>Twoje zgłoszenie <strong>#${safeId}</strong> zostało oznaczone jako anulowane.</p>`;
+    case "staff_reply":
+      return `<p>Otrzymałeś odpowiedź od zespołu Weddinfo w sprawie zgłoszenia <strong>#${safeId}</strong>.</p>`;
+    case "status_changed":
+      return `<p>Status zgłoszenia <strong>#${safeId}</strong> został zaktualizowany.</p>`;
+    default:
+      return `<p>Aktualizacja zgłoszenia <strong>#${safeId}</strong>.</p>`;
+  }
+}
+
+function buildEventHtml(p: InquiryEventMailPayload, forAdmin: boolean): string {
+  const link = forAdmin ? adminUrl(p.publicId) : statusUrl(p.publicId);
+  const linkLabel = forAdmin ? "Otwórz w panelu admina" : "Sprawdź status zgłoszenia";
+  const preview = p.messagePreview?.trim()
+    ? `<blockquote style="margin:16px 0;padding:12px 16px;border-left:3px solid #c9a227;background:#fafafa;color:#3f3f46;">${escapeHtml(p.messagePreview)}</blockquote>`
+    : "";
+  const statusLine =
+    p.newStatus && p.event === "status_changed"
+      ? `<p><strong>Nowy status:</strong> ${escapeHtml(inquiryStatusLabels[p.newStatus])}</p>`
+      : "";
+
+  return `
+<!DOCTYPE html>
+<html lang="pl">
+<body style="font-family: system-ui, sans-serif; line-height: 1.55; color: #18181b; max-width: 560px;">
+  ${eventIntro(p, forAdmin)}
+  ${statusLine}
+  ${preview}
+  <p><a href="${escapeHtml(link)}" style="color:#9f1239;">${linkLabel}</a><br/>
+  <span style="font-size:0.85em;color:#71717a;">${escapeHtml(link)}</span></p>
+  <p style="font-size:0.9em;color:#71717a;">Pozdrawiamy,<br/>Zespół Weddinfo</p>
+</body>
+</html>`.trim();
+}
+
+export async function sendInquiryEventClientEmail(
+  p: InquiryEventMailPayload,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  return sendHtmlMail({
+    to: p.clientEmail,
+    subject: eventSubject(p, false),
+    html: buildEventHtml(p, false),
+  });
+}
+
+export async function sendInquiryEventAdminEmail(
+  p: InquiryEventMailPayload,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const to = getAdminNotifyEmail();
+  if (!to) return { ok: false, error: "Brak adresu powiadomień admina." };
+  return sendHtmlMail({
+    to,
+    subject: eventSubject(p, true),
+    html: buildEventHtml(p, true),
+  });
+}
+
+export async function notifyInquiryEvent(
+  p: InquiryEventMailPayload,
+): Promise<void> {
+  const client = await sendInquiryEventClientEmail(p);
+  if (!client.ok) console.error("[notifyInquiryEvent] client mail failed", client.error);
+  const admin = await sendInquiryEventAdminEmail(p);
+  if (!admin.ok) console.error("[notifyInquiryEvent] admin mail failed", admin.error);
+}
+
 function buildClientConfirmationHtml(p: InquiryMailPayload): string {
   const safe = {
     name: escapeHtml(p.displayName),
@@ -136,7 +254,8 @@ function buildAdminNotificationHtml(p: InquiryMailPayload): string {
   <p><strong>Formularz:</strong> ${safe.type}</p>
   <p><strong>Numer:</strong> #${safe.id}</p>
   <p><strong>Kontakt:</strong> ${safe.name} &lt;${safe.email}&gt;</p>
-  <p><a href="${safe.link}">Podgląd statusu (widok klienta)</a></p>
+  <p><a href="${escapeHtml(adminUrl(p.publicId))}">Panel admina — szczegóły zgłoszenia</a><br/>
+  <a href="${safe.link}">Widok klienta</a></p>
 </body>
 </html>`.trim();
 }

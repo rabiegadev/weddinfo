@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LandingSectionInner } from "@/components/landing/landing-section-inner";
-import { getInquiryByPublicId } from "@/data/inquiries";
+import { InquiryStatusShell } from "@/components/inquiry/inquiry-status-shell";
+import { getInquiryWithRelations } from "@/data/inquiries";
 import { hasGuestViewAccess } from "@/lib/inquiry-session";
 import { InquiryDetails } from "./inquiry-details";
 import { InquiryPasswordForm } from "./inquiry-password-form";
@@ -18,31 +17,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function InquiryStatusPage({ params }: PageProps) {
   const { publicId } = await params;
-  const inquiry = await getInquiryByPublicId(publicId);
-  if (!inquiry) notFound();
+  const data = await getInquiryWithRelations(publicId);
+  if (!data) notFound();
 
   const unlocked = await hasGuestViewAccess(publicId);
 
   return (
-    <div className="page-below-header pb-16">
-      <LandingSectionInner className="max-w-3xl">
-        <p className="mb-8 text-sm">
-          <Link href="/kontakt" className="text-[var(--gold)] hover:underline">
-            ← Formularze kontaktowe
-          </Link>
-        </p>
-
-        {unlocked ? (
-          <InquiryDetails inquiry={inquiry} />
-        ) : (
-          <div className="border border-[var(--border-light)] bg-white p-6 sm:p-8">
-            <h1 className="font-wedinfo-serif text-2xl text-[var(--text-dark)]">Status zgłoszenia</h1>
-            <div className="mt-8">
-              <InquiryPasswordForm publicId={publicId} />
-            </div>
-          </div>
-        )}
-      </LandingSectionInner>
-    </div>
+    <InquiryStatusShell
+      title={unlocked ? `Zgłoszenie #${publicId}` : "Podgląd zgłoszenia"}
+      subtitle={
+        unlocked
+          ? "Poniżej znajdziesz status, załączniki i korespondencję. Możesz też dodać komentarz lub anulować zgłoszenie."
+          : `Zgłoszenie #${publicId} — wpisz hasło z e-maila potwierdzającego.`
+      }
+    >
+      {unlocked ? (
+        <InquiryDetails
+          inquiry={data.inquiry}
+          attachments={data.attachments}
+          messages={data.messages}
+        />
+      ) : (
+        <InquiryPasswordForm publicId={publicId} />
+      )}
+    </InquiryStatusShell>
   );
 }

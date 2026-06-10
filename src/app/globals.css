@@ -208,3 +208,25 @@ body {
   background-size: 27px 31px, 19px 23px, 33px 29px;
   background-position: 0 0, 9px 6px, 15px 12px;
 }
+
+@keyframes hero-scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.hero-scroll-arrow {
+  animation: hero-scroll-bounce 1.75s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-arrow {
+    animation: none;
+  }
+}

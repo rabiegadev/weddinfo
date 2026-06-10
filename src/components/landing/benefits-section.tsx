@@ -50,7 +50,8 @@ const benefits = [
 export function BenefitsSection() {
   return (
     <section
-      className="border-y border-[var(--border-light)] bg-[var(--bg-light)] py-6 sm:py-8"
+      id="korzysci"
+      className="scroll-mt-header border-y border-[var(--border-light)] bg-[var(--bg-light)] py-6 sm:py-8"
       aria-label="Korzyści"
     >
       <LandingSectionInner>

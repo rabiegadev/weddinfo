@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { inputClass, labelClass } from "@/app/kontakt/form-ui";
 import { unlockInquiryWithPassword } from "./actions";
 
 export function InquiryPasswordForm({ publicId }: { publicId: string }) {
@@ -12,7 +13,7 @@ export function InquiryPasswordForm({ publicId }: { publicId: string }) {
 
   return (
     <form
-      className="mx-auto max-w-md space-y-5"
+      className="mx-auto max-w-md space-y-6 text-center"
       onSubmit={(e) => {
         e.preventDefault();
         setError(null);
@@ -26,24 +27,28 @@ export function InquiryPasswordForm({ publicId }: { publicId: string }) {
         });
       }}
     >
-      <p className="text-sm text-[var(--text-muted)]">
-        Wpisz hasło z e-maila potwierdzającego, aby zobaczyć status zgłoszenia <strong>#{publicId}</strong>.
+      <p className="text-sm leading-relaxed text-[var(--text-muted)]">
+        Hasło wysłaliśmy w e-mailu po złożeniu formularza. Po zalogowaniu zobaczysz pełny status i korespondencję.
       </p>
       {error ? (
-        <p className="rounded border border-red-300/60 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>
+        <p className="rounded border border-red-300/60 bg-red-50 px-4 py-3 text-left text-sm text-red-800" role="alert">
+          {error}
+        </p>
       ) : null}
-      <label className="block">
-        <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-dark)]">
-          Hasło
-        </span>
+      <div className="text-left">
+        <label htmlFor="inquiry-password" className={labelClass}>
+          Hasło do zgłoszenia
+        </label>
         <input
+          id="inquiry-password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
-          className="w-full border border-[var(--border-light)] px-4 py-3 text-sm focus:border-[var(--gold)] focus:outline-none"
+          required
+          className={inputClass}
         />
-      </label>
+      </div>
       <button type="submit" disabled={pending} className="btn-primary w-full">
         {pending ? "Sprawdzanie…" : "Otwórz podgląd"}
       </button>

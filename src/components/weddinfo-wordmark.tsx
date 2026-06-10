@@ -9,11 +9,14 @@ const weddinfoScript = Great_Vibes({
 
 const sizeClass = {
   hero: "text-[2.25rem] leading-none sm:text-[2.75rem] md:text-[3.25rem] lg:text-[3.75rem]",
-  header: "text-[1.9rem] leading-none sm:text-[2.25rem] md:text-[2.6rem] lg:text-[3rem]",
+  header:
+    "text-[1.75rem] leading-[1.2] sm:text-[2rem] md:text-[2.25rem] lg:text-[2.5rem]",
 } as const;
 
-const wrapperClass =
-  "block shrink-0 py-2.5 sm:py-3 md:py-3.5";
+const wrapperClass = {
+  hero: "block shrink-0 py-2.5 sm:py-3 md:py-3.5",
+  header: "block shrink-0 py-1 sm:py-1.5 md:py-1.5",
+} as const;
 
 type WeddinfoWordmarkProps = {
   size?: keyof typeof sizeClass;
@@ -35,13 +38,13 @@ export function WeddinfoWordmark({
   );
 
   if (!linked) {
-    return <span className={wrapperClass}>{label}</span>;
+    return <span className={wrapperClass[size]}>{label}</span>;
   }
 
   return (
     <Link
       href="/"
-      className={`touch-manipulation ${wrapperClass} transition hover:opacity-90 [-webkit-tap-highlight-color:transparent]`}
+      className={`touch-manipulation ${wrapperClass[size]} transition hover:opacity-90 [-webkit-tap-highlight-color:transparent]`}
       aria-label="Weddinfo — strona główna"
     >
       {label}

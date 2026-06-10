@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LandingSectionInner } from "@/components/landing/landing-section-inner";
+import { SubpageHero } from "@/components/subpage-hero";
 
 export const metadata: Metadata = {
   title: "Polityka prywatności i RODO",
@@ -9,19 +11,24 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="page-below-header mx-auto max-w-3xl px-4 pb-[calc(3rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:pb-14">
-      <p className="mb-8 mt-1 text-sm">
-        <Link href="/" className="text-rose-800 underline-offset-2 hover:underline dark:text-rose-200">
-          ← Strona główna
-        </Link>
-      </p>
-      <article className="prose prose-zinc max-w-none dark:prose-invert prose-headings:font-semibold prose-p:text-[15px] prose-p:leading-relaxed">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
-          Polityka prywatności i przetwarzanie danych (RODO)
-        </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Ostatnia aktualizacja: 17 kwietnia 2026 r.
-        </p>
+    <div className="flex flex-1 flex-col pb-24 md:pb-0">
+      <SubpageHero>
+        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)] sm:mt-8">RODO</p>
+        <h1 className="font-wedinfo-serif mt-4 text-3xl font-medium sm:text-4xl">Polityka prywatności</h1>
+        <p className="mx-auto mt-4 max-w-2xl text-sm text-white/70">Ostatnia aktualizacja: 17 kwietnia 2026 r.</p>
+      </SubpageHero>
+
+      <section className="bg-white py-10 sm:py-14">
+        <LandingSectionInner className="mx-auto max-w-3xl">
+          <p className="mb-8 text-sm">
+            <Link
+              href="/"
+              className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--gold)] transition-opacity hover:opacity-80"
+            >
+              ← Strona główna
+            </Link>
+          </p>
+          <article className="prose prose-zinc max-w-none prose-headings:font-semibold prose-p:text-[15px] prose-p:leading-relaxed prose-a:text-[var(--gold)]">
 
         <h2>1. Administrator danych</h2>
         <p>
@@ -98,12 +105,12 @@ export default function PrivacyPolicyPage() {
         <h2>8. Kontakt w sprawach ochrony danych</h2>
         <p>
           W sprawach związanych z ochroną danych skontaktuj się przez{" "}
-          <Link href="/kontakt" className="text-rose-800 underline-offset-2 hover:underline">
-            formularz kontaktowy
-          </Link>{" "}
+          <Link href="/kontakt">formularz kontaktowy</Link>{" "}
           lub dane podane w stopce strony.
         </p>
-      </article>
+          </article>
+        </LandingSectionInner>
+      </section>
     </div>
   );
 }
