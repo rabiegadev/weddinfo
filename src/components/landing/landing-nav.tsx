@@ -32,7 +32,7 @@ export function LandingNav({ variant = "hero" }: LandingNavProps) {
           {landingNavLinks.map((item) => (
             <li key={item.href}>
               {item.href === "/realizacje" ? (
-                <RealizacjeNavLink className={linkClass} label="Portfolio" />
+                <RealizacjeNavLink className={linkClass} label={item.label} />
               ) : (
                 <a href={navHref(item.href)} className={linkClass}>
                   {item.label}

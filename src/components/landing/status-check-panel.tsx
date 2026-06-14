@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { unlockInquiryWithPassword } from "@/app/zapytanie/[publicId]/actions";
@@ -21,7 +20,7 @@ export function StatusCheckPanel({ connectedTop = false }: { connectedTop?: bool
       <div className="relative z-[1]">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--gold)]">Status</p>
         <h3 className="font-wedinfo-serif mt-3 text-xl font-medium leading-snug text-white sm:text-2xl">
-          Śledź status swojego zgłoszenia
+          Śledź status swojego zlecenia
         </h3>
         <p className="mt-4 text-sm leading-relaxed text-white/65">
           Wpisz numer i hasło z e-maila potwierdzającego po wysłaniu formularza.
@@ -47,7 +46,7 @@ export function StatusCheckPanel({ connectedTop = false }: { connectedTop?: bool
           ) : null}
           <label className="block">
             <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-white/75">
-              Numer zgłoszenia
+              Numer zlecenia
             </span>
             <input
               value={publicId}
@@ -71,11 +70,6 @@ export function StatusCheckPanel({ connectedTop = false }: { connectedTop?: bool
             {pending ? "Sprawdzanie…" : "Sprawdź status"}
           </button>
         </form>
-        <p className="mt-6 text-xs text-white/55">
-          <Link href="/kontakt" className="text-[var(--gold)] hover:underline">
-            Nie masz jeszcze zgłoszenia? Formularze →
-          </Link>
-        </p>
       </div>
     </aside>
   );

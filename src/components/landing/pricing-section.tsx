@@ -50,7 +50,7 @@ export function PricingSection() {
           id="pricing-heading"
           className="font-wedinfo-serif text-left text-3xl font-medium text-[var(--text-dark)] sm:text-4xl"
         >
-          Prosty cennik
+          Cennik
         </h2>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1.75fr)_minmax(280px,1fr)] lg:items-center lg:gap-12 xl:gap-16">

@@ -56,7 +56,7 @@ export function SiteHeader() {
               {landingNavLinks.map((item) =>
                 item.href === "/realizacje" ? (
                   <li key={item.href}>
-                    <RealizacjeNavLink className={navLinkClass} label="Portfolio" />
+                    <RealizacjeNavLink className={navLinkClass} label={item.label} />
                   </li>
                 ) : (
                   <li key={item.href}>
