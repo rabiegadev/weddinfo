@@ -171,6 +171,14 @@ export async function submitInquiryForm(fd: FormData): Promise<SubmitInquiryResu
 
     const parsed = parseInquiryFormData(fd);
 
+    if (parsed.inquiryType !== "contact") {
+      return {
+        ok: false,
+        error:
+          "Formularze pakietów są tymczasowo niedostępne. Skorzystaj z formularza kontaktowego na stronie Kontakt.",
+      };
+    }
+
     if (parsed.website) {
       return { ok: true, publicId: "000000" };
     }

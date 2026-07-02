@@ -2,24 +2,36 @@ import { LandingSectionInner } from "./landing-section-inner";
 
 const faqItems = [
   {
-    q: "Czy muszę mieć już zebrane wszystkie teksty?",
-    a: "Nie — wystarczy brief. Treści możemy uzupełniać iteracyjnie; im wcześniej masz datę i lokalizację, tym spokojniejszy harmonogram prac.",
+    q: "Czy muszę dostarczyć teksty do wyświetlenia na stronie?",
+    a: "Nie — na podstawie dostarczonych informacji przygotujemy wstępny koncept wraz z tekstami do akceptacji lub modyfikacji.",
   },
   {
     q: "Czy goście muszą coś instalować?",
     a: "Nie. Wizytówka to zwykła strona w przeglądarce — jeden link z zaproszenia lub wiadomości.",
   },
   {
-    q: "Jak wygląda RSVP?",
-    a: "Gość wypełnia krótki formularz na stronie; odpowiedzi trafiają do panelu zapytania pary. Możemy włączyć lub wyłączyć RSVP wg briefu.",
+    q: "Jak wygląda potwierdzenie obecności?",
+    a: "Gość wypełnia krótki formularz na stronie; odpowiedzi trafiają do panelu pary. To funkcja opcjonalna — włączamy ją według briefu.",
   },
   {
-    q: "Czy mogę mieć własną domenę?",
-    a: "Tak w wyższych pakietach — wymaga konfiguracji DNS u Twojego rejestratora. Pomagamy instrukcją krok po kroku.",
+    q: "Czy mogę wybrać nazwę domeny?",
+    a: "Tak — możesz. Wybór zależy od dostępności nazwy; ustalamy go podczas wstępnych rozmów i zbierania informacji.",
+  },
+  {
+    q: "Jak wygląda galeria zdjęć?",
+    a: "Zależy od ustaleń oraz rozmiaru (wagi) przesyłanych plików — dopasowujemy rozwiązanie do Waszych potrzeb.",
   },
   {
     q: "Co jeśli po wesele chcę usunąć stronę?",
-    a: "Możemy ustawić tryb archiwum lub wyłączyć publikację — ustalamy to przy kontrakcie lub mailu końcowym.",
+    a: "Okres, w którym strona będzie dostępna, ustalamy indywidualnie. Standardowo publikujemy ją na kilka miesięcy przed uroczystością — w zależności od ustaleń możemy ten czas dostosować.",
+  },
+  {
+    q: "Czy strona dostępna po weselu pojawia się automatycznie następnego dnia?",
+    a: "Tak — możemy skonfigurować stronę tak, aby następnego dnia automatycznie wyświetlała podziękowania oraz przekierowanie do galerii zdjęć od uczestników wesela.",
+  },
+  {
+    q: "Czy oferujecie kody QR?",
+    a: "Tak — oferujemy personalizowane kody QR, które możemy dostarczyć w różnych rozmiarach, np. do dołączenia do zaproszeń lub wysłania w formie SMS.",
   },
 ] as const;
 

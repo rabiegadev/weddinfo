@@ -1,9 +1,14 @@
 "use client";
 
+/**
+ * Archiwum — formularze pakietów Individual i Premium.
+ * Niepodpięte pod routing; zachowane do ewentualnego przywrócenia.
+ */
+
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { weddingTemplateOptions } from "@/data/wedding-templates";
-import { submitInquiryForm, type SubmitInquiryResult } from "./actions";
-import { CaptchaField } from "./captcha-field";
+import { submitInquiryForm, type SubmitInquiryResult } from "../actions";
+import { CaptchaField } from "../captcha-field";
 import {
   buildFormDataFromDraft,
   clearDraftFromSession,
@@ -14,7 +19,7 @@ import {
   type InquiryFileDraft,
   type InquiryFormDraft,
   type InquiryFormMode,
-} from "./inquiry-form-draft";
+} from "../inquiry-form-draft";
 import {
   ControlledFileUploadField,
   ControlledYesNoField,
@@ -24,10 +29,10 @@ import {
   inputClass,
   labelClass,
   textareaClass,
-} from "./form-ui";
+} from "../form-ui";
+import { InquirySuccess } from "../inquiry-success";
+import { TurnstileField } from "../turnstile-field";
 import { getInquiryModeLabel, InquiryTypeSelector } from "./inquiry-type-selector";
-import { InquirySuccess } from "./inquiry-success";
-import { TurnstileField } from "./turnstile-field";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
 

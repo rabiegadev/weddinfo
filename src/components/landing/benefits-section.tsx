@@ -12,6 +12,7 @@ function BenefitIcon({ children }: { children: ReactNode }) {
 const benefits = [
   {
     label: "Indywidualny projekt",
+    sublabel: undefined,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" className="size-7 sm:size-8" stroke="currentColor" strokeWidth="1.25">
         <path d="M4 20h16M6 16l3-9 3 5 3-7 3 11" strokeLinecap="round" strokeLinejoin="round" />
@@ -19,7 +20,8 @@ const benefits = [
     ),
   },
   {
-    label: "Własna domena",
+    label: "Personalizowana domena",
+    sublabel: "example.weddinfo.pl",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" className="size-7 sm:size-8" stroke="currentColor" strokeWidth="1.25">
         <circle cx="12" cy="12" r="9" />
@@ -29,6 +31,7 @@ const benefits = [
   },
   {
     label: "Szybka realizacja",
+    sublabel: undefined,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" className="size-7 sm:size-8" stroke="currentColor" strokeWidth="1.25">
         <circle cx="12" cy="12" r="9" />
@@ -38,6 +41,7 @@ const benefits = [
   },
   {
     label: "Wsparcie na każdym etapie",
+    sublabel: undefined,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" className="size-7 sm:size-8" stroke="currentColor" strokeWidth="1.25">
         <path d="M4 14v3a2 2 0 002 2h1l2 3 2-6 2-6 2 3 2-3h1a2 2 0 002-2v-3" strokeLinecap="round" strokeLinejoin="round" />
@@ -62,6 +66,11 @@ export function BenefitsSection() {
               <p className="mt-2 max-w-[10rem] text-[10px] font-semibold uppercase leading-snug tracking-[0.14em] text-[var(--text-dark)] sm:max-w-none sm:text-[11px]">
                 {item.label}
               </p>
+              {item.sublabel ? (
+                <p className="mt-1 text-[10px] normal-case tracking-normal text-[var(--text-muted)] sm:text-[11px]">
+                  {item.sublabel}
+                </p>
+              ) : null}
             </li>
           ))}
         </ul>

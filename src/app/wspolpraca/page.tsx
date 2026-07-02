@@ -76,8 +76,8 @@ export default function WspolpracaPage() {
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/55">
             Napiszcie do nas, a dobierzemy pakiet idealnie dopasowany do Waszego wesela.
           </p>
-          <Link href="/cennik" className="btn-primary mt-8">
-            Zobacz cennik
+          <Link href="/kontakt" className="btn-primary mt-8">
+            Kontakt
           </Link>
         </LandingSectionInner>
       </section>

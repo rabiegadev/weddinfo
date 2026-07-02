@@ -31,7 +31,7 @@ export function resolveInquiryModeFromSearchParams(
   if (t === "premium") return "premium";
   if (t === "contact" || t === "kontakt") return "contact";
   if (t === "basic" || t === "start" || t === "podstawowy") return "premium";
-  return "individual";
+  return "contact";
 }
 
 /** @deprecated Użyj resolveInquiryModeFromSearchParams */

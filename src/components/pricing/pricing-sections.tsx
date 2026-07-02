@@ -13,7 +13,7 @@ type PricingCardsGridProps = {
 
 export function PricingCardsGrid({ plans, animated = false }: PricingCardsGridProps) {
   return (
-    <ul className="grid gap-5 sm:gap-6 md:grid-cols-3 md:items-stretch">
+    <ul className="grid gap-5 sm:gap-6 md:grid-cols-2 md:items-stretch">
       {plans.map((plan, index) => (
         <li
           key={plan.id}
@@ -104,7 +104,7 @@ function DetailIcon({ index }: { index: number }) {
 }
 
 export function PricingPlanDetailSection({ plan, reversed = false }: PricingPlanDetailSectionProps) {
-  const contactHref = pricingContactHref(plan.contactTyp);
+  const contactHref = pricingContactHref();
 
   return (
     <section
@@ -118,14 +118,11 @@ export function PricingPlanDetailSection({ plan, reversed = false }: PricingPlan
         }`}
       >
         <div className={reversed ? "lg:[direction:ltr]" : ""}>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-            Pakiet {plan.name}
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{plan.name}</p>
           <h2
             id={`plan-${plan.id}-heading`}
             className="font-wedinfo-serif mt-3 text-3xl font-medium text-[var(--text-dark)] sm:text-4xl lg:text-[2.75rem]"
           >
-            Pakiet{" "}
             <span className="text-[var(--gold)]">{plan.name}</span>
           </h2>
           <p className="mt-4 max-w-xl text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">

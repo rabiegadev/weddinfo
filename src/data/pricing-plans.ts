@@ -1,4 +1,4 @@
-export type PricingPlanId = "podstawowy" | "premium" | "indywidual";
+export type PricingPlanId = "podstawowy" | "indywidual";
 
 export type PricingDetailFeature = {
   title: string;
@@ -15,25 +15,12 @@ export type PricingPlan = {
   detailFeatures: readonly PricingDetailFeature[];
   highlighted: boolean;
   unavailable: boolean;
-  contactTyp: "premium" | "individual";
 };
-
-export const pricingExtras = [
-  {
-    title: "Własna domena",
-    description: "Skorzystaj z naszych subdomen lub przedstaw swoją propozycję!",
-  },
-  {
-    title: "Aktualizacje w cenie",
-    description:
-      "Zmienił się świadek? A może podałeś zły numer telefonu? Takie poprawki realizujemy bez dodatkowych opłat.",
-  },
-] as const;
 
 export const pricingPlans: readonly PricingPlan[] = [
   {
     id: "podstawowy",
-    name: "Podstawowy",
+    name: "Pakiet podstawowy",
     price: "149 zł",
     priceNote: "jednorazowo",
     tagline: "Szybki start z gotowym szablonem",
@@ -72,54 +59,10 @@ export const pricingPlans: readonly PricingPlan[] = [
     ],
     highlighted: false,
     unavailable: true,
-    contactTyp: "premium",
-  },
-  {
-    id: "premium",
-    name: "Premium",
-    price: "299 zł",
-    priceNote: "jednorazowo",
-    tagline: "Wszystko, czego potrzebujecie i jeszcze więcej",
-    overviewFeatures: [
-      "Wszystko z pakietu Podstawowy",
-      "Indywidualne kolory",
-      "Własna domena",
-      "Noclegi",
-      "Galeria zdjęć",
-    ],
-    detailFeatures: [
-      {
-        title: "Indywidualny projekt",
-        description: "Kolorystyka i detale dopasowane do charakteru Waszego wesela.",
-      },
-      {
-        title: "Własna domena",
-        description: "Subdomena Weddinfo lub podpięcie Waszej domeny.",
-      },
-      {
-        title: "Mobilna wersja",
-        description: "Goście wygodnie korzystają ze strony na smartfonie.",
-      },
-      {
-        title: "Potwierdzenie obecności",
-        description: "RSVP z zebraniem odpowiedzi w jednym miejscu.",
-      },
-      {
-        title: "Galeria zdjęć",
-        description: "Miejsce na Wasze zdjęcia i wspomnienia z dnia ślubu.",
-      },
-      {
-        title: "Wsparcie techniczne",
-        description: "Pomoc przy aktualizacji treści przed weselem.",
-      },
-    ],
-    highlighted: true,
-    unavailable: false,
-    contactTyp: "premium",
   },
   {
     id: "indywidual",
-    name: "Indywidual",
+    name: "Pakiet indywidualny",
     price: "od 599 zł",
     priceNote: "wycena indywidualna",
     tagline: "Projekt szyty na miarę — bez kompromisów",
@@ -156,9 +99,8 @@ export const pricingPlans: readonly PricingPlan[] = [
         description: "Wspólne dopracowanie projektu aż do efektu „wow”.",
       },
     ],
-    highlighted: false,
-    unavailable: false,
-    contactTyp: "individual",
+    highlighted: true,
+    unavailable: true,
   },
 ] as const;
 
@@ -170,7 +112,6 @@ export function pricingPlanAnchor(id: PricingPlanId): string {
   return `/cennik#${id}`;
 }
 
-export function pricingContactHref(typ: PricingPlan["contactTyp"]): string {
-  if (typ === "premium") return "/kontakt?typ=premium";
-  return "/kontakt?typ=individual";
+export function pricingContactHref(): string {
+  return "/kontakt";
 }

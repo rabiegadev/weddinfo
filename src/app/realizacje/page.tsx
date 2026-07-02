@@ -19,7 +19,9 @@ export default function RealizacjePage() {
     <div className="flex flex-1 flex-col pb-24 md:pb-0">
       <SubpageHero>
         <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)] sm:mt-8">Portfolio</p>
-        <h1 className="font-wedinfo-serif mt-4 text-3xl font-medium sm:text-4xl lg:text-5xl">Nasze realizacje</h1>
+        <h1 className="font-wedinfo-serif mt-4 text-3xl font-medium sm:text-4xl lg:text-5xl">
+          Przykładowe projekty stron
+        </h1>
         <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
           Zobacz przykładowe wizytówki — od gotowych szablonów po dopasowane projekty. Każda strona działa na
           telefonie i komputerze.
@@ -37,7 +39,7 @@ export default function RealizacjePage() {
                 Na żywo — podgląd
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-[var(--text-muted)]">
-                Działające przykłady z pełnym zakresem sekcji: harmonogram, RSVP, dojazd i kontakt.
+                Działające przykłady z pełnym zakresem sekcji: harmonogram, potwierdzenie obecności, dojazd i kontakt.
               </p>
             </div>
             <ul className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
@@ -85,16 +87,11 @@ export default function RealizacjePage() {
             Chcecie podobną stronę?
           </p>
           <p className="mx-auto mt-4 max-w-lg text-sm text-white/55">
-            Porównaj pakiety w cenniku albo od razu złóż zapytanie — dopasujemy szablon do Waszego stylu.
+            Napisz do nas — chętnie opowiemy o pakietach i dopasujemy projekt do Waszego stylu.
           </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/cennik" className="btn-secondary min-w-[200px]">
-              Zobacz cennik
-            </Link>
-            <Link href="/kontakt" className="btn-primary min-w-[200px]">
-              Złóż zapytanie
-            </Link>
-          </div>
+          <Link href="/kontakt" className="btn-primary mt-8 min-w-[200px]">
+            Złóż zapytanie
+          </Link>
         </LandingSectionInner>
       </section>
     </div>

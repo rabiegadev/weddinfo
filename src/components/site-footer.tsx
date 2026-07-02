@@ -5,7 +5,6 @@ const footerLinks = [
   { href: "/realizacje", label: "Realizacje" },
   { href: "/wspolpraca", label: "Współpraca" },
   { href: "/zapytanie", label: "Status zlecenia" },
-  { href: "/cennik", label: "Cennik" },
   { href: "/kontakt", label: "Kontakt" },
   { href: "/polityka-prywatnosci", label: "RODO" },
 ] as const;
@@ -29,19 +28,8 @@ export function SiteFooter() {
           ))}
         </nav>
 
-        <div className="mt-10 space-y-2 text-center text-sm text-white/45">
+        <div className="mt-10 text-center text-sm text-white/45">
           <p>© {new Date().getFullYear()} Weddinfo. Wszelkie prawa zastrzeżone.</p>
-          <p>
-            Realizacja:{" "}
-            <a
-              href="https://rabiegadevelopment.pl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--gold)] underline-offset-2 transition hover:underline"
-            >
-              rabiegadevelopment.pl
-            </a>
-          </p>
         </div>
       </LandingSectionInner>
     </footer>

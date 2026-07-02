@@ -1,42 +1,16 @@
-import Image from "next/image";
+import { HeroBackdrop } from "./hero-backdrop";
 import { LandingNav } from "./landing-nav";
 
 export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[100dvh] flex-col overflow-hidden"
+      className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden"
       aria-label="Strona główna"
     >
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-        <Image
-          src="/images/para8.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[center_30%]"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              linear-gradient(
-                100deg,
-                rgba(0, 0, 0, 0.88) 0%,
-                rgba(0, 0, 0, 0.78) 22%,
-                rgba(0, 0, 0, 0.58) 45%,
-                rgba(0, 0, 0, 0.35) 68%,
-                rgba(0, 0, 0, 0.18) 100%
-              )
-            `,
-          }}
-        />
-      </div>
+      <HeroBackdrop />
 
-      <div
-        className="relative z-10 flex min-h-[100dvh] flex-col px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-16 sm:px-8 md:px-12 lg:px-16 xl:px-20 2xl:px-24"
-      >
+      <div className="relative z-10 flex min-h-[100dvh] flex-col px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-16 sm:px-8 md:px-12 lg:px-16 xl:px-20 2xl:px-24">
         <LandingNav variant="hero" />
 
         <div className="flex w-full max-w-3xl flex-1 flex-col items-start justify-center text-left lg:max-w-4xl">

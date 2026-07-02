@@ -16,8 +16,10 @@ export type PortfolioExample = {
   urlDisplay?: string;
   /** Krótka etykieta stylu na karcie landingowej */
   styleLabel?: string;
-  /** Wyróżnione sekcje na karcie landingowej (np. RSVP, harmonogram) */
+  /** Wyróżnione sekcje na karcie landingowej (np. potwierdzenie obecności, harmonogram) */
   featureHighlights?: readonly string[];
+  /** Ukryty podgląd — mocno zamazany placeholder zamiast zrzutu ekranu */
+  previewHidden?: boolean;
   badge?: PortfolioExampleBadge;
 };
 
@@ -32,40 +34,39 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     liveUrl: "https://example1.weddinfo.pl/",
     urlDisplay: "example1.weddinfo.pl",
     summary:
-      "Kompletna strona weselna: powitanie z licznikiem, harmonogram, RSVP, dojazd, nocleg, galeria i kontakt — spójna typografia i stonowana kolorystyka.",
+      "Kompletna strona weselna: powitanie z licznikiem, harmonogram, potwierdzenie obecności, dojazd, nocleg, galeria i kontakt — spójna typografia i stonowana kolorystyka.",
     styleLabel: "Klasyczna elegancja",
-    featureHighlights: ["RSVP", "Harmonogram", "Galeria"],
+    featureHighlights: ["Potwierdzenie obecności", "Harmonogram", "Galeria"],
     badge: "live",
   },
   {
-    couple: "Paulina & Bartosz",
-    slug: "paulinabartosz",
+    couple: "Julia & Antoni",
+    slug: "juliaantoni",
     palette: "from-[var(--w-mauve)]/20 via-[#f8f4fb] to-[var(--w-pink-dust)]/35",
     accent: "text-[var(--w-gold-deep)]",
-    date: "25 września 2026",
-    screenshotSrc: "/images/portfolio/paulina-bartosz-ex2.png",
-    liveUrl: "https://example2.weddinfo.pl/",
-    urlDisplay: "example2.weddinfo.pl",
+    date: "21 czerwca 2027",
+    screenshotSrc: "/images/portfolio/julaant.png",
+    liveUrl: "https://weddinfo-ex5.vercel.app/",
+    urlDisplay: "weddinfo-ex5.vercel.app",
     summary:
-      "Lawendowe tło z delikatnym wzorem, złote kaligraficzne imiona i fioletowe akcenty w menu oraz etykietach; treść na białych kartach z miękkim cieniem — harmonogram, RSVP, dojazd, kontakt i odliczanie do ślubu w jednej spójnej całości.",
-    styleLabel: "Lawenda i złoto",
-    featureHighlights: ["Harmonogram", "Mapa dojazdu", "Galeria gości"],
+      "Elegancka wizytówka z odliczaniem do ślubu, harmonogramem dnia, lokalizacjami (kościół i sala), informacjami weselnymi (nocleg, poprawiny, dress code), opcjonalnym potwierdzeniem obecności oraz kontaktem do pary i świadków — w kolorystyce oliwki, złota i beżu.",
+    styleLabel: "Oliwka · złoto · beż",
+    featureHighlights: ["Odliczanie", "Harmonogram", "Potwierdzenie obecności"],
     badge: "live",
   },
   {
-    couple: "Karolina & Paweł",
-    slug: "karolinapawel",
-    palette:
-      "from-emerald-50/90 via-[var(--w-cream-a)] to-[var(--w-beige-a)]/70",
+    couple: "Karolina & Michał",
+    slug: "karolinamichal",
+    palette: "from-emerald-50/90 via-[var(--w-cream-a)] to-[var(--w-beige-a)]/70",
     accent: "text-emerald-800",
-    date: "18 września 2026",
-    screenshotSrc: "/images/portfolio/karolina-pawel-ex3.png",
-    liveUrl: "http://example3.weddinfo.pl/",
-    urlDisplay: "example3.weddinfo.pl",
+    date: "15 września 2027",
+    screenshotSrc: "/images/portfolio/example4.png",
+    liveUrl: "https://weddinfo-ex4.vercel.app/",
+    urlDisplay: "weddinfo-ex4.vercel.app",
     summary:
-      "Żywa wizytówka szablonu „eukaliptus · lawenda · biel”: zaproszenie z datą i miejscem (Żabi Dwór Radwanów), odliczanie do ślubu, harmonogram dnia, RSVP (demonstracja zapisu w przeglądarce), mapa Google, nocleg i poprawiny, kontakt oraz odnośnik do galerii gości. Podgląd działa pod adresem HTTP — po konfiguracji domeny na Vercel pojawi się standardowy certyfikat HTTPS.",
-    styleLabel: "Eukaliptus · lawenda",
-    featureHighlights: ["Odliczanie", "RSVP", "Dojazd i noclegi"],
+      "Stonowana wizytówka z powitaniem gości, rozwijanym harmonogramem dnia (ceremonia, sesja zdjęciowa, kolacja), sekcją dojazdu z mapą Google oraz transportem powrotnym — praktyczne informacje w eleganckiej, czytelnej formie.",
+    styleLabel: "Elegancki minimalizm",
+    featureHighlights: ["Harmonogram", "Dojazd", "Transport powrotny"],
     badge: "live",
   },
   {
@@ -77,7 +78,8 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     liveUrl: "https://example4.weddinfo.pl/",
     urlDisplay: "example4.weddinfo.pl",
     styleLabel: "Ciepły minimalizm",
-    featureHighlights: ["RSVP", "Harmonogram", "Kontakt"],
+    featureHighlights: ["Potwierdzenie obecności", "Harmonogram", "Kontakt"],
+    previewHidden: true,
   },
   {
     couple: "Natalia & Paweł",
@@ -87,6 +89,7 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     date: "23 sierpnia",
     liveUrl: "https://example5.weddinfo.pl/",
     urlDisplay: "example5.weddinfo.pl",
+    previewHidden: true,
   },
   {
     couple: "Julia & Marcin",
@@ -96,6 +99,7 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     date: "5 października",
     liveUrl: "https://example6.weddinfo.pl/",
     urlDisplay: "example6.weddinfo.pl",
+    previewHidden: true,
   },
   {
     couple: "Zosia & Adam",
@@ -105,6 +109,7 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     date: "18 maja",
     liveUrl: "https://example7.weddinfo.pl/",
     urlDisplay: "example7.weddinfo.pl",
+    previewHidden: true,
   },
   {
     couple: "Ewa & Kacper",
@@ -114,6 +119,7 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     date: "12 lipca",
     liveUrl: "https://example8.weddinfo.pl/",
     urlDisplay: "example8.weddinfo.pl",
+    previewHidden: true,
   },
   {
     couple: "Karolina & Piotr",
@@ -123,6 +129,7 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     date: "30 sierpnia",
     liveUrl: "https://example9.weddinfo.pl/",
     urlDisplay: "example9.weddinfo.pl",
+    previewHidden: true,
   },
   {
     couple: "Marta & Łukasz",
@@ -132,6 +139,7 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     date: "7 czerwca",
     liveUrl: "https://example10.weddinfo.pl/",
     urlDisplay: "example10.weddinfo.pl",
+    previewHidden: true,
   },
 ];
 

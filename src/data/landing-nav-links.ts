@@ -3,7 +3,6 @@ export const landingNavLinks = [
   { href: "/realizacje", label: "Realizacje" },
   { href: "/wspolpraca", label: "Współpraca" },
   { href: "/zapytanie", label: "Status zlecenia" },
-  { href: "/cennik", label: "Cennik" },
 ] as const;
 
 export const landingNavCta = {
