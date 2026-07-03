@@ -1,5 +1,20 @@
 export type PortfolioExampleBadge = "demo" | "live";
 
+/** Pojedynczy ekran w galerii podglądu — podmień plik w /public, zachowując ścieżkę src */
+export type PortfolioShowcaseSlide = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+/** Galeria 4 ekranów z modalem (np. strona podziękowań po weselu) */
+export type PortfolioShowcase = {
+  modalLabel?: string;
+  modalDescription: string;
+  detailDescription: string;
+  slides: readonly PortfolioShowcaseSlide[];
+};
+
 export type PortfolioExample = {
   couple: string;
   slug: string;
@@ -20,6 +35,8 @@ export type PortfolioExample = {
   featureHighlights?: readonly string[];
   /** Ukryty podgląd — mocno zamazany placeholder zamiast zrzutu ekranu */
   previewHidden?: boolean;
+  /** Galeria ekranów z modalem po kliknięciu */
+  showcase?: PortfolioShowcase;
   badge?: PortfolioExampleBadge;
 };
 
@@ -70,16 +87,45 @@ export const portfolioExamples: readonly PortfolioExample[] = [
     badge: "live",
   },
   {
-    couple: "Ola & Michał",
-    slug: "olaimichal",
+    couple: "Iga & Kamil",
+    slug: "igakamil",
     palette: "from-[var(--w-beige-b)] to-[var(--w-cream-b)]",
     accent: "text-[var(--foreground)]",
-    date: "6 lipca",
-    liveUrl: "https://example4.weddinfo.pl/",
-    urlDisplay: "example4.weddinfo.pl",
-    styleLabel: "Ciepły minimalizm",
-    featureHighlights: ["Potwierdzenie obecności", "Harmonogram", "Kontakt"],
-    previewHidden: true,
+    date: "19 lipca 2025",
+    urlDisplay: "Strona po weselu",
+    summary:
+      "Prywatna strona wspomnień po weselu — podziękowania, filmy, teledysk i galeria zdjęć do pobrania, chroniona hasłem.",
+    styleLabel: "Podziękowania po weselu",
+    featureHighlights: ["Podziękowania", "Filmy i teledysk", "Galeria zdjęć"],
+    showcase: {
+      modalLabel: "Strona po weselu",
+      modalDescription:
+        "Po uroczystości strona zamienia się w prywatne podziękowania dla gości — z dostępem do filmu, teledysku, galerii zdjęć oraz możliwością pobrania materiałów. Dostęp zabezpieczony hasłem.",
+      detailDescription:
+        "Projekt pokazuje etap po weselu: elegancka, ciemna strona z podziękowaniami, kartami pobierania filmu weselnego, teledysku i galerii zdjęć oraz rozbudowaną galerią z ośmią czasu i masowym pobieraniem plików. Całość można zabezpieczyć hasłem i aktywować automatycznie następnego dnia po uroczystości.",
+      slides: [
+        {
+          src: "/images/portfolio/poweselu/igakamil_poweselu.png",
+          alt: "Ekran logowania hasłem",
+          caption: "Prywatny dostęp — strona chroniona hasłem",
+        },
+        {
+          src: "/images/portfolio/poweselu/igakamil_poweselu2.png",
+          alt: "Podziękowania z parą młodą",
+          caption: "Podziękowania i powitanie gości po weselu",
+        },
+        {
+          src: "/images/portfolio/poweselu/igakamil_poweselu3.png",
+          alt: "Karty z filmem, teledyskiem i zdjęciami",
+          caption: "Odnośniki do filmu, teledysku i galerii zdjęć",
+        },
+        {
+          src: "/images/portfolio/poweselu/igakamil_poweselu4.png",
+          alt: "Galeria zdjęć z osią czasu",
+          caption: "Galeria zdjęć z podziałem na etapy dnia i pobieraniem plików",
+        },
+      ],
+    },
   },
   {
     couple: "Natalia & Paweł",
